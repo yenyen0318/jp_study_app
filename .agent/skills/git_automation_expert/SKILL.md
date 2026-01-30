@@ -11,6 +11,9 @@ description: 版本管理與 GitHub 同步專家。負責在測試通過後執�
 
 *   **嚴格限制**：僅在 `testing_qa_specialist` 回報 100% 測試通過且無任何錯誤時，才能啟動 Git 操作。
 *   **狀態檢查**：執行前必須確認當前 Git 分支狀態為 clean，若有未預期的變動需先向使用者報告。
+*   **使用者確認 (User Approval)**：
+    *   **禁止自動 Commit**：在執行 `git commit` 前，必須先透過 `notify_user` 或對話詢問使用者：「是否確認提交變更？」。
+    *   **例外**：僅在使用者明確授權「自動修復並提交」的流程中（如 CI 腳本修復），才可跳過此步驟。
 
 ## 2. 提交規範 (Conventional Commits)
 
