@@ -15,7 +15,7 @@ class KanaListViewModel extends _$KanaListViewModel {
   @override
   Future<List<Kana>> build() async {
     final repository = ref.watch(kanaRepositoryProvider);
-    // Simulate some logic if needed, or just fetch
+    // 如果需要，可以在此模擬邏輯或直接獲取數據
     return repository.getHiragana();
   }
 }

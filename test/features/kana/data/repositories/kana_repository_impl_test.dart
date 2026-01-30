@@ -16,7 +16,7 @@ void main() {
       expect(result, isA<List<Kana>>());
       expect(result.isNotEmpty, true);
 
-      // Verify first item (A)
+      // 驗證第一項 (あ)
       final first = result.first;
       expect(first.text, 'あ');
       expect(first.romaji, 'a');
@@ -24,7 +24,7 @@ void main() {
       expect(first.row, 0);
       expect(first.col, 0);
 
-      // Verify basic count (46 basic sounds)
+      // 驗證基本數量 (46 個基礎音)
       expect(result.length, 46);
     });
   });

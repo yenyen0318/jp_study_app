@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Zen Theme Extension for Semantic Colors
+/// 語意化顏色的 Zen 主題擴充
 @immutable
 class ZenTheme extends ThemeExtension<ZenTheme> {
   final Color bgPrimary;
@@ -80,7 +80,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
   );
 }
 
-/// App Core Theme Data
+/// App 核心主題資料
 class AppTheme {
   static ThemeData get light {
     return ThemeData(

@@ -10,7 +10,7 @@ void main() {
 
   setUp(() {
     log.clear();
-    // Mock the flutter_tts method channel
+    // 模擬 flutter_tts 的 method channel
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(const MethodChannel('flutter_tts'), (
           MethodCall methodCall,
@@ -30,9 +30,9 @@ void main() {
   test('TtsService calls speak on flutter_tts', () async {
     await ttsService.speak('あ');
 
-    // Verify that the speak method was called on the platform channel
-    // Note: Initialization calls (setLanguage, etc.) might also be in the log depending on timing
-    // We check if "speak" is in the log
+    // 驗證 speak 方法是否在 platform channel 上被呼叫
+    // 注意：初始化呼叫 (setLanguage 等) 也可能出現在日誌中，視時機而定
+    // 我們檢查 "speak" 是否存在於日誌中
     expect(log.any((call) => call.method == 'speak'), isTrue);
 
     final speakCall = log.firstWhere((call) => call.method == 'speak');
@@ -40,12 +40,12 @@ void main() {
   });
 
   test('TtsService initializes with correct settings', () async {
-    // We expect calls to setLanguage, setSpeechRate, setVolume, setPitch
-    // Since _init is called in constructor and is async, wait a bit or just check log
-    // In a real unit test for async constructor, we might need a way to await init.
-    // However, for this simple case, we just check if the calls are dispatched eventually.
+    // 我們預期 setLanguage, setSpeechRate, setVolume, setPitch 會被呼叫
+    // 由於 _init 是在建構函式中呼叫且為非同步，等待一下或直接檢查日誌
+    // 在真實的非同步建構函式單元測試中，我們可能需要等待 init 完成的方法
+    // 但在此簡單案例中，我們只需檢查呼叫是否最終被發送
 
-    // Let's call a method to ensure microtasks run?
+    // 呼叫一個方法以確保 microtasks 執行
     await ttsService.speak('test');
 
     expect(

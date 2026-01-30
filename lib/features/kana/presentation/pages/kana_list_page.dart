@@ -28,10 +28,10 @@ class KanaListPage extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                   sliver: SliverToBoxAdapter(
                     child: Text(
-                      '五十音', // 50 Sounds
+                      '五十音', // 50 音列表
                       style: GoogleFonts.notoSansTc(
                         fontSize: 32,
-                        fontWeight: FontWeight.w300, // Light/Zen feel
+                        fontWeight: FontWeight.w300, // 輕盈/禪意風格
                         color: zenTheme.textPrimary,
                         letterSpacing: 2.0,
                       ),
@@ -122,7 +122,7 @@ class _KanaCard extends StatelessWidget {
                 kana.text,
                 style: GoogleFonts.notoSansJp(
                   fontSize: 32,
-                  height: 1.6, // For potential rubies/spacing
+                  height: 1.6, // 預留標音/間距空間
                   color: theme.textPrimary,
                 ),
               ),

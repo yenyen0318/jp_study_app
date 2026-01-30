@@ -7,8 +7,8 @@ import 'package:jp_study_app/features/kana/presentation/pages/kana_list_page.dar
 import 'package:jp_study_app/features/kana/presentation/providers/kana_view_model.dart';
 import 'package:mocktail/mocktail.dart';
 
-// Mock ViewModel is harder with Riverpod Generator unless we override the repository in the container.
-// We will override the repository provider to return a mock repository.
+// 模擬 ViewModel 在使用 Riverpod Generator 時較困難，除非我們在容器中覆蓋 repository
+// 我們將覆蓋 repository provider 以回傳模擬的 repository
 
 import 'package:jp_study_app/features/kana/domain/repositories/kana_repository.dart';
 
@@ -22,7 +22,7 @@ void main() {
   });
 
   testWidgets('KanaListPage displays kana grid', (WidgetTester tester) async {
-    // Arrange
+    // 準備 (Arrange)
     final mockData = [
       const Kana(
         id: '1',
@@ -50,16 +50,14 @@ void main() {
       ),
     );
 
-    // Act
-    // Initial state might be loading
+    // 操作 (Act)
+    // 初始狀態可能是載入中
     expect(find.text('準備中...'), findsOneWidget);
 
-    await tester.pump(); // Trigger future builder
-    await tester.pump(
-      const Duration(milliseconds: 10),
-    ); // Wait for animation/delay
+    await tester.pump(); // 觸發 future builder
+    await tester.pump(const Duration(milliseconds: 10)); // 等待動畫/延遲
 
-    // Assert
+    // 驗證 (Assert)
     expect(find.text('五十音'), findsOneWidget);
     expect(find.text('あ'), findsOneWidget);
     expect(find.text('い'), findsOneWidget);

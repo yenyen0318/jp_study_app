@@ -3,19 +3,19 @@ import 'package:jp_study_app/features/kana/domain/repositories/kana_repository.d
 
 class KanaRepositoryImpl implements KanaRepository {
   static const _hiraganaData = [
-    // A-row
+    // あ行
     Kana(id: 'h_a', text: 'あ', romaji: 'a', type: 'hiragana', row: 0, col: 0),
     Kana(id: 'h_i', text: 'い', romaji: 'i', type: 'hiragana', row: 0, col: 1),
     Kana(id: 'h_u', text: 'う', romaji: 'u', type: 'hiragana', row: 0, col: 2),
     Kana(id: 'h_e', text: 'え', romaji: 'e', type: 'hiragana', row: 0, col: 3),
     Kana(id: 'h_o', text: 'お', romaji: 'o', type: 'hiragana', row: 0, col: 4),
-    // Ka-row
+    // か行
     Kana(id: 'h_ka', text: 'か', romaji: 'ka', type: 'hiragana', row: 1, col: 0),
     Kana(id: 'h_ki', text: 'き', romaji: 'ki', type: 'hiragana', row: 1, col: 1),
     Kana(id: 'h_ku', text: 'く', romaji: 'ku', type: 'hiragana', row: 1, col: 2),
     Kana(id: 'h_ke', text: 'け', romaji: 'ke', type: 'hiragana', row: 1, col: 3),
     Kana(id: 'h_ko', text: 'こ', romaji: 'ko', type: 'hiragana', row: 1, col: 4),
-    // Sa-row
+    // さ行
     Kana(id: 'h_sa', text: 'さ', romaji: 'sa', type: 'hiragana', row: 2, col: 0),
     Kana(
       id: 'h_shi',
@@ -28,7 +28,7 @@ class KanaRepositoryImpl implements KanaRepository {
     Kana(id: 'h_su', text: 'す', romaji: 'su', type: 'hiragana', row: 2, col: 2),
     Kana(id: 'h_se', text: 'せ', romaji: 'se', type: 'hiragana', row: 2, col: 3),
     Kana(id: 'h_so', text: 'そ', romaji: 'so', type: 'hiragana', row: 2, col: 4),
-    // Ta-row
+    // た行
     Kana(id: 'h_ta', text: 'た', romaji: 'ta', type: 'hiragana', row: 3, col: 0),
     Kana(
       id: 'h_chi',
@@ -48,35 +48,35 @@ class KanaRepositoryImpl implements KanaRepository {
     ),
     Kana(id: 'h_te', text: 'て', romaji: 'te', type: 'hiragana', row: 3, col: 3),
     Kana(id: 'h_to', text: 'と', romaji: 'to', type: 'hiragana', row: 3, col: 4),
-    // Na-row
+    // な行
     Kana(id: 'h_na', text: 'な', romaji: 'na', type: 'hiragana', row: 4, col: 0),
     Kana(id: 'h_ni', text: 'に', romaji: 'ni', type: 'hiragana', row: 4, col: 1),
     Kana(id: 'h_nu', text: 'ぬ', romaji: 'nu', type: 'hiragana', row: 4, col: 2),
     Kana(id: 'h_ne', text: 'ね', romaji: 'ne', type: 'hiragana', row: 4, col: 3),
     Kana(id: 'h_no', text: 'の', romaji: 'no', type: 'hiragana', row: 4, col: 4),
-    // Ha-row
+    // は行
     Kana(id: 'h_ha', text: 'は', romaji: 'ha', type: 'hiragana', row: 5, col: 0),
     Kana(id: 'h_hi', text: 'ひ', romaji: 'hi', type: 'hiragana', row: 5, col: 1),
     Kana(id: 'h_fu', text: 'ふ', romaji: 'fu', type: 'hiragana', row: 5, col: 2),
     Kana(id: 'h_he', text: 'へ', romaji: 'he', type: 'hiragana', row: 5, col: 3),
     Kana(id: 'h_ho', text: 'ほ', romaji: 'ho', type: 'hiragana', row: 5, col: 4),
-    // Ma-row
+    // ま行
     Kana(id: 'h_ma', text: 'ま', romaji: 'ma', type: 'hiragana', row: 6, col: 0),
     Kana(id: 'h_mi', text: 'み', romaji: 'mi', type: 'hiragana', row: 6, col: 1),
     Kana(id: 'h_mu', text: 'む', romaji: 'mu', type: 'hiragana', row: 6, col: 2),
     Kana(id: 'h_me', text: 'め', romaji: 'me', type: 'hiragana', row: 6, col: 3),
     Kana(id: 'h_mo', text: 'も', romaji: 'mo', type: 'hiragana', row: 6, col: 4),
-    // Ya-row
+    // や行
     Kana(id: 'h_ya', text: 'や', romaji: 'ya', type: 'hiragana', row: 7, col: 0),
     Kana(id: 'h_yu', text: 'ゆ', romaji: 'yu', type: 'hiragana', row: 7, col: 2),
     Kana(id: 'h_yo', text: 'よ', romaji: 'yo', type: 'hiragana', row: 7, col: 4),
-    // Ra-row
+    // ら行
     Kana(id: 'h_ra', text: 'ら', romaji: 'ra', type: 'hiragana', row: 8, col: 0),
     Kana(id: 'h_ri', text: 'り', romaji: 'ri', type: 'hiragana', row: 8, col: 1),
     Kana(id: 'h_ru', text: 'る', romaji: 'ru', type: 'hiragana', row: 8, col: 2),
     Kana(id: 'h_re', text: 'れ', romaji: 're', type: 'hiragana', row: 8, col: 3),
     Kana(id: 'h_ro', text: 'ろ', romaji: 'ro', type: 'hiragana', row: 8, col: 4),
-    // Wa-row
+    // わ行
     Kana(id: 'h_wa', text: 'わ', romaji: 'wa', type: 'hiragana', row: 9, col: 0),
     Kana(id: 'h_wo', text: 'を', romaji: 'wo', type: 'hiragana', row: 9, col: 4),
     // N
@@ -85,7 +85,7 @@ class KanaRepositoryImpl implements KanaRepository {
 
   @override
   Future<List<Kana>> getHiragana() async {
-    // Simulate slight delay for async
+    // 模擬非同步延遲
     await Future.delayed(const Duration(milliseconds: 10));
     return _hiraganaData;
   }
