@@ -20,21 +20,24 @@ class KanaListPage extends ConsumerWidget {
           constraints: const BoxConstraints(maxWidth: 600),
           child: CustomScrollView(
             slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
-                sliver: SliverToBoxAdapter(
-                  child: Text(
-                    '五十音', // 50 Sounds
-                    style: GoogleFonts.notoSansTc(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w300, // Light/Zen feel
-                      color: zenTheme.textPrimary,
-                      letterSpacing: 2.0,
+              SliverSafeArea(
+                bottom: false,
+                sliver: SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                  sliver: SliverToBoxAdapter(
+                    child: Text(
+                      '五十音', // 50 Sounds
+                      style: GoogleFonts.notoSansTc(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w300, // Light/Zen feel
+                        color: zenTheme.textPrimary,
+                        letterSpacing: 2.0,
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+
               kanaListAsync.when(
                 data: (kanaList) => SliverGrid(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -66,6 +69,11 @@ class KanaListPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+              ),
+              const SliverSafeArea(
+                top: false,
+                minimum: EdgeInsets.only(bottom: 24),
+                sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
               ),
             ],
           ),

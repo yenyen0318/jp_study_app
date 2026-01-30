@@ -101,3 +101,18 @@ description: "App UI/UX Design System & Guidelines"
     *   在寬度足夠時 (> 900dp)，可採用 **Master-Detail (左列表、右詳細)** 佈局，但右側詳細頁仍需遵循最大寬度限制。
 *   **邊距加倍**：
     *   平板的全局邊距 (Screen Edge) 應從 `24dp` 提升至 **48dp** 或更寬，確保握持時拇指不會遮擋內容。
+
+## 9. 邊界與安全區域 (Boundaries & Safe Area)
+
+確保內容在任何裝置上都不會被遮擋，同時維持視覺延伸感。
+
+*   **沉浸式背景 (Immersive Background)**：
+    *   `Scaffold` 的背景色 (`color.bg.primary`) 必須延伸至 Status Bar 與 Bottom Navigation Bar 區域。**禁止**出現黑邊。
+    *   實作上，`SystemChrome` 需設定為透明 (`transparent`)。
+*   **安全區域 (Safe Area)**：
+    *   **頂部 (Top)**：除了全螢幕背景圖外，所有內容必須包裹在 `SafeArea` (top: true) 內，避免與瀏海 (Notch) 重疊。
+    *   **底部 (Bottom)**：
+        *   捲動列表 (ScrollView) 底部必須預留 `padding.bottom` + `24dp`，避免內容被 Home Indicator 遮擋或觸控衝突。
+        *   固定底部按鈕 (Sticky Button) 必須包裹在 `SafeArea` (bottom: true) 內，並額外增加 `16dp` 垂直間距。
+*   **邊界避讓 (Edge Constraints)**：
+    *   在大曲面螢幕手機上，關鍵操作元件（如按鈕）應距離實體邊緣至少 `16dp`，避免誤觸。
