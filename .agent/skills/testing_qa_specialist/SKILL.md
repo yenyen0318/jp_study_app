@@ -35,8 +35,12 @@ description: "測試專家與品質保證工程師。負責執行 TDD 流程、�
 
 ## 5. 自動化閘門 (CI/CD Quality Gate)
 
-*   **提交規範**：所有 Pull Request 與 Push 操作，必須在本地通過 `flutter test` 與 `golden tests` 檢查，方可提交。
-*   **CI 整合**：確保 GitHub Actions 流程中包含測試步驟，任何測試失敗將直接導致 Build Failed，禁止合併。
+*   **靜態分析 (Zero Warning Policy)**：
+    *   在提交代碼前，**必須**執行 `flutter analyze`。
+    *   本專案採行「零警告」標準。任何 Error、Warning 或 Info 級別的 lint 提示均需在 Commit 前修復。
+    *   優先使用 `dart fix --apply` 進行大規模自動修復。
+*   **提交規範**：所有 Pull Request 與 Push 操作，必須在本地通過 `flutter analyze`、`flutter test` 與 `golden tests` 檢查，方可提交。
+*   **CI 整合**：確保 GitHub Actions 流程中包含測試與分析步驟，任何分析警告或測試失敗將直接導致 Build Failed，禁止合併。
 
 ## 6. 實作計畫與報告
 
