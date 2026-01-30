@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_view_model.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+import 'package:jp_study_app/core/services/tts_service.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -12,6 +13,7 @@ class KanaListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final zenTheme = Theme.of(context).extension<ZenTheme>()!;
     final kanaListAsync = ref.watch(kanaListViewModelProvider);
+    final ttsService = ref.watch(ttsServiceProvider);
 
     return Scaffold(
       backgroundColor: zenTheme.bgPrimary,
@@ -54,7 +56,11 @@ class KanaListPage extends ConsumerWidget {
                           ),
                       delegate: SliverChildBuilderDelegate((context, index) {
                         final kana = kanaList[index];
-                        return _KanaCard(kana: kana, theme: zenTheme);
+                        return _KanaCard(
+                          kana: kana,
+                          theme: zenTheme,
+                          onTap: () => ttsService.speak(kana.text),
+                        );
                       }, childCount: kanaList.length),
                     ),
                     loading: () => SliverToBoxAdapter(
@@ -94,42 +100,47 @@ class KanaListPage extends ConsumerWidget {
 class _KanaCard extends StatelessWidget {
   final Kana kana;
   final ZenTheme theme;
+  final VoidCallback? onTap;
 
-  const _KanaCard({required this.kana, required this.theme});
+  const _KanaCard({required this.kana, required this.theme, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.bgSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.borderSubtle, width: 0.5),
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Text(
-              kana.text,
-              style: GoogleFonts.notoSansJp(
-                fontSize: 32,
-                height: 1.6, // For potential rubies/spacing
-                color: theme.textPrimary,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.bgSurface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: theme.borderSubtle, width: 0.5),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Text(
+                kana.text,
+                style: GoogleFonts.notoSansJp(
+                  fontSize: 32,
+                  height: 1.6, // For potential rubies/spacing
+                  color: theme.textPrimary,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 8,
-            right: 12,
-            child: Text(
-              kana.romaji,
-              style: GoogleFonts.notoSansTc(
-                fontSize: 12,
-                color: theme.textSecondary,
-                fontWeight: FontWeight.w300,
+            Positioned(
+              bottom: 8,
+              right: 12,
+              child: Text(
+                kana.romaji,
+                style: GoogleFonts.notoSansTc(
+                  fontSize: 12,
+                  color: theme.textSecondary,
+                  fontWeight: FontWeight.w300,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
