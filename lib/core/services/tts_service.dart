@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jp_study_app/core/errors/exceptions.dart';
@@ -31,7 +32,7 @@ class TtsService {
         // isLanguageAvailable can return null
         await _flutterTts.setLanguage("ja-JP");
       } else {
-        print("Error: ja-JP language is not available on this device.");
+        debugPrint("Error: ja-JP language is not available on this device.");
         // 嘗試 fallback 到系統預設，或維持現狀
       }
 

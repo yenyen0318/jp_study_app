@@ -7,6 +7,7 @@ import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_audio_controller.dart';
 import 'package:jp_study_app/core/widgets/zen_toast.dart';
 import 'package:jp_study_app/core/errors/exceptions.dart';
+import 'package:jp_study_app/features/exam/presentation/widgets/exam_scope_dialog.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -107,6 +108,42 @@ class KanaListPage extends ConsumerWidget {
                 sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
               ),
             ],
+          ),
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 16, right: 8),
+        child: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => const ExamScopeDialog(),
+            );
+          },
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              color: zenTheme.bgSurface,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: zenTheme.borderSubtle, width: 0.5),
+              boxShadow: [
+                BoxShadow(
+                  color: zenTheme.textPrimary.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Text(
+              '驗收',
+              style: GoogleFonts.notoSansTc(
+                fontSize: 14,
+                color: zenTheme.textPrimary,
+                fontWeight: FontWeight.w300,
+                letterSpacing: 2.0,
+              ),
+            ),
           ),
         ),
       ),

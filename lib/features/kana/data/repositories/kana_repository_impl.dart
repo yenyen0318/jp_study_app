@@ -83,6 +83,87 @@ class KanaRepositoryImpl implements KanaRepository {
     Kana(id: 'h_n', text: 'ん', romaji: 'n', type: 'hiragana', row: 10, col: 0),
   ];
 
+  static const _katakanaData = [
+    // ア行
+    Kana(id: 'k_a', text: 'ア', romaji: 'a', type: 'katakana', row: 0, col: 0),
+    Kana(id: 'k_i', text: 'イ', romaji: 'i', type: 'katakana', row: 0, col: 1),
+    Kana(id: 'k_u', text: 'ウ', romaji: 'u', type: 'katakana', row: 0, col: 2),
+    Kana(id: 'k_e', text: 'エ', romaji: 'e', type: 'katakana', row: 0, col: 3),
+    Kana(id: 'k_o', text: 'オ', romaji: 'o', type: 'katakana', row: 0, col: 4),
+    // カ行
+    Kana(id: 'k_ka', text: 'カ', romaji: 'ka', type: 'katakana', row: 1, col: 0),
+    Kana(id: 'k_ki', text: 'キ', romaji: 'ki', type: 'katakana', row: 1, col: 1),
+    Kana(id: 'k_ku', text: 'ク', romaji: 'ku', type: 'katakana', row: 1, col: 2),
+    Kana(id: 'k_ke', text: 'ケ', romaji: 'ke', type: 'katakana', row: 1, col: 3),
+    Kana(id: 'k_ko', text: 'コ', romaji: 'ko', type: 'katakana', row: 1, col: 4),
+    // サ行
+    Kana(id: 'k_sa', text: 'サ', romaji: 'sa', type: 'katakana', row: 2, col: 0),
+    Kana(
+      id: 'k_shi',
+      text: 'シ',
+      romaji: 'shi',
+      type: 'katakana',
+      row: 2,
+      col: 1,
+    ),
+    Kana(id: 'k_su', text: 'ス', romaji: 'su', type: 'katakana', row: 2, col: 2),
+    Kana(id: 'k_se', text: 'セ', romaji: 'se', type: 'katakana', row: 2, col: 3),
+    Kana(id: 'k_so', text: 'ソ', romaji: 'so', type: 'katakana', row: 2, col: 4),
+    // タ行
+    Kana(id: 'k_ta', text: 'タ', romaji: 'ta', type: 'katakana', row: 3, col: 0),
+    Kana(
+      id: 'k_chi',
+      text: 'チ',
+      romaji: 'chi',
+      type: 'katakana',
+      row: 3,
+      col: 1,
+    ),
+    Kana(
+      id: 'k_tsu',
+      text: 'ツ',
+      romaji: 'tsu',
+      type: 'katakana',
+      row: 3,
+      col: 2,
+    ),
+    Kana(id: 'k_te', text: 'テ', romaji: 'te', type: 'katakana', row: 3, col: 3),
+    Kana(id: 'k_to', text: 'ト', romaji: 'to', type: 'katakana', row: 3, col: 4),
+    // ナ行
+    Kana(id: 'k_na', text: 'ナ', romaji: 'na', type: 'katakana', row: 4, col: 0),
+    Kana(id: 'k_ni', text: 'ニ', romaji: 'ni', type: 'katakana', row: 4, col: 1),
+    Kana(id: 'k_nu', text: 'ヌ', romaji: 'nu', type: 'katakana', row: 4, col: 2),
+    Kana(id: 'k_ne', text: 'ネ', romaji: 'ne', type: 'katakana', row: 4, col: 3),
+    Kana(id: 'k_no', text: 'ノ', romaji: 'no', type: 'katakana', row: 4, col: 4),
+    // ハ行
+    Kana(id: 'k_ha', text: 'ハ', romaji: 'ha', type: 'katakana', row: 5, col: 0),
+    Kana(id: 'k_hi', text: 'ヒ', romaji: 'hi', type: 'katakana', row: 5, col: 1),
+    Kana(id: 'k_fu', text: 'フ', romaji: 'fu', type: 'katakana', row: 5, col: 2),
+    Kana(id: 'k_he', text: 'ヘ', romaji: 'he', type: 'katakana', row: 5, col: 3),
+    Kana(id: 'k_ho', text: 'ホ', romaji: 'ho', type: 'katakana', row: 5, col: 4),
+    // マ行
+    Kana(id: 'k_ma', text: 'マ', romaji: 'ma', type: 'katakana', row: 6, col: 0),
+    Kana(id: 'k_mi', text: 'ミ', romaji: 'mi', type: 'katakana', row: 6, col: 1),
+    Kana(id: 'k_mu', text: 'ム', romaji: 'mu', type: 'katakana', row: 6, col: 2),
+    Kana(id: 'k_me', text: 'メ', romaji: 'me', type: 'katakana', row: 6, col: 3),
+    Kana(id: 'k_mo', text: 'モ', romaji: 'mo', type: 'katakana', row: 6, col: 4),
+    // ヤ行
+    Kana(id: 'k_ya', text: 'ヤ', romaji: 'ya', type: 'katakana', row: 7, col: 0),
+    Kana(id: 'k_yu', text: 'ユ', romaji: 'yu', type: 'katakana', row: 7, col: 2),
+    Kana(id: 'k_yo', text: 'ヨ', romaji: 'yo', type: 'katakana', row: 7, col: 4),
+    // ラ行
+    Kana(id: 'k_ra', text: 'ラ', romaji: 'ra', type: 'katakana', row: 8, col: 0),
+    Kana(id: 'k_ri', text: 'リ', romaji: 'ri', type: 'katakana', row: 8, col: 1),
+    Kana(id: 'k_ru', text: 'ル', romaji: 'ru', type: 'katakana', row: 8, col: 2),
+    Kana(id: 'k_re', text: 'レ', romaji: 're', type: 'katakana', row: 8, col: 3),
+    Kana(id: 'k_ro', text: 'ロ', romaji: 'ro', type: 'katakana', row: 8, col: 4),
+    // ワ行
+    Kana(id: 'k_wa', text: 'ワ', romaji: 'wa', type: 'katakana', row: 9, col: 0),
+    Kana(id: 'k_wo', text: 'ヲ', romaji: 'wo', type: 'katakana', row: 9, col: 4),
+    // N
+    Kana(id: 'k_n', text: 'ン', romaji: 'n', type: 'katakana', row: 10, col: 0),
+  ];
+
   @override
   Future<List<Kana>> getHiragana() async {
     // 模擬非同步延遲
@@ -91,7 +172,8 @@ class KanaRepositoryImpl implements KanaRepository {
   }
 
   @override
-  Future<List<Kana>> getKatakana() {
-    throw UnimplementedError();
+  Future<List<Kana>> getKatakana() async {
+    await Future.delayed(const Duration(milliseconds: 10));
+    return _katakanaData;
   }
 }

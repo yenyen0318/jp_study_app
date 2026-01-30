@@ -36,7 +36,7 @@ void main() {
 
     // 操作 (Act)
     // 監聽 provider 以觸發 build
-    container.listen(kanaListViewModelProvider, (_, __) {});
+    container.listen(kanaListViewModelProvider, (_, _) {});
     final result = await container.read(kanaListViewModelProvider.future);
 
     // 驗證 (Assert)

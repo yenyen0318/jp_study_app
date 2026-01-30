@@ -6,7 +6,7 @@ part of 'kana_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kanaRepositoryHash() => r'6574865c5858247b7980ddd07e52cd0e6b4dea89';
+String _$kanaRepositoryHash() => r'fa7c6593aaf5527fdf7c89ca7786d9618a20746c';
 
 /// See also [kanaRepository].
 @ProviderFor(kanaRepository)
