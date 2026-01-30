@@ -114,5 +114,11 @@ description: "App UI/UX Design System & Guidelines"
     *   **底部 (Bottom)**：
         *   捲動列表 (ScrollView) 底部必須預留 `padding.bottom` + `24dp`，避免內容被 Home Indicator 遮擋或觸控衝突。
         *   固定底部按鈕 (Sticky Button) 必須包裹在 `SafeArea` (bottom: true) 內，並額外增加 `16dp` 垂直間距。
+    *   **左右 (Horizontal)**：
+        *   **預設開啟**：所有 `SafeArea`, `SliverSafeArea` 必須設定 `left: true` 與 `right: true`（預設值），以避開橫向模式的 Notch 或 Dynamic Island。
+        *   **最小邊距 (Minimum Edge)**：
+            *   即使在無 Notch 裝置上，**所有頁面內容**（背景色除外）左右兩側必須保留至少 **16dp** 的安全間距，避免內容貼齊螢幕邊緣。
+            *   實作建議：使用 `SliverPadding(padding: EdgeInsets.symmetric(horizontal: max(safeArea, 16)))` 或確保 `Container` margin 至少為 16dp。
+        *   **寬螢幕適配**：在 Tablet/Web 上，應結合「最大內容寬度 (600dp)」與 `Center` 佈局，而非單純依賴 Safe Area。
 *   **邊界避讓 (Edge Constraints)**：
     *   在大曲面螢幕手機上，關鍵操作元件（如按鈕）應距離實體邊緣至少 `16dp`，避免誤觸。

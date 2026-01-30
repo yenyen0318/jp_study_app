@@ -38,34 +38,42 @@ class KanaListPage extends ConsumerWidget {
                 ),
               ),
 
-              kanaListAsync.when(
-                data: (kanaList) => SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 100,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 1.0,
-                  ),
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    final kana = kanaList[index];
-                    return _KanaCard(kana: kana, theme: zenTheme);
-                  }, childCount: kanaList.length),
-                ),
-                loading: () => SliverToBoxAdapter(
-                  child: Center(
-                    child: Text(
-                      '準備中...',
-                      style: GoogleFonts.notoSansTc(
-                        color: zenTheme.textSecondary,
+              SliverSafeArea(
+                top: false,
+                bottom: false,
+                sliver: SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  sliver: kanaListAsync.when(
+                    data: (kanaList) => SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 100,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 1.0,
+                          ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final kana = kanaList[index];
+                        return _KanaCard(kana: kana, theme: zenTheme);
+                      }, childCount: kanaList.length),
+                    ),
+                    loading: () => SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          '準備中...',
+                          style: GoogleFonts.notoSansTc(
+                            color: zenTheme.textSecondary,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                error: (err, stack) => SliverToBoxAdapter(
-                  child: Center(
-                    child: Text(
-                      '發生錯誤',
-                      style: GoogleFonts.notoSansTc(color: zenTheme.error),
+                    error: (err, stack) => SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          '發生錯誤',
+                          style: GoogleFonts.notoSansTc(color: zenTheme.error),
+                        ),
+                      ),
                     ),
                   ),
                 ),
