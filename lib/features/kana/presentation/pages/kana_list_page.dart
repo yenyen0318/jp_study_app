@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:jp_study_app/core/theme/theme.dart';
+import 'package:jp_study_app/features/kana/presentation/providers/kana_view_model.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+
+class KanaListPage extends ConsumerWidget {
+  const KanaListPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final zenTheme = Theme.of(context).extension<ZenTheme>()!;
+    final kanaListAsync = ref.watch(kanaListViewModelProvider);
+
+    return Scaffold(
+      backgroundColor: zenTheme.bgPrimary,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    '五十音', // 50 Sounds
+                    style: GoogleFonts.notoSansTc(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w300, // Light/Zen feel
+                      color: zenTheme.textPrimary,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+              const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+              kanaListAsync.when(
+                data: (kanaList) => SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 100,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 1.0,
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final kana = kanaList[index];
+                    return _KanaCard(kana: kana, theme: zenTheme);
+                  }, childCount: kanaList.length),
+                ),
+                loading: () => SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      '準備中...',
+                      style: GoogleFonts.notoSansTc(
+                        color: zenTheme.textSecondary,
+                      ),
+                    ),
+                  ),
+                ),
+                error: (err, stack) => SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      '發生錯誤',
+                      style: GoogleFonts.notoSansTc(color: zenTheme.error),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _KanaCard extends StatelessWidget {
+  final Kana kana;
+  final ZenTheme theme;
+
+  const _KanaCard({required this.kana, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.bgSurface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.borderSubtle, width: 0.5),
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: Text(
+              kana.text,
+              style: GoogleFonts.notoSansJp(
+                fontSize: 32,
+                height: 1.6, // For potential rubies/spacing
+                color: theme.textPrimary,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            right: 12,
+            child: Text(
+              kana.romaji,
+              style: GoogleFonts.notoSansTc(
+                fontSize: 12,
+                color: theme.textSecondary,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
