@@ -54,7 +54,7 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          firebase appdistribution:distribute android/app/build/outputs/bundle/release/app-release.aab \
+          firebase appdistribution:distribute build/app/outputs/bundle/release/app-release.aab \
             --app ${{ secrets.FIREBASE_ANDROID_APP_ID }} \
             --groups testers \
             --release-notes "New Release ${{ github.ref_name }}" \
