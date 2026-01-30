@@ -54,7 +54,7 @@ jobs:
           packageName: com.yenyen0318.jpstudy
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: internal
-          status: completed
+          status: draft
 
       - name: Cleanup Keystore
         if: always()
