@@ -24,8 +24,23 @@ void main() {
       expect(first.row, 0);
       expect(first.col, 0);
 
-      // 驗證基本數量 (46 個基礎音)
-      expect(result.length, 46);
+      // 驗證總數量 (46基礎 + 25濁/半濁 + 33拗音 + 5重複 = 109)
+      expect(result.length, 109);
+    });
+
+    test('getKatakana returns correct list of Katakana', () async {
+      final result = await repository.getKatakana();
+
+      expect(result, isA<List<Kana>>());
+      expect(result.isNotEmpty, true);
+
+      // 驗證第一項 (ア)
+      final first = result.first;
+      expect(first.text, 'ア');
+      expect(first.type, 'katakana');
+
+      // 驗證總數量 (同平假名)
+      expect(result.length, 109);
     });
   });
 }

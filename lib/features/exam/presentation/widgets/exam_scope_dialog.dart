@@ -28,7 +28,10 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
     'や行',
     'ら行',
     'わ行',
-    'ん',
+    '鼻音 (ん)',
+    '濁音 (が行~ば行)',
+    '半濁音 (ぱ行)',
+    '拗音 (きゃ~ぴょ)',
   ];
 
   void _toggleRow(int index) {
@@ -147,9 +150,26 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
+                  // 處理行索引映射：將 UI 上的索引轉換為資料庫中實際的 row 索引
+                  final Set<int> actualRows = {};
+                  for (final index in _selectedRows) {
+                    if (index == 11) {
+                      // 濁音包含 が、ざ、だ、ば 行 (11, 12, 13, 14)
+                      actualRows.addAll([11, 12, 13, 14]);
+                    } else if (index == 12) {
+                      // 半濁音包含 ぱ 行 (15)
+                      actualRows.add(15);
+                    } else if (index == 13) {
+                      // 拗音包含 row 16-26
+                      actualRows.addAll(List.generate(11, (i) => i + 16));
+                    } else {
+                      actualRows.add(index);
+                    }
+                  }
+
                   final scope = ExamScope(
                     types: _selectedTypes,
-                    rows: _selectedRows,
+                    rows: actualRows.toList(),
                   );
                   ref.read(examControllerProvider.notifier).startExam(scope);
                   context.pop();

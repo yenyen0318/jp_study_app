@@ -30,9 +30,14 @@ class ExamRepositoryImpl implements ExamRepository {
       allPossibleKana.addAll(await _kanaRepository.getKatakana());
     }
 
-    // 根據行 (row) 過濾
+    // 根據行 (row) 過濾，同時排除重複音
     final filteredKana = allPossibleKana
-        .where((k) => scope.rows.contains(k.row))
+        .where((k) => scope.rows.contains(k.row) && !k.isDuplicate)
+        .toList();
+
+    // 在生成錯誤選項時也排除重複音
+    final uniqueAllPossibleKana = allPossibleKana
+        .where((k) => !k.isDuplicate)
         .toList();
 
     if (filteredKana.isEmpty) return [];
@@ -47,7 +52,7 @@ class ExamRepositoryImpl implements ExamRepository {
 
       // 生成選項 (1 正確 + 3 錯誤)
       // 錯誤選項應該盡量是同類型的
-      final sameTypeKana = allPossibleKana
+      final sameTypeKana = uniqueAllPossibleKana
           .where((k) => k.type == kana.type && k.id != kana.id)
           .toList();
       sameTypeKana.shuffle(_random);

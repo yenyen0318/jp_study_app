@@ -12,6 +12,7 @@ class Kana with _$Kana {
     required String type,
     required int row,
     required int col,
+    @Default(false) bool isDuplicate,
   }) = _Kana;
 
   factory Kana.fromJson(Map<String, dynamic> json) => _$KanaFromJson(json);

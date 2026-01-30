@@ -13,6 +13,7 @@ _$KanaImpl _$$KanaImplFromJson(Map<String, dynamic> json) => _$KanaImpl(
   type: json['type'] as String,
   row: (json['row'] as num).toInt(),
   col: (json['col'] as num).toInt(),
+  isDuplicate: json['isDuplicate'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
@@ -23,4 +24,5 @@ Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
       'type': instance.type,
       'row': instance.row,
       'col': instance.col,
+      'isDuplicate': instance.isDuplicate,
     };

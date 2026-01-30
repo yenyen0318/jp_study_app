@@ -27,6 +27,7 @@ mixin _$Kana {
   String get type => throw _privateConstructorUsedError;
   int get row => throw _privateConstructorUsedError;
   int get col => throw _privateConstructorUsedError;
+  bool get isDuplicate => throw _privateConstructorUsedError;
 
   /// Serializes this Kana to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $KanaCopyWith<$Res> {
     String type,
     int row,
     int col,
+    bool isDuplicate,
   });
 }
 
@@ -73,6 +75,7 @@ class _$KanaCopyWithImpl<$Res, $Val extends Kana>
     Object? type = null,
     Object? row = null,
     Object? col = null,
+    Object? isDuplicate = null,
   }) {
     return _then(
       _value.copyWith(
@@ -100,6 +103,10 @@ class _$KanaCopyWithImpl<$Res, $Val extends Kana>
                 ? _value.col
                 : col // ignore: cast_nullable_to_non_nullable
                       as int,
+            isDuplicate: null == isDuplicate
+                ? _value.isDuplicate
+                : isDuplicate // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -121,6 +128,7 @@ abstract class _$$KanaImplCopyWith<$Res> implements $KanaCopyWith<$Res> {
     String type,
     int row,
     int col,
+    bool isDuplicate,
   });
 }
 
@@ -142,6 +150,7 @@ class __$$KanaImplCopyWithImpl<$Res>
     Object? type = null,
     Object? row = null,
     Object? col = null,
+    Object? isDuplicate = null,
   }) {
     return _then(
       _$KanaImpl(
@@ -169,6 +178,10 @@ class __$$KanaImplCopyWithImpl<$Res>
             ? _value.col
             : col // ignore: cast_nullable_to_non_nullable
                   as int,
+        isDuplicate: null == isDuplicate
+            ? _value.isDuplicate
+            : isDuplicate // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -184,6 +197,7 @@ class _$KanaImpl implements _Kana {
     required this.type,
     required this.row,
     required this.col,
+    this.isDuplicate = false,
   });
 
   factory _$KanaImpl.fromJson(Map<String, dynamic> json) =>
@@ -201,10 +215,13 @@ class _$KanaImpl implements _Kana {
   final int row;
   @override
   final int col;
+  @override
+  @JsonKey()
+  final bool isDuplicate;
 
   @override
   String toString() {
-    return 'Kana(id: $id, text: $text, romaji: $romaji, type: $type, row: $row, col: $col)';
+    return 'Kana(id: $id, text: $text, romaji: $romaji, type: $type, row: $row, col: $col, isDuplicate: $isDuplicate)';
   }
 
   @override
@@ -217,13 +234,15 @@ class _$KanaImpl implements _Kana {
             (identical(other.romaji, romaji) || other.romaji == romaji) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.row, row) || other.row == row) &&
-            (identical(other.col, col) || other.col == col));
+            (identical(other.col, col) || other.col == col) &&
+            (identical(other.isDuplicate, isDuplicate) ||
+                other.isDuplicate == isDuplicate));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, text, romaji, type, row, col);
+      Object.hash(runtimeType, id, text, romaji, type, row, col, isDuplicate);
 
   /// Create a copy of Kana
   /// with the given fields replaced by the non-null parameter values.
@@ -247,6 +266,7 @@ abstract class _Kana implements Kana {
     required final String type,
     required final int row,
     required final int col,
+    final bool isDuplicate,
   }) = _$KanaImpl;
 
   factory _Kana.fromJson(Map<String, dynamic> json) = _$KanaImpl.fromJson;
@@ -263,6 +283,8 @@ abstract class _Kana implements Kana {
   int get row;
   @override
   int get col;
+  @override
+  bool get isDuplicate;
 
   /// Create a copy of Kana
   /// with the given fields replaced by the non-null parameter values.

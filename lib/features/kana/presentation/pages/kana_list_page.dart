@@ -57,48 +57,85 @@ class KanaListPage extends ConsumerWidget {
               SliverSafeArea(
                 top: false,
                 bottom: false,
-                sliver: SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: kanaListAsync.when(
-                    data: (kanaList) => SliverGrid(
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 100,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            childAspectRatio: 1.0,
-                          ),
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        final kana = kanaList[index];
-                        return _KanaCard(
-                          kana: kana,
-                          theme: zenTheme,
-                          onTap: () {
-                            ref
-                                .read(kanaAudioControllerProvider.notifier)
-                                .play(kana.text);
-                          },
-                        );
-                      }, childCount: kanaList.length),
-                    ),
-                    loading: () => SliverToBoxAdapter(
-                      child: Center(
-                        child: Text(
-                          '準備中...',
-                          style: GoogleFonts.notoSansTc(
-                            color: zenTheme.textSecondary,
-                          ),
-                        ),
+                sliver: kanaListAsync.when(
+                  data: (kanaList) {
+                    final seion = kanaList
+                        .where((k) => k.row >= 0 && k.row <= 9)
+                        .toList();
+                    final bion = kanaList.where((k) => k.row == 10).toList();
+                    final dakuon = kanaList
+                        .where((k) => k.row >= 11 && k.row <= 14)
+                        .toList();
+                    final handakuon = kanaList
+                        .where((k) => k.row == 15)
+                        .toList();
+                    final youon = kanaList
+                        .where((k) => k.row >= 16 && k.row <= 26)
+                        .toList();
+
+                    return SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          if (seion.isNotEmpty) ...[
+                            _CategoryHeader(title: '清音', theme: zenTheme),
+                            const SizedBox(height: 16),
+                            _KanaGrid(
+                              kanaList: seion,
+                              ref: ref,
+                              zenTheme: zenTheme,
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+                          if (bion.isNotEmpty) ...[
+                            _CategoryHeader(title: '鼻音', theme: zenTheme),
+                            const SizedBox(height: 16),
+                            _KanaGrid(
+                              kanaList: bion,
+                              ref: ref,
+                              zenTheme: zenTheme,
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+                          if (dakuon.isNotEmpty) ...[
+                            _CategoryHeader(title: '濁音', theme: zenTheme),
+                            const SizedBox(height: 16),
+                            _KanaGrid(
+                              kanaList: dakuon,
+                              ref: ref,
+                              zenTheme: zenTheme,
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+                          if (handakuon.isNotEmpty) ...[
+                            _CategoryHeader(title: '半濁音', theme: zenTheme),
+                            const SizedBox(height: 16),
+                            _KanaGrid(
+                              kanaList: handakuon,
+                              ref: ref,
+                              zenTheme: zenTheme,
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+                          if (youon.isNotEmpty) ...[
+                            _CategoryHeader(title: '拗音', theme: zenTheme),
+                            const SizedBox(height: 16),
+                            _KanaGrid(
+                              kanaList: youon,
+                              ref: ref,
+                              zenTheme: zenTheme,
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+                        ]),
                       ),
-                    ),
-                    error: (err, stack) => SliverToBoxAdapter(
-                      child: Center(
-                        child: Text(
-                          '發生錯誤',
-                          style: GoogleFonts.notoSansTc(color: zenTheme.error),
-                        ),
-                      ),
-                    ),
+                    );
+                  },
+                  loading: () => const SliverFillRemaining(
+                    child: Center(child: Text('準備中...')),
+                  ),
+                  error: (err, stack) => const SliverFillRemaining(
+                    child: Center(child: Text('發生錯誤')),
                   ),
                 ),
               ),
@@ -151,6 +188,63 @@ class KanaListPage extends ConsumerWidget {
   }
 }
 
+class _CategoryHeader extends StatelessWidget {
+  final String title;
+  final ZenTheme theme;
+
+  const _CategoryHeader({required this.title, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: GoogleFonts.notoSansTc(
+        fontSize: 14,
+        fontWeight: FontWeight.w300,
+        color: theme.textSecondary,
+        letterSpacing: 4.0,
+      ),
+    );
+  }
+}
+
+class _KanaGrid extends StatelessWidget {
+  final List<Kana> kanaList;
+  final WidgetRef ref;
+  final ZenTheme zenTheme;
+
+  const _KanaGrid({
+    required this.kanaList,
+    required this.ref,
+    required this.zenTheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 100,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        childAspectRatio: 1.0,
+      ),
+      itemCount: kanaList.length,
+      itemBuilder: (context, index) {
+        final kana = kanaList[index];
+        return _KanaCard(
+          kana: kana,
+          theme: zenTheme,
+          onTap: () {
+            ref.read(kanaAudioControllerProvider.notifier).play(kana.text);
+          },
+        );
+      },
+    );
+  }
+}
+
 class _KanaCard extends StatelessWidget {
   final Kana kana;
   final ZenTheme theme;
@@ -177,7 +271,9 @@ class _KanaCard extends StatelessWidget {
                 style: GoogleFonts.notoSansJp(
                   fontSize: 32,
                   height: 1.6, // 預留標音/間距空間
-                  color: theme.textPrimary,
+                  color: kana.isDuplicate
+                      ? theme.textPrimary.withValues(alpha: 0.2)
+                      : theme.textPrimary,
                 ),
               ),
             ),
@@ -188,7 +284,9 @@ class _KanaCard extends StatelessWidget {
                 kana.romaji,
                 style: GoogleFonts.notoSansTc(
                   fontSize: 12,
-                  color: theme.textSecondary,
+                  color: kana.isDuplicate
+                      ? theme.textSecondary.withValues(alpha: 0.2)
+                      : theme.textSecondary,
                   fontWeight: FontWeight.w300,
                 ),
               ),
