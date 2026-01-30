@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAl9QBSgmvn_fJzGKTqyVAggEshtmcEIVY',
-    appId: '1:401639459752:android:35c7f2178f53b62ff46b9d',
+    appId: '1:401639459752:android:4e452335501d3ffaf46b9d',
     messagingSenderId: '401639459752',
     projectId: 'jp-study-app',
     storageBucket: 'jp-study-app.firebasestorage.app',
@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDwBxztYEnwMgld5FOeZ7BxZJtKkgMsUbg',
-    appId: '1:401639459752:ios:764898ba56f77830f46b9d',
+    appId: '1:401639459752:ios:6a7235d757dd4104f46b9d',
     messagingSenderId: '401639459752',
     projectId: 'jp-study-app',
     storageBucket: 'jp-study-app.firebasestorage.app',
-    iosBundleId: 'com.example.jpStudyApp',
+    iosBundleId: 'com.yenyen0318.jpstudy',
   );
+
 }
