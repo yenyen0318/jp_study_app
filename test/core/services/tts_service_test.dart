@@ -28,11 +28,24 @@ void main() {
   });
 
   test('TtsService calls speak on flutter_tts', () async {
+    // 模擬必要的回傳值，避免 _init 卡住
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('flutter_tts'), (
+          MethodCall methodCall,
+        ) async {
+          log.add(methodCall);
+          if (methodCall.method == 'isLanguageAvailable') {
+            return true;
+          }
+          return 1;
+        });
+
+    // 重新初始化 service 以觸發 init logic
+    ttsService = TtsService();
+
     await ttsService.speak('あ');
 
     // 驗證 speak 方法是否在 platform channel 上被呼叫
-    // 注意：初始化呼叫 (setLanguage 等) 也可能出現在日誌中，視時機而定
-    // 我們檢查 "speak" 是否存在於日誌中
     expect(log.any((call) => call.method == 'speak'), isTrue);
 
     final speakCall = log.firstWhere((call) => call.method == 'speak');
@@ -40,12 +53,20 @@ void main() {
   });
 
   test('TtsService initializes with correct settings', () async {
-    // 我們預期 setLanguage, setSpeechRate, setVolume, setPitch 會被呼叫
-    // 由於 _init 是在建構函式中呼叫且為非同步，等待一下或直接檢查日誌
-    // 在真實的非同步建構函式單元測試中，我們可能需要等待 init 完成的方法
-    // 但在此簡單案例中，我們只需檢查呼叫是否最終被發送
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(const MethodChannel('flutter_tts'), (
+          MethodCall methodCall,
+        ) async {
+          log.add(methodCall);
+          if (methodCall.method == 'isLanguageAvailable') {
+            return true;
+          }
+          return 1;
+        });
 
-    // 呼叫一個方法以確保 microtasks 執行
+    ttsService = TtsService();
+
+    // 呼叫 speak 以確保 _init 完成 (因為 speak 會 await _initCompleter)
     await ttsService.speak('test');
 
     expect(
@@ -54,6 +75,16 @@ void main() {
       ),
       isTrue,
     );
-    expect(log.any((call) => call.method == 'setSpeechRate'), isTrue);
+    expect(
+      log.any(
+        (call) => call.method == 'setSpeechRate' && call.arguments == 0.5,
+      ),
+      isTrue,
+    );
+    // awaitSpeakCompletion 應該也要被呼叫
+    expect(log.any((call) => call.method == 'awaitSpeakCompletion'), isTrue);
+
+    // isLanguageAvailable 應該被呼叫
+    expect(log.any((call) => call.method == 'isLanguageAvailable'), isTrue);
   });
 }
