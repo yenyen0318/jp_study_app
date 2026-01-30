@@ -1,0 +1,37 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "jp_study_app (Debug)",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "jp_study_app (iOS)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "iphone"
+            ]
+        },
+        {
+            "name": "jp_study_app (Android)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "android"
+            ]
+        },
+        {
+            "name": "jp_study_app (Release)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
