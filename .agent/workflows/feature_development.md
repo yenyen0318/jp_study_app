@@ -24,7 +24,7 @@ description: 標準化新功能開發流程 (Standard Feature Development Flow)
 > 參照 Skill: `ui_design_system`
 
 - [ ] **無圖示檢查**：確認介面設計未使用 Icon，僅使用文字與顏色。
-- [ ] **色彩與間距**：確認使用 `color.bg.primary` 等語意化變數，以及 `24dp` 邊距。
+- [ ] **色彩與間距**：確認使用 `color.bg.primary` 等語意化變數，以及 `16dp` 邊距。
 - [ ] **元件規劃**：確認是否可重用現有 Zen 元件，或需新建 Widget。
 
 ## 4. 測試先行 (TDD - Test Driven Development)

@@ -14,6 +14,12 @@ _$KanaImpl _$$KanaImplFromJson(Map<String, dynamic> json) => _$KanaImpl(
   row: (json['row'] as num).toInt(),
   col: (json['col'] as num).toInt(),
   isDuplicate: json['isDuplicate'] as bool? ?? false,
+  mnemonic: json['mnemonic'] as String?,
+  similarKanaIds:
+      (json['similarKanaIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
@@ -25,4 +31,6 @@ Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
       'row': instance.row,
       'col': instance.col,
       'isDuplicate': instance.isDuplicate,
+      'mnemonic': instance.mnemonic,
+      'similarKanaIds': instance.similarKanaIds,
     };

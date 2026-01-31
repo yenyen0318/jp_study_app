@@ -28,6 +28,8 @@ mixin _$Kana {
   int get row => throw _privateConstructorUsedError;
   int get col => throw _privateConstructorUsedError;
   bool get isDuplicate => throw _privateConstructorUsedError;
+  String? get mnemonic => throw _privateConstructorUsedError;
+  List<String> get similarKanaIds => throw _privateConstructorUsedError;
 
   /// Serializes this Kana to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,6 +53,8 @@ abstract class $KanaCopyWith<$Res> {
     int row,
     int col,
     bool isDuplicate,
+    String? mnemonic,
+    List<String> similarKanaIds,
   });
 }
 
@@ -76,6 +80,8 @@ class _$KanaCopyWithImpl<$Res, $Val extends Kana>
     Object? row = null,
     Object? col = null,
     Object? isDuplicate = null,
+    Object? mnemonic = freezed,
+    Object? similarKanaIds = null,
   }) {
     return _then(
       _value.copyWith(
@@ -107,6 +113,14 @@ class _$KanaCopyWithImpl<$Res, $Val extends Kana>
                 ? _value.isDuplicate
                 : isDuplicate // ignore: cast_nullable_to_non_nullable
                       as bool,
+            mnemonic: freezed == mnemonic
+                ? _value.mnemonic
+                : mnemonic // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            similarKanaIds: null == similarKanaIds
+                ? _value.similarKanaIds
+                : similarKanaIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
           )
           as $Val,
     );
@@ -129,6 +143,8 @@ abstract class _$$KanaImplCopyWith<$Res> implements $KanaCopyWith<$Res> {
     int row,
     int col,
     bool isDuplicate,
+    String? mnemonic,
+    List<String> similarKanaIds,
   });
 }
 
@@ -151,6 +167,8 @@ class __$$KanaImplCopyWithImpl<$Res>
     Object? row = null,
     Object? col = null,
     Object? isDuplicate = null,
+    Object? mnemonic = freezed,
+    Object? similarKanaIds = null,
   }) {
     return _then(
       _$KanaImpl(
@@ -182,6 +200,14 @@ class __$$KanaImplCopyWithImpl<$Res>
             ? _value.isDuplicate
             : isDuplicate // ignore: cast_nullable_to_non_nullable
                   as bool,
+        mnemonic: freezed == mnemonic
+            ? _value.mnemonic
+            : mnemonic // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        similarKanaIds: null == similarKanaIds
+            ? _value._similarKanaIds
+            : similarKanaIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
       ),
     );
   }
@@ -198,7 +224,9 @@ class _$KanaImpl implements _Kana {
     required this.row,
     required this.col,
     this.isDuplicate = false,
-  });
+    this.mnemonic,
+    final List<String> similarKanaIds = const [],
+  }) : _similarKanaIds = similarKanaIds;
 
   factory _$KanaImpl.fromJson(Map<String, dynamic> json) =>
       _$$KanaImplFromJson(json);
@@ -218,10 +246,20 @@ class _$KanaImpl implements _Kana {
   @override
   @JsonKey()
   final bool isDuplicate;
+  @override
+  final String? mnemonic;
+  final List<String> _similarKanaIds;
+  @override
+  @JsonKey()
+  List<String> get similarKanaIds {
+    if (_similarKanaIds is EqualUnmodifiableListView) return _similarKanaIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_similarKanaIds);
+  }
 
   @override
   String toString() {
-    return 'Kana(id: $id, text: $text, romaji: $romaji, type: $type, row: $row, col: $col, isDuplicate: $isDuplicate)';
+    return 'Kana(id: $id, text: $text, romaji: $romaji, type: $type, row: $row, col: $col, isDuplicate: $isDuplicate, mnemonic: $mnemonic, similarKanaIds: $similarKanaIds)';
   }
 
   @override
@@ -236,13 +274,29 @@ class _$KanaImpl implements _Kana {
             (identical(other.row, row) || other.row == row) &&
             (identical(other.col, col) || other.col == col) &&
             (identical(other.isDuplicate, isDuplicate) ||
-                other.isDuplicate == isDuplicate));
+                other.isDuplicate == isDuplicate) &&
+            (identical(other.mnemonic, mnemonic) ||
+                other.mnemonic == mnemonic) &&
+            const DeepCollectionEquality().equals(
+              other._similarKanaIds,
+              _similarKanaIds,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, text, romaji, type, row, col, isDuplicate);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    text,
+    romaji,
+    type,
+    row,
+    col,
+    isDuplicate,
+    mnemonic,
+    const DeepCollectionEquality().hash(_similarKanaIds),
+  );
 
   /// Create a copy of Kana
   /// with the given fields replaced by the non-null parameter values.
@@ -267,6 +321,8 @@ abstract class _Kana implements Kana {
     required final int row,
     required final int col,
     final bool isDuplicate,
+    final String? mnemonic,
+    final List<String> similarKanaIds,
   }) = _$KanaImpl;
 
   factory _Kana.fromJson(Map<String, dynamic> json) = _$KanaImpl.fromJson;
@@ -285,6 +341,10 @@ abstract class _Kana implements Kana {
   int get col;
   @override
   bool get isDuplicate;
+  @override
+  String? get mnemonic;
+  @override
+  List<String> get similarKanaIds;
 
   /// Create a copy of Kana
   /// with the given fields replaced by the non-null parameter values.

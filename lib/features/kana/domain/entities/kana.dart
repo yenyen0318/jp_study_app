@@ -13,6 +13,8 @@ class Kana with _$Kana {
     required int row,
     required int col,
     @Default(false) bool isDuplicate,
+    String? mnemonic,
+    @Default([]) List<String> similarKanaIds,
   }) = _Kana;
 
   factory Kana.fromJson(Map<String, dynamic> json) => _$KanaFromJson(json);

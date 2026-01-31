@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-01-31
+
+### Added
+- 實作「假名詳細資訊面板」(KanaDetailSheet)，支援助記小撇步與相似字對比
+- 補完平假名 46 個基礎假名的「助記小撇步 (Mnemonics)」內容
+- 新增五十音列表分類篩選器 (Category Selector)，支援清音、濁音、半濁音與拗音切換
+
+### Changed
+- 擴充 `Kana` 資料模型，支援 `mnemonic` 與 `similarKanaIds` 欄位
+- 優化平假名列表頁面，點擊卡片改為優雅彈出詳細資訊，而非僅發音
+
+### Verified
+- 已補齊相關單元測試與 Widget 驗證測試，全系統測試通過率 100%
+
 ## [0.1.0] - 2026-01-31
 
 ### Added

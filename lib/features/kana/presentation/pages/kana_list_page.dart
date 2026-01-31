@@ -8,6 +8,8 @@ import 'package:jp_study_app/features/kana/presentation/providers/kana_audio_con
 import 'package:jp_study_app/core/widgets/zen_toast.dart';
 import 'package:jp_study_app/core/errors/exceptions.dart';
 import 'package:jp_study_app/features/exam/presentation/widgets/exam_scope_dialog.dart';
+import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
+import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -16,6 +18,7 @@ class KanaListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final zenTheme = Theme.of(context).extension<ZenTheme>()!;
     final kanaListAsync = ref.watch(kanaListViewModelProvider);
+    final selectedCategory = ref.watch(kanaCategoryFilterProvider);
 
     // 監聽音效錯誤狀態
     ref.listen<AsyncValue<void>>(kanaAudioControllerProvider, (previous, next) {
@@ -41,14 +44,29 @@ class KanaListPage extends ConsumerWidget {
                 sliver: SliverPadding(
                   padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                   sliver: SliverToBoxAdapter(
-                    child: Text(
-                      '五十音', // 50 音列表
-                      style: GoogleFonts.notoSansTc(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w300, // 輕盈/禪意風格
-                        color: zenTheme.textPrimary,
-                        letterSpacing: 2.0,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '五十音',
+                          style: GoogleFonts.notoSansTc(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w300,
+                            color: zenTheme.textPrimary,
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _CategorySelector(
+                          selectedCategory: selectedCategory,
+                          onCategorySelected: (category) {
+                            ref
+                                .read(kanaCategoryFilterProvider.notifier)
+                                .setFilter(category);
+                          },
+                          theme: zenTheme,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -73,55 +91,73 @@ class KanaListPage extends ConsumerWidget {
                         .where((k) => k.row >= 16 && k.row <= 26)
                         .toList();
 
+                    final showSeion =
+                        selectedCategory == KanaCategory.all ||
+                        selectedCategory == KanaCategory.seion;
+                    final showDakuon =
+                        selectedCategory == KanaCategory.all ||
+                        selectedCategory == KanaCategory.dakuon;
+                    final showHandakuon =
+                        selectedCategory == KanaCategory.all ||
+                        selectedCategory == KanaCategory.handakuon;
+                    final showYouon =
+                        selectedCategory == KanaCategory.all ||
+                        selectedCategory == KanaCategory.youon;
+
                     return SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       sliver: SliverList(
                         delegate: SliverChildListDelegate([
-                          if (seion.isNotEmpty) ...[
+                          if (showSeion && seion.isNotEmpty) ...[
                             _CategoryHeader(title: '清音', theme: zenTheme),
                             const SizedBox(height: 16),
                             _KanaGrid(
                               kanaList: seion,
+                              allKana: kanaList,
                               ref: ref,
                               zenTheme: zenTheme,
                             ),
                             const SizedBox(height: 32),
                           ],
-                          if (bion.isNotEmpty) ...[
+                          if (showSeion && bion.isNotEmpty) ...[
                             _CategoryHeader(title: '鼻音', theme: zenTheme),
                             const SizedBox(height: 16),
                             _KanaGrid(
                               kanaList: bion,
+                              allKana: kanaList,
                               ref: ref,
                               zenTheme: zenTheme,
                             ),
                             const SizedBox(height: 32),
                           ],
-                          if (dakuon.isNotEmpty) ...[
+                          if (showDakuon && dakuon.isNotEmpty) ...[
                             _CategoryHeader(title: '濁音', theme: zenTheme),
                             const SizedBox(height: 16),
                             _KanaGrid(
                               kanaList: dakuon,
+                              allKana: kanaList,
                               ref: ref,
                               zenTheme: zenTheme,
                             ),
                             const SizedBox(height: 32),
                           ],
-                          if (handakuon.isNotEmpty) ...[
+                          if (showHandakuon && handakuon.isNotEmpty) ...[
                             _CategoryHeader(title: '半濁音', theme: zenTheme),
                             const SizedBox(height: 16),
                             _KanaGrid(
                               kanaList: handakuon,
+                              allKana: kanaList,
                               ref: ref,
                               zenTheme: zenTheme,
                             ),
                             const SizedBox(height: 32),
                           ],
-                          if (youon.isNotEmpty) ...[
+                          if (showYouon && youon.isNotEmpty) ...[
                             _CategoryHeader(title: '拗音', theme: zenTheme),
                             const SizedBox(height: 16),
                             _KanaGrid(
                               kanaList: youon,
+                              allKana: kanaList,
                               ref: ref,
                               zenTheme: zenTheme,
                             ),
@@ -188,6 +224,56 @@ class KanaListPage extends ConsumerWidget {
   }
 }
 
+class _CategorySelector extends StatelessWidget {
+  final KanaCategory selectedCategory;
+  final Function(KanaCategory) onCategorySelected;
+  final ZenTheme theme;
+
+  const _CategorySelector({
+    required this.selectedCategory,
+    required this.onCategorySelected,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: KanaCategory.values.map((category) {
+          final isSelected = category == selectedCategory;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+              label: Text(
+                category.label,
+                style: GoogleFonts.notoSansTc(
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+                  color: isSelected ? theme.bgPrimary : theme.textSecondary,
+                ),
+              ),
+              selected: isSelected,
+              onSelected: (_) => onCategorySelected(category),
+              selectedColor: theme.textPrimary,
+              backgroundColor: theme.bgSurface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: isSelected ? Colors.transparent : theme.borderSubtle,
+                  width: 0.5,
+                ),
+              ),
+              showCheckmark: false,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
 class _CategoryHeader extends StatelessWidget {
   final String title;
   final ZenTheme theme;
@@ -210,11 +296,13 @@ class _CategoryHeader extends StatelessWidget {
 
 class _KanaGrid extends StatelessWidget {
   final List<Kana> kanaList;
+  final List<Kana> allKana;
   final WidgetRef ref;
   final ZenTheme zenTheme;
 
   const _KanaGrid({
     required this.kanaList,
+    required this.allKana,
     required this.ref,
     required this.zenTheme,
   });
@@ -238,6 +326,22 @@ class _KanaGrid extends StatelessWidget {
           theme: zenTheme,
           onTap: () {
             ref.read(kanaAudioControllerProvider.notifier).play(kana.text);
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              isScrollControlled: true,
+              builder: (context) => KanaDetailSheet(
+                kana: kana,
+                similarKana: allKana
+                    .where((k) => kana.similarKanaIds.contains(k.id))
+                    .toList(),
+                onPlayAudio: () {
+                  ref
+                      .read(kanaAudioControllerProvider.notifier)
+                      .play(kana.text);
+                },
+              ),
+            );
           },
         );
       },
