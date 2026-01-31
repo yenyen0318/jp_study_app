@@ -49,5 +49,6 @@ class ExamScope with _$ExamScope {
   const factory ExamScope({
     required List<String> types, // ['hiragana', 'katakana']
     required List<int> rows, // [0, 1, 2...] 代表 あ行, か行...
+    @Default(false) bool isRandomSampling, // 是否隨機抽樣（預設完整覆蓋）
   }) = _ExamScope;
 }

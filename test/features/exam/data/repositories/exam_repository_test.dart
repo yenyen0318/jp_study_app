@@ -51,7 +51,7 @@ void main() {
       col: 0,
     );
 
-    test('應該優先選擇相似字作為干擾項', () async {
+    test('應該只從驗收範圍內選擇干擾項', () async {
       // Arrange
       final allHiragana = [kanaNu, kanaMe, kanaNe, kanaA];
       when(
@@ -59,7 +59,12 @@ void main() {
       ).thenAnswer((_) async => allHiragana);
       when(() => mockKanaRepository.getKatakana()).thenAnswer((_) async => []);
 
-      final scope = ExamScope(types: ['hiragana'], rows: [4]); // な行 (包含 ぬ, ね)
+      // 使用隨機抽樣模式確保只生成 1 題
+      final scope = ExamScope(
+        types: ['hiragana'],
+        rows: [4], // な行 (包含 ぬ, ね)
+        isRandomSampling: true,
+      );
 
       // Act
       final questions = await examRepository.generateExam(
@@ -71,20 +76,20 @@ void main() {
       expect(questions.length, 1);
       final question = questions.first;
 
-      // 不管抽到的是 nu 還是 ne，只要它有相似字，選項中就應該包含那些相似字
-      final correctKana = question.correctKana;
-      if (correctKana.id == 'nu') {
-        if (question is ReadingQuestion) {
-          expect(question.options, contains('me'));
-          expect(question.options, contains('ne'));
+      // 驗證所有選項都來自驗收範圍（な行）
+      // な行只有 nu 和 ne，所以選項應該只包含這兩個
+      if (question is ReadingQuestion) {
+        for (final option in question.options) {
+          expect(['nu', 'ne'], contains(option));
         }
-      } else if (correctKana.id == 'ne') {
-        // ne 沒有設定相似字，所以這裡不特定檢查相似字
-        expect(question.options.length, 4);
+      } else if (question is ListeningQuestion) {
+        for (final option in question.options) {
+          expect(['ぬ', 'ne'], contains(option));
+        }
       }
     });
 
-    test('若相似字不足，應從同類型假名中補足', () async {
+    test('若驗收範圍內假名不足，選項數量會相應減少', () async {
       // Arrange
       final uniqueKana = const Kana(
         id: 'unique',
@@ -134,7 +139,8 @@ void main() {
       );
 
       // Assert
-      expect(questions.first.options.length, 4); // 1 正確 + 3 錯誤
+      // 驗收範圍內只有 uniqueKana，所以選項只有 1 個（正確答案）
+      expect(questions.first.options.length, 1);
     });
   });
 }

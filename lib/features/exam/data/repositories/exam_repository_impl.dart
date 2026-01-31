@@ -35,24 +35,31 @@ class ExamRepositoryImpl implements ExamRepository {
         .where((k) => scope.rows.contains(k.row) && !k.isDuplicate)
         .toList();
 
-    // 在生成錯誤選項時也排除重複音
-    final uniqueAllPossibleKana = allPossibleKana
-        .where((k) => !k.isDuplicate)
-        .toList();
-
     if (filteredKana.isEmpty) return [];
+
+    // 根據模式決定題目數量
+    final int actualQuestionCount;
+    if (scope.isRandomSampling) {
+      // 隨機抽樣模式：固定 10 題（或範圍內假名數量，取較小值）
+      actualQuestionCount = questionCount < filteredKana.length
+          ? questionCount
+          : filteredKana.length;
+    } else {
+      // 完整覆蓋模式：確保每個假名都出現，至少 5 題
+      actualQuestionCount = filteredKana.length < 5 ? 5 : filteredKana.length;
+    }
 
     // 打亂順序並取出指定數量的題目
     filteredKana.shuffle(_random);
-    final selectedKana = filteredKana.take(questionCount).toList();
+    final selectedKana = filteredKana.take(actualQuestionCount).toList();
 
     return selectedKana.map((kana) {
       // 隨機決定題型：50% 閱讀, 50% 聽力
       final isListening = _random.nextBool();
 
       // 生成選項 (1 正確 + 3 錯誤)
-      // 錯誤選項應該盡量是同類型的
-      final sameTypeKana = uniqueAllPossibleKana
+      // 錯誤選項只從驗收範圍內選擇（修正問題 2）
+      final sameTypeKana = filteredKana
           .where((k) => k.type == kana.type && k.id != kana.id)
           .toList();
       sameTypeKana.shuffle(_random);

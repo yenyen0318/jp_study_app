@@ -17,6 +17,7 @@ class ExamScopeDialog extends ConsumerStatefulWidget {
 class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
   final List<int> _selectedRows = [0]; // 預設選中あ行
   final List<String> _selectedTypes = ['hiragana'];
+  bool _isRandomSampling = false; // 驗收模式：false=完整覆蓋, true=隨機抽樣
 
   final _rows = [
     'あ行',
@@ -144,11 +145,21 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
               }),
             ),
 
+            const SizedBox(height: 20),
+
+            // 驗收模式選擇（使用 Segmented Button 表達單選語意）
+            _ModeSegmentedButton(
+              isRandomSampling: _isRandomSampling,
+              onModeChanged: (isRandom) =>
+                  setState(() => _isRandomSampling = isRandom),
+              theme: theme,
+            ),
+
             const SizedBox(height: 32),
 
             // 開始按鈕
             ZenButton(
-              label: '平靜開始',
+              label: '開始',
               onPressed: () {
                 // 處理行索引映射：將 UI 上的索引轉換為資料庫中實際的 row 索引
                 final Set<int> actualRows = {};
@@ -170,6 +181,7 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
                 final scope = ExamScope(
                   types: _selectedTypes,
                   rows: actualRows.toList(),
+                  isRandomSampling: _isRandomSampling,
                 );
                 ref.read(examControllerProvider.notifier).startExam(scope);
                 context.pop();
@@ -209,7 +221,10 @@ class _TypeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? theme.textPrimary : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? null : Border.all(color: theme.borderSubtle),
+          border: Border.all(
+            color: isSelected ? theme.textPrimary : theme.borderSubtle,
+            width: 0.5,
+          ),
         ),
         child: Text(
           label,
@@ -217,6 +232,102 @@ class _TypeChip extends StatelessWidget {
             fontSize: 13,
             color: isSelected ? theme.bgSurface : theme.textSecondary,
             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 驗收模式 Segmented Button（完整覆蓋 / 隨機抽樣）
+/// 使用整體式設計明確表達「單選」語意
+class _ModeSegmentedButton extends StatelessWidget {
+  final bool isRandomSampling;
+  final ValueChanged<bool> onModeChanged;
+  final ZenTheme theme;
+
+  const _ModeSegmentedButton({
+    required this.isRandomSampling,
+    required this.onModeChanged,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: theme.borderSubtle, width: 0.5),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _SegmentButton(
+              label: '完整覆蓋',
+              isSelected: !isRandomSampling,
+              onTap: () => onModeChanged(false),
+              theme: theme,
+              isLeft: true,
+            ),
+          ),
+          Container(width: 0.5, height: 32, color: theme.borderSubtle),
+          Expanded(
+            child: _SegmentButton(
+              label: '隨機 10 題',
+              isSelected: isRandomSampling,
+              onTap: () => onModeChanged(true),
+              theme: theme,
+              isLeft: false,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Segmented Button 的單個按鈕
+class _SegmentButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final ZenTheme theme;
+  final bool isLeft;
+
+  const _SegmentButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+    required this.theme,
+    required this.isLeft,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.horizontal(
+        left: isLeft ? const Radius.circular(20) : Radius.zero,
+        right: !isLeft ? const Radius.circular(20) : Radius.zero,
+      ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? theme.textPrimary : Colors.transparent,
+          borderRadius: BorderRadius.horizontal(
+            left: isLeft ? const Radius.circular(20) : Radius.zero,
+            right: !isLeft ? const Radius.circular(20) : Radius.zero,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: GoogleFonts.notoSansTc(
+              fontSize: 13,
+              color: isSelected ? theme.bgSurface : theme.textSecondary,
+              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+            ),
           ),
         ),
       ),

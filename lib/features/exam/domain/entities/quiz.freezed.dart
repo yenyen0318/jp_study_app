@@ -447,7 +447,9 @@ abstract class _ExamResult implements ExamResult {
 mixin _$ExamScope {
   List<String> get types =>
       throw _privateConstructorUsedError; // ['hiragana', 'katakana']
-  List<int> get rows => throw _privateConstructorUsedError;
+  List<int> get rows =>
+      throw _privateConstructorUsedError; // [0, 1, 2...] 代表 あ行, か行...
+  bool get isRandomSampling => throw _privateConstructorUsedError;
 
   /// Create a copy of ExamScope
   /// with the given fields replaced by the non-null parameter values.
@@ -461,7 +463,7 @@ abstract class $ExamScopeCopyWith<$Res> {
   factory $ExamScopeCopyWith(ExamScope value, $Res Function(ExamScope) then) =
       _$ExamScopeCopyWithImpl<$Res, ExamScope>;
   @useResult
-  $Res call({List<String> types, List<int> rows});
+  $Res call({List<String> types, List<int> rows, bool isRandomSampling});
 }
 
 /// @nodoc
@@ -478,7 +480,11 @@ class _$ExamScopeCopyWithImpl<$Res, $Val extends ExamScope>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? types = null, Object? rows = null}) {
+  $Res call({
+    Object? types = null,
+    Object? rows = null,
+    Object? isRandomSampling = null,
+  }) {
     return _then(
       _value.copyWith(
             types: null == types
@@ -489,6 +495,10 @@ class _$ExamScopeCopyWithImpl<$Res, $Val extends ExamScope>
                 ? _value.rows
                 : rows // ignore: cast_nullable_to_non_nullable
                       as List<int>,
+            isRandomSampling: null == isRandomSampling
+                ? _value.isRandomSampling
+                : isRandomSampling // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -504,7 +514,7 @@ abstract class _$$ExamScopeImplCopyWith<$Res>
   ) = __$$ExamScopeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<String> types, List<int> rows});
+  $Res call({List<String> types, List<int> rows, bool isRandomSampling});
 }
 
 /// @nodoc
@@ -520,7 +530,11 @@ class __$$ExamScopeImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? types = null, Object? rows = null}) {
+  $Res call({
+    Object? types = null,
+    Object? rows = null,
+    Object? isRandomSampling = null,
+  }) {
     return _then(
       _$ExamScopeImpl(
         types: null == types
@@ -531,6 +545,10 @@ class __$$ExamScopeImplCopyWithImpl<$Res>
             ? _value._rows
             : rows // ignore: cast_nullable_to_non_nullable
                   as List<int>,
+        isRandomSampling: null == isRandomSampling
+            ? _value.isRandomSampling
+            : isRandomSampling // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -542,6 +560,7 @@ class _$ExamScopeImpl implements _ExamScope {
   const _$ExamScopeImpl({
     required final List<String> types,
     required final List<int> rows,
+    this.isRandomSampling = false,
   }) : _types = types,
        _rows = rows;
 
@@ -563,9 +582,14 @@ class _$ExamScopeImpl implements _ExamScope {
     return EqualUnmodifiableListView(_rows);
   }
 
+  // [0, 1, 2...] 代表 あ行, か行...
+  @override
+  @JsonKey()
+  final bool isRandomSampling;
+
   @override
   String toString() {
-    return 'ExamScope(types: $types, rows: $rows)';
+    return 'ExamScope(types: $types, rows: $rows, isRandomSampling: $isRandomSampling)';
   }
 
   @override
@@ -574,7 +598,9 @@ class _$ExamScopeImpl implements _ExamScope {
         (other.runtimeType == runtimeType &&
             other is _$ExamScopeImpl &&
             const DeepCollectionEquality().equals(other._types, _types) &&
-            const DeepCollectionEquality().equals(other._rows, _rows));
+            const DeepCollectionEquality().equals(other._rows, _rows) &&
+            (identical(other.isRandomSampling, isRandomSampling) ||
+                other.isRandomSampling == isRandomSampling));
   }
 
   @override
@@ -582,6 +608,7 @@ class _$ExamScopeImpl implements _ExamScope {
     runtimeType,
     const DeepCollectionEquality().hash(_types),
     const DeepCollectionEquality().hash(_rows),
+    isRandomSampling,
   );
 
   /// Create a copy of ExamScope
@@ -597,12 +624,15 @@ abstract class _ExamScope implements ExamScope {
   const factory _ExamScope({
     required final List<String> types,
     required final List<int> rows,
+    final bool isRandomSampling,
   }) = _$ExamScopeImpl;
 
   @override
   List<String> get types; // ['hiragana', 'katakana']
   @override
-  List<int> get rows;
+  List<int> get rows; // [0, 1, 2...] 代表 あ行, か行...
+  @override
+  bool get isRandomSampling;
 
   /// Create a copy of ExamScope
   /// with the given fields replaced by the non-null parameter values.
