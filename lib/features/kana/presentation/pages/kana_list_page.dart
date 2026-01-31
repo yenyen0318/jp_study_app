@@ -244,28 +244,31 @@ class _CategorySelector extends StatelessWidget {
           final isSelected = category == selectedCategory;
           return Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(
-                category.label,
-                style: GoogleFonts.notoSansTc(
-                  fontSize: 13,
-                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-                  color: isSelected ? theme.bgPrimary : theme.textSecondary,
+            child: InkWell(
+              onTap: () => onCategorySelected(category),
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? theme.textPrimary : theme.bgSurface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected ? Colors.transparent : theme.borderSubtle,
+                    width: 0.5,
+                  ),
+                ),
+                child: Text(
+                  category.label,
+                  style: GoogleFonts.notoSansTc(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+                    color: isSelected ? theme.bgPrimary : theme.textSecondary,
+                  ),
                 ),
               ),
-              selected: isSelected,
-              onSelected: (_) => onCategorySelected(category),
-              selectedColor: theme.textPrimary,
-              backgroundColor: theme.bgSurface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                  color: isSelected ? Colors.transparent : theme.borderSubtle,
-                  width: 0.5,
-                ),
-              ),
-              showCheckmark: false,
-              padding: const EdgeInsets.symmetric(horizontal: 4),
             ),
           );
         }).toList(),
