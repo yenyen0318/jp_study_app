@@ -23,7 +23,7 @@ final kanaRepositoryProvider = AutoDisposeProvider<KanaRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef KanaRepositoryRef = AutoDisposeProviderRef<KanaRepository>;
-String _$kanaListViewModelHash() => r'bc0c072d814ee9ac5baf0663a7b5df762188e28e';
+String _$kanaListViewModelHash() => r'33a5d8db225ea26c83b53db4d3b26db1491295ef';
 
 /// See also [KanaListViewModel].
 @ProviderFor(KanaListViewModel)

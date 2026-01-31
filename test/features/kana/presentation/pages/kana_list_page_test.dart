@@ -59,7 +59,8 @@ void main() {
 
     // 驗證 (Assert)
     expect(find.text('五十音'), findsOneWidget);
-    expect(find.text('あ'), findsOneWidget);
+    // 「あ」會出現兩次:一次在切換按鈕,一次在假名卡片
+    expect(find.text('あ'), findsNWidgets(2));
     expect(find.text('い'), findsOneWidget);
     expect(find.text('a'), findsOneWidget);
   });

@@ -11,6 +11,7 @@ import 'package:jp_study_app/features/exam/presentation/widgets/exam_scope_dialo
 import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
 import 'package:jp_study_app/core/widgets/zen_button.dart';
+import 'package:jp_study_app/features/kana/presentation/providers/kana_type_filter_provider.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -48,14 +49,29 @@ class KanaListPage extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '五十音',
-                          style: GoogleFonts.notoSansTc(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w300,
-                            color: zenTheme.textPrimary,
-                            letterSpacing: 2.0,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '五十音',
+                              style: GoogleFonts.notoSansTc(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w300,
+                                color: zenTheme.textPrimary,
+                                letterSpacing: 2.0,
+                              ),
+                            ),
+                            _KanaTypeToggle(
+                              selectedType: ref.watch(kanaTypeFilterProvider),
+                              onTypeChanged: (type) {
+                                ref
+                                    .read(kanaTypeFilterProvider.notifier)
+                                    .setType(type);
+                              },
+                              theme: zenTheme,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 24),
                         _CategorySelector(
@@ -73,107 +89,121 @@ class KanaListPage extends ConsumerWidget {
                 ),
               ),
 
-              SliverSafeArea(
-                top: false,
-                bottom: false,
-                sliver: kanaListAsync.when(
-                  data: (kanaList) {
-                    final seion = kanaList
-                        .where((k) => k.row >= 0 && k.row <= 9)
-                        .toList();
-                    final bion = kanaList.where((k) => k.row == 10).toList();
-                    final dakuon = kanaList
-                        .where((k) => k.row >= 11 && k.row <= 14)
-                        .toList();
-                    final handakuon = kanaList
-                        .where((k) => k.row == 15)
-                        .toList();
-                    final youon = kanaList
-                        .where((k) => k.row >= 16 && k.row <= 26)
-                        .toList();
-
-                    final showSeion =
-                        selectedCategory == KanaCategory.all ||
-                        selectedCategory == KanaCategory.seion;
-                    final showDakuon =
-                        selectedCategory == KanaCategory.all ||
-                        selectedCategory == KanaCategory.dakuon;
-                    final showHandakuon =
-                        selectedCategory == KanaCategory.all ||
-                        selectedCategory == KanaCategory.handakuon;
-                    final showYouon =
-                        selectedCategory == KanaCategory.all ||
-                        selectedCategory == KanaCategory.youon;
-
-                    return SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          if (showSeion && seion.isNotEmpty) ...[
-                            _CategoryHeader(title: '清音', theme: zenTheme),
-                            const SizedBox(height: 16),
-                            _KanaGrid(
-                              kanaList: seion,
-                              allKana: kanaList,
-                              ref: ref,
-                              zenTheme: zenTheme,
-                            ),
-                            const SizedBox(height: 32),
-                          ],
-                          if (showSeion && bion.isNotEmpty) ...[
-                            _CategoryHeader(title: '鼻音', theme: zenTheme),
-                            const SizedBox(height: 16),
-                            _KanaGrid(
-                              kanaList: bion,
-                              allKana: kanaList,
-                              ref: ref,
-                              zenTheme: zenTheme,
-                            ),
-                            const SizedBox(height: 32),
-                          ],
-                          if (showDakuon && dakuon.isNotEmpty) ...[
-                            _CategoryHeader(title: '濁音', theme: zenTheme),
-                            const SizedBox(height: 16),
-                            _KanaGrid(
-                              kanaList: dakuon,
-                              allKana: kanaList,
-                              ref: ref,
-                              zenTheme: zenTheme,
-                            ),
-                            const SizedBox(height: 32),
-                          ],
-                          if (showHandakuon && handakuon.isNotEmpty) ...[
-                            _CategoryHeader(title: '半濁音', theme: zenTheme),
-                            const SizedBox(height: 16),
-                            _KanaGrid(
-                              kanaList: handakuon,
-                              allKana: kanaList,
-                              ref: ref,
-                              zenTheme: zenTheme,
-                            ),
-                            const SizedBox(height: 32),
-                          ],
-                          if (showYouon && youon.isNotEmpty) ...[
-                            _CategoryHeader(title: '拗音', theme: zenTheme),
-                            const SizedBox(height: 16),
-                            _KanaGrid(
-                              kanaList: youon,
-                              allKana: kanaList,
-                              ref: ref,
-                              zenTheme: zenTheme,
-                              crossAxisCount: 3,
-                            ),
-                            const SizedBox(height: 32),
-                          ],
-                        ]),
-                      ),
-                    );
+              // 使用 AnimatedSwitcher 實作淡入淡出過渡動畫
+              // 符合禪意美學:平靜的視覺過渡,避免生硬的切換
+              SliverToBoxAdapter(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(opacity: animation, child: child);
                   },
-                  loading: () => const SliverFillRemaining(
-                    child: Center(child: Text('準備中...')),
-                  ),
-                  error: (err, stack) => const SliverFillRemaining(
-                    child: Center(child: Text('發生錯誤')),
+                  child: kanaListAsync.when(
+                    data: (kanaList) {
+                      final seion = kanaList
+                          .where((k) => k.row >= 0 && k.row <= 9)
+                          .toList();
+                      final bion = kanaList.where((k) => k.row == 10).toList();
+                      final dakuon = kanaList
+                          .where((k) => k.row >= 11 && k.row <= 14)
+                          .toList();
+                      final handakuon = kanaList
+                          .where((k) => k.row == 15)
+                          .toList();
+                      final youon = kanaList
+                          .where((k) => k.row >= 16 && k.row <= 26)
+                          .toList();
+
+                      final showSeion =
+                          selectedCategory == KanaCategory.all ||
+                          selectedCategory == KanaCategory.seion;
+                      final showDakuon =
+                          selectedCategory == KanaCategory.all ||
+                          selectedCategory == KanaCategory.dakuon;
+                      final showHandakuon =
+                          selectedCategory == KanaCategory.all ||
+                          selectedCategory == KanaCategory.handakuon;
+                      final showYouon =
+                          selectedCategory == KanaCategory.all ||
+                          selectedCategory == KanaCategory.youon;
+
+                      return Padding(
+                        key: ValueKey(ref.watch(kanaTypeFilterProvider)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (showSeion && seion.isNotEmpty) ...[
+                              _CategoryHeader(title: '清音', theme: zenTheme),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: seion,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                            if (showSeion && bion.isNotEmpty) ...[
+                              _CategoryHeader(title: '鼻音', theme: zenTheme),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: bion,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                            if (showDakuon && dakuon.isNotEmpty) ...[
+                              _CategoryHeader(title: '濁音', theme: zenTheme),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: dakuon,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                            if (showHandakuon && handakuon.isNotEmpty) ...[
+                              _CategoryHeader(title: '半濁音', theme: zenTheme),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: handakuon,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                            if (showYouon && youon.isNotEmpty) ...[
+                              _CategoryHeader(title: '拗音', theme: zenTheme),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: youon,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                                crossAxisCount: 3,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                          ],
+                        ),
+                      );
+                    },
+                    loading: () => const SizedBox(
+                      key: ValueKey('loading'),
+                      height: 200,
+                      child: Center(child: Text('準備中...')),
+                    ),
+                    error: (err, stack) => const SizedBox(
+                      key: ValueKey('error'),
+                      height: 200,
+                      child: Center(child: Text('發生錯誤')),
+                    ),
                   ),
                 ),
               ),
@@ -197,6 +227,77 @@ class KanaListPage extends ConsumerWidget {
             );
           },
           theme: zenTheme,
+        ),
+      ),
+    );
+  }
+}
+
+/// 假名類型切換按鈕
+///
+/// 符合禪意美學設計原則:
+/// - 使用簡潔的文字標籤「あ」vs「ア」
+/// - 與現有 _CategorySelector 風格一致
+/// - 極簡的視覺設計,不干擾主要內容
+class _KanaTypeToggle extends StatelessWidget {
+  final KanaType selectedType;
+  final Function(KanaType) onTypeChanged;
+  final ZenTheme theme;
+
+  const _KanaTypeToggle({
+    required this.selectedType,
+    required this.onTypeChanged,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildToggleButton(
+          type: KanaType.hiragana,
+          label: 'あ',
+          isSelected: selectedType == KanaType.hiragana,
+        ),
+        const SizedBox(width: 8),
+        _buildToggleButton(
+          type: KanaType.katakana,
+          label: 'ア',
+          isSelected: selectedType == KanaType.katakana,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToggleButton({
+    required KanaType type,
+    required String label,
+    required bool isSelected,
+  }) {
+    return InkWell(
+      onTap: () => onTypeChanged(type),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: isSelected ? theme.textPrimary : theme.bgSurface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? Colors.transparent : theme.borderSubtle,
+            width: 0.5,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: GoogleFonts.notoSansJp(
+              fontSize: 18,
+              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+              color: isSelected ? theme.bgPrimary : theme.textSecondary,
+            ),
+          ),
         ),
       ),
     );
@@ -312,7 +413,7 @@ class _KanaGrid extends StatelessWidget {
             final double currentItemWidth =
                 (width - (crossAxisCount - 1) * gap) / crossAxisCount;
 
-            // 動態計算長寬比：讓高度始終等於 baseItemHeight
+            // 動態計算長寬比:讓高度始終等於 baseItemHeight
             final double childAspectRatio = currentItemWidth / baseItemHeight;
 
             return GridView.builder(
