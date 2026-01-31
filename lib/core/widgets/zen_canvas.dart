@@ -15,7 +15,7 @@ class ZenCanvas extends ConsumerStatefulWidget {
     super.key,
     required this.height,
     required this.guideText,
-    required this.strokes,
+    this.strokes = const [],
     required this.theme,
   });
 
