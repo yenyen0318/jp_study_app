@@ -160,6 +160,7 @@ class KanaListPage extends ConsumerWidget {
                               allKana: kanaList,
                               ref: ref,
                               zenTheme: zenTheme,
+                              crossAxisCount: 3,
                             ),
                             const SizedBox(height: 32),
                           ],
@@ -295,12 +296,14 @@ class _KanaGrid extends StatelessWidget {
   final List<Kana> allKana;
   final WidgetRef ref;
   final ZenTheme zenTheme;
+  final int crossAxisCount;
 
   const _KanaGrid({
     required this.kanaList,
     required this.allKana,
     required this.ref,
     required this.zenTheme,
+    this.crossAxisCount = 5,
   });
 
   @override
@@ -311,8 +314,8 @@ class _KanaGrid extends StatelessWidget {
         child: GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 1.0,
