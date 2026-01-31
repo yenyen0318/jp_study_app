@@ -41,10 +41,23 @@ description: 版本管理與 GitHub 同步專家。負責在測試通過後執�
 
 *   **上下文關聯**：在 Commit Message 中，應主動提及受影響的 UI 元件或 Provider，方便未來回溯。
 
-## 6. 發布與標籤管理 (Release & Tagging)
+## 7. 版本迭代規範 (Versioning Policy)
 
-*   **觸發條件**：確認 `CHANGELOG.md` 已更新且測試通過。
-*   **標籤規範**：使用語意化版本號 `vX.Y.Z` (例如 `v1.0.0`)。
-*   **執行指令**：
-    1.  建立標籤：`git tag -a v1.0.0 -m "Release v1.0.0"`
-    2.  推送標籤：`git push origin v1.0.0` (此動作將觸發 CI/CD 部署流程)
+本規範確保語意化版本 (SemVer) 與 Google Play / Apple App Store 的發布需求一致。
+
+### 7.1 版本格式：`X.Y.Z+B`
+*   **X (Major)**: 僅在發生不相容的重大變更或品牌重塑時增加。
+*   **Y (Minor)**: 新功能增加、大規模內容擴充或顯著 UI 優化（如假名細分）。每當 Y 增加，Z 歸零。
+*   **Z (Patch)**: Bug Fix、文字修正、小規模樣式調整。
+*   **+B (Build Number)**: 每次提交後的唯一序號。
+
+### 7.2 跨平台合規規則
+*   **iOS (CFBundleVersion)**: 在同一個 X.Y.Z 內，每上傳一次 B 必須遞增。
+*   **Android (versionCode)**: B 必須全域單調遞增，不可重複。
+*   **Flutter 同步**: 在 `pubspec.yaml` 更新 `1.2.3+10` 後，系統將自動映射至雙平台。
+
+### 7.3 執行流程
+1.  **決策**: 依改動性質決定 X, Y, Z 的異動。
+2.  **遞增**: 每次發布標籤前，將 `+B` **遞增 1**。
+3.  **記錄**: 同步更新 `CHANGELOG.md` 描述變更項。
+4.  **標籤**: 建立 `vX.Y.Z` 標籤並推送，觸發發布流程。
