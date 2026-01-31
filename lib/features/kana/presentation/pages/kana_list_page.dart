@@ -305,42 +305,47 @@ class _KanaGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 100,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        childAspectRatio: 1.0,
-      ),
-      itemCount: kanaList.length,
-      itemBuilder: (context, index) {
-        final kana = kanaList[index];
-        return _KanaCard(
-          kana: kana,
-          theme: zenTheme,
-          onTap: () {
-            ref.read(kanaAudioControllerProvider.notifier).play(kana.text);
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              isScrollControlled: true,
-              builder: (context) => KanaDetailSheet(
-                kana: kana,
-                similarKana: allKana
-                    .where((k) => kana.similarKanaIds.contains(k.id))
-                    .toList(),
-                onPlayAudio: () {
-                  ref
-                      .read(kanaAudioControllerProvider.notifier)
-                      .play(kana.text);
-                },
-              ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 1.0,
+          ),
+          itemCount: kanaList.length,
+          itemBuilder: (context, index) {
+            final kana = kanaList[index];
+            return _KanaCard(
+              kana: kana,
+              theme: zenTheme,
+              onTap: () {
+                ref.read(kanaAudioControllerProvider.notifier).play(kana.text);
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  builder: (context) => KanaDetailSheet(
+                    kana: kana,
+                    similarKana: allKana
+                        .where((k) => kana.similarKanaIds.contains(k.id))
+                        .toList(),
+                    onPlayAudio: () {
+                      ref
+                          .read(kanaAudioControllerProvider.notifier)
+                          .play(kana.text);
+                    },
+                  ),
+                );
+              },
             );
           },
-        );
-      },
+        ),
+      ),
     );
   }
 }
