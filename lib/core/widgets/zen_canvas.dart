@@ -142,7 +142,12 @@ class _ZenPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 1. 繪製背景基準線 (Cross-hair Grid)
+    // 0. 計算格線數量 (根據字數)
+    // 假設 guideText 是 "みょ"，length 為 2 -> 分為 2 格
+    final characters = guideText.characters.toList();
+    final int cellCount = characters.isNotEmpty ? characters.length : 1;
+    final double cellWidth = size.width / cellCount;
+
     final gridPaint = Paint()
       ..color = guideColor.withValues(alpha: 0.1)
       ..style = PaintingStyle.stroke
@@ -151,49 +156,84 @@ class _ZenPainter extends CustomPainter {
     const dashWidth = 5.0;
     const dashSpace = 5.0;
 
-    // 水平線
-    double startX = 0;
-    while (startX < size.width) {
-      canvas.drawLine(
-        Offset(startX, size.height / 2),
-        Offset(startX + dashWidth, size.height / 2),
-        gridPaint,
-      );
-      startX += dashWidth + dashSpace;
+    // 1. 迴圈繪製每個格子的導引線與底字
+    for (int i = 0; i < cellCount; i++) {
+      // 每個格子的偏移量
+      final double offsetX = i * cellWidth;
+      final Rect cellRect = Rect.fromLTWH(offsetX, 0, cellWidth, size.height);
+      final Offset cellCenter = cellRect.center;
+
+      // 1-1. 繪製十字基準線 (Cross-hair)
+      // 水平線 (在格子垂直中心)
+      double startX = offsetX;
+      while (startX < offsetX + cellWidth) {
+        canvas.drawLine(
+          Offset(startX, cellCenter.dy),
+          Offset(startX + dashWidth, cellCenter.dy),
+          gridPaint,
+        );
+        startX += dashWidth + dashSpace;
+      }
+
+      // 垂直線 (在格子水平中心)
+      double startY = 0;
+      while (startY < size.height) {
+        // startY 從 0 到 height
+        canvas.drawLine(
+          Offset(cellCenter.dx, startY),
+          Offset(cellCenter.dx, startY + dashWidth),
+          gridPaint,
+        );
+        startY += dashWidth + dashSpace;
+      }
+
+      // 1-2. 繪製分隔線 (Separator) - 僅在格子之間繪製，極淡
+      if (i > 0) {
+        final separatorPaint = Paint()
+          ..color = guideColor
+              .withValues(alpha: 0.05) // 非常淡
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.5;
+
+        // 畫實線或虛線皆可，這裡使用實線簡單區隔
+        canvas.drawLine(
+          Offset(offsetX, 16), // 上下留白
+          Offset(offsetX, size.height - 16),
+          separatorPaint,
+        );
+      }
+
+      // 1-3. 繪製導引文字
+      if (i < characters.length) {
+        final char = characters[i];
+        final textPainter = TextPainter(
+          text: TextSpan(
+            text: char,
+            style: GoogleFonts.notoSansJp(
+              // 字體大小需適配格子寬度，避免重疊
+              // 對於拗音，因為分格後空間變小，字體自然會依照格子比例調整 (假設 height 為主)
+              // 但若維持 size.height * 0.7 可能會撐爆寬度
+              // 因此取 min(cellWidth, size.height) * 0.7
+              fontSize:
+                  (cellWidth < size.height ? cellWidth : size.height) * 0.6,
+              color: guideColor,
+              fontWeight: FontWeight.w100,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        );
+        textPainter.layout();
+
+        final textOffset = Offset(
+          cellCenter.dx - (textPainter.width / 2),
+          cellCenter.dy - (textPainter.height / 2),
+        );
+        textPainter.paint(canvas, textOffset);
+      }
     }
 
-    // 垂直線
-    double startY = 0;
-    while (startY < size.height) {
-      canvas.drawLine(
-        Offset(size.width / 2, startY),
-        Offset(size.width / 2, startY + dashWidth),
-        gridPaint,
-      );
-      startY += dashWidth + dashSpace;
-    }
-
-    // 2. 準備字體繪製器 (Ghost Guide) - 仍保留極淡的底字供參考
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: guideText,
-        style: GoogleFonts.notoSansJp(
-          fontSize: size.height * 0.7,
-          color: guideColor,
-          fontWeight: FontWeight.w100,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    textPainter.layout();
-
-    final textOffset = Offset(
-      (size.width - textPainter.width) / 2,
-      (size.height - textPainter.height) / 2,
-    );
-    textPainter.paint(canvas, textOffset);
-
-    // 3. 繪製使用者筆跡
+    // 2. 繪製使用者筆跡 (Overlay on top of everything)
+    // 筆跡是跨越整個 Canvas 的，無需分格處理
     final userStrokePaint = Paint()
       ..color = strokeColor
       ..strokeCap = StrokeCap.round
