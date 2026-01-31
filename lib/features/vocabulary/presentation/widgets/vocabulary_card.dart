@@ -41,7 +41,7 @@ class VocabularyCard extends StatelessWidget {
                         style: textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: zen.textPrimary,
-                          height: 1.6,
+                          height: zen.typography.lineHeightRelaxed,
                         ),
                         rubyStyle: textTheme.labelMedium?.copyWith(
                           color: zen.textSecondary,
@@ -67,7 +67,7 @@ class VocabularyCard extends StatelessWidget {
             vocabulary.romaji,
             style: textTheme.bodyMedium?.copyWith(
               color: zen.textSecondary,
-              letterSpacing: 1.2,
+              letterSpacing: zen.layout.letterSpacingNormal / 1.5, // 接近 1.2
             ),
           ),
           Divider(

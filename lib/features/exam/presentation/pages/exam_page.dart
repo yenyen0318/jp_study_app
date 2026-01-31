@@ -67,7 +67,11 @@ class ExamPage extends ConsumerWidget {
               // 進度條 - 增加頂部間距以符合設計系統規範
               SafeArea(
                 bottom: false,
-                minimum: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                minimum: EdgeInsets.only(
+                  top: theme.spacing.lg,
+                  left: theme.spacing.lg,
+                  right: theme.spacing.lg,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 0),
                   child: _ProgressBar(progress: progress, theme: theme),
@@ -78,16 +82,16 @@ class ExamPage extends ConsumerWidget {
                 child: SafeArea(
                   // Use SafeArea implicitly for content
                   top: false,
-                  minimum: const EdgeInsets.only(
-                    bottom: 24,
-                    left: 24,
-                    right: 24,
+                  minimum: EdgeInsets.only(
+                    bottom: theme.spacing.lg,
+                    left: theme.spacing.lg,
+                    right: theme.spacing.lg,
                   ),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 0,
-                        vertical: 24,
+                        vertical: theme.spacing.lg,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -196,7 +200,7 @@ class _QuestionArea extends StatelessWidget {
       return Column(
         children: [
           SizedBox(
-            height: 120,
+            height: theme.layout.questionAreaHeight,
             child: Center(
               child: _ZenPlayButton(onTap: onPlay, theme: theme),
             ),
@@ -206,7 +210,7 @@ class _QuestionArea extends StatelessWidget {
             '聽音辨字',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: theme.textSecondary,
-              letterSpacing: 2,
+              letterSpacing: theme.layout.letterSpacingNormal,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -216,15 +220,15 @@ class _QuestionArea extends StatelessWidget {
       return Column(
         children: [
           SizedBox(
-            height: 120,
+            height: theme.layout.questionAreaHeight,
             child: Center(
               child: Text(
                 question.correctKana.text,
                 style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  fontSize: 80,
+                  fontSize: theme.typography.fontSizeDisplay,
                   color: theme.textPrimary,
                   fontWeight: FontWeight.w200,
-                  height: 1.0,
+                  height: theme.typography.lineHeightTight,
                 ),
               ),
             ),
@@ -234,7 +238,7 @@ class _QuestionArea extends StatelessWidget {
             '字元辨識',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: theme.textSecondary,
-              letterSpacing: 2,
+              letterSpacing: theme.layout.letterSpacingNormal,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -284,8 +288,8 @@ class _ZenPlayButtonState extends State<_ZenPlayButton>
       child: ScaleTransition(
         scale: Tween<double>(begin: 1.0, end: 0.9).animate(_controller),
         child: Container(
-          width: 80,
-          height: 80,
+          width: widget.theme.layout.handleWidth * 2,
+          height: widget.theme.layout.handleWidth * 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: widget.theme.bgSurface,
@@ -324,10 +328,10 @@ class _OptionsArea extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+        mainAxisSpacing: theme.spacing.md,
+        crossAxisSpacing: theme.spacing.md,
         childAspectRatio: 2.5,
       ),
       itemCount: options.length,
@@ -433,7 +437,7 @@ class _OptionCardState extends State<_OptionCard>
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
                   color: widget.bgColor ?? widget.theme.bgSurface,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(widget.theme.radius.md),
                   border: Border.all(
                     color: widget.isAnswered
                         ? (widget.isCorrect
@@ -593,7 +597,7 @@ class _WrongAnswerHint extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: theme.textSecondary.withValues(alpha: value),
-                    height: 1.6,
+                    height: theme.typography.lineHeightRelaxed,
                     fontWeight: FontWeight.w300,
                   ),
                 ),

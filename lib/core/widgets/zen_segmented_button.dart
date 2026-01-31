@@ -55,7 +55,7 @@ class ZenSegmentedButton<T> extends StatelessWidget {
     return IntrinsicWidth(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(theme.radius.lg),
           border: Border.all(color: theme.borderSubtle, width: 0.5),
         ),
         child: Row(
@@ -123,8 +123,8 @@ class _SegmentButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.horizontal(
-        left: isFirst ? const Radius.circular(20) : Radius.zero,
-        right: isLast ? const Radius.circular(20) : Radius.zero,
+        left: isFirst ? Radius.circular(theme.radius.lg) : Radius.zero,
+        right: isLast ? Radius.circular(theme.radius.lg) : Radius.zero,
       ),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -132,8 +132,8 @@ class _SegmentButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? theme.textPrimary : Colors.transparent,
           borderRadius: BorderRadius.horizontal(
-            left: isFirst ? const Radius.circular(20) : Radius.zero,
-            right: isLast ? const Radius.circular(20) : Radius.zero,
+            left: isFirst ? Radius.circular(theme.radius.lg) : Radius.zero,
+            right: isLast ? Radius.circular(theme.radius.lg) : Radius.zero,
           ),
         ),
         child: Center(

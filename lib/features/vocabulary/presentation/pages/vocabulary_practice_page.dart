@@ -21,14 +21,16 @@ class VocabularyPracticePage extends ConsumerWidget {
           children: [
             // 頂部手勢提示 (取代返回鍵)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: EdgeInsets.symmetric(vertical: zenTheme.spacing.lg),
               child: Center(
                 child: Container(
-                  width: 40,
-                  height: 4,
+                  width: zenTheme.layout.handleWidth,
+                  height: zenTheme.layout.handleHeight,
                   decoration: BoxDecoration(
                     color: zenTheme.borderSubtle,
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(
+                      zenTheme.layout.handleHeight / 2,
+                    ),
                   ),
                 ),
               ),
@@ -36,11 +38,11 @@ class VocabularyPracticePage extends ConsumerWidget {
 
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: zenTheme.spacing.lg),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 24),
+                    SizedBox(height: zenTheme.spacing.lg),
                     Text(
                       vocabulary.text,
                       style: Theme.of(context).textTheme.displayMedium
@@ -52,7 +54,7 @@ class VocabularyPracticePage extends ConsumerWidget {
                         color: zenTheme.textSecondary,
                       ),
                     ),
-                    const SizedBox(height: 48),
+                    SizedBox(height: zenTheme.spacing.xxl),
 
                     // 書寫練習區
                     Text(
@@ -62,13 +64,13 @@ class VocabularyPracticePage extends ConsumerWidget {
                         letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: zenTheme.spacing.md),
                     ZenCanvas(
                       guideText: vocabulary.text,
                       theme: zenTheme,
-                      height: 300,
+                      height: zenTheme.layout.canvasHeightDefault,
                     ),
-                    const SizedBox(height: 48),
+                    SizedBox(height: zenTheme.spacing.xxl),
 
                     // 引導訊息
                     Center(

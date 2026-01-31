@@ -176,7 +176,7 @@ class VocabularyListPage extends ConsumerWidget {
           ),
 
           // 底部間距
-          SliverToBoxAdapter(child: SizedBox(height: zen.spacing.xxl * 2)),
+          SliverToBoxAdapter(child: SizedBox(height: zen.spacing.xxl)),
         ],
       ),
     );

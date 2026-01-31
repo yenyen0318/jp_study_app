@@ -27,16 +27,20 @@ class ExamResultPage extends ConsumerWidget {
               // 頂部儀式感區域
               SliverSafeArea(
                 bottom: false,
-                minimum: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                minimum: EdgeInsets.only(
+                  top: theme.spacing.lg,
+                  left: theme.spacing.lg,
+                  right: theme.spacing.lg,
+                ),
                 sliver: SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 24),
+                    padding: EdgeInsets.only(bottom: theme.spacing.lg),
                     child: Column(
                       children: [
                         _MasteryCircle(score: result.score, theme: theme),
                         const SizedBox(height: 32),
                         _HankoStamp(label: result.hankoLabel, theme: theme),
-                        const SizedBox(height: 24),
+                        SizedBox(height: theme.spacing.lg),
                         Text(
                           result.feedbackQuote,
                           textAlign: TextAlign.center,
@@ -45,7 +49,6 @@ class ExamResultPage extends ConsumerWidget {
                                 fontWeight: FontWeight.w300,
                                 color: theme.textPrimary,
                                 letterSpacing: 1.2,
-                                fontSize: 18,
                               ),
                         ),
                       ],
@@ -59,7 +62,7 @@ class ExamResultPage extends ConsumerWidget {
                 SliverSafeArea(
                   top: false,
                   bottom: false,
-                  minimum: const EdgeInsets.symmetric(horizontal: 24),
+                  minimum: EdgeInsets.symmetric(horizontal: theme.spacing.lg),
                   sliver: SliverToBoxAdapter(
                     child: Text(
                       '需要精進的字元',
@@ -75,9 +78,9 @@ class ExamResultPage extends ConsumerWidget {
               SliverSafeArea(
                 top: false,
                 bottom: false,
-                minimum: const EdgeInsets.symmetric(horizontal: 24),
+                minimum: EdgeInsets.symmetric(horizontal: theme.spacing.lg),
                 sliver: SliverPadding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  padding: EdgeInsets.symmetric(vertical: theme.spacing.lg),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final wrong = result.wrongAnswers[index];
@@ -94,10 +97,14 @@ class ExamResultPage extends ConsumerWidget {
               // 操作按鈕
               SliverSafeArea(
                 top: false,
-                minimum: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
+                minimum: EdgeInsets.only(
+                  bottom: theme.spacing.lg,
+                  left: theme.spacing.lg,
+                  right: theme.spacing.lg,
+                ),
                 sliver: SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 24),
+                    padding: EdgeInsets.only(top: theme.spacing.lg),
                     child: Column(
                       children: [
                         _ActionBtn(
@@ -151,7 +158,7 @@ class _MasteryCircle extends StatelessWidget {
       style: Theme.of(context).textTheme.labelLarge?.copyWith(
         fontWeight: FontWeight.w300,
         color: theme.textSecondary,
-        letterSpacing: 2.0,
+        letterSpacing: theme.layout.letterSpacingNormal,
       ),
     );
   }
@@ -217,7 +224,7 @@ class _HankoStampState extends State<_HankoStamp>
                   color: widget.theme.error.withValues(alpha: 0.7),
                   width: 2,
                 ),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(widget.theme.radius.sm / 2),
               ),
               child: Text(
                 widget.label,
@@ -323,7 +330,7 @@ class _ActionBtn extends StatelessWidget {
               ? theme.textPrimary.withValues(alpha: 0.05)
               : Colors.transparent,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(theme.radius.md),
             side: BorderSide(color: theme.borderSubtle, width: 0.5),
           ),
         ),

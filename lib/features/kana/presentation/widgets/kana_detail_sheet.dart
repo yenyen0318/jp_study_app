@@ -24,7 +24,9 @@ class KanaDetailSheet extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       decoration: BoxDecoration(
         color: zenTheme.bgPrimary,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(zenTheme.radius.lg),
+        ),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -68,7 +70,8 @@ class KanaDetailSheet extends StatelessWidget {
                             ?.copyWith(
                               fontWeight: FontWeight.w300,
                               color: zenTheme.textSecondary,
-                              letterSpacing: 2.0,
+                              letterSpacing:
+                                  zenTheme.layout.letterSpacingNormal,
                             ),
                       ),
                       const SizedBox(height: 4),
@@ -152,7 +155,7 @@ class KanaDetailSheet extends StatelessWidget {
                           color: zenTheme.borderSubtle,
                           width: 0.5,
                         ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(zenTheme.radius.md),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +212,7 @@ class _SectionHeader extends StatelessWidget {
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w400,
             color: theme.textSecondary,
-            letterSpacing: 1.2,
+            letterSpacing: theme.layout.letterSpacingNormal / 1.5, // 接近 1.33
           ),
         ),
       ],

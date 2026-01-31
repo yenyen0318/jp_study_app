@@ -73,7 +73,7 @@ class _HomeNavItem extends StatelessWidget {
               color: isEnabled
                   ? zen.textPrimary
                   : zen.textPrimary.withValues(alpha: 0.2),
-              letterSpacing: 8.0,
+              letterSpacing: zen.layout.letterSpacingHuge,
             ),
           ),
           SizedBox(height: zen.spacing.sm),
@@ -84,7 +84,7 @@ class _HomeNavItem extends StatelessWidget {
               color: isEnabled
                   ? zen.textSecondary.withValues(alpha: 0.7)
                   : zen.textSecondary.withValues(alpha: 0.1),
-              letterSpacing: 4.0,
+              letterSpacing: zen.layout.letterSpacingLarge,
             ),
           ),
         ],

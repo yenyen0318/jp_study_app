@@ -37,7 +37,7 @@ class ZenToast extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
         color: theme.bgSurface,
-        borderRadius: BorderRadius.circular(50), // 圓潤的膠囊形狀
+        borderRadius: BorderRadius.circular(theme.radius.full), // 圓潤的膠囊形狀
         border: Border.all(
           color: theme.error.withValues(alpha: 0.8),
           width: 0.5,

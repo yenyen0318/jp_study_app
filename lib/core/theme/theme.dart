@@ -37,13 +37,48 @@ class ZenRadius {
   });
 }
 
+/// 使用者介面的排版規範 (Design Tokens)
+@immutable
+class ZenTypography {
+  final double fontSizeDisplay;
+  final double lineHeightTight;
+  final double lineHeightNormal;
+  final double lineHeightRelaxed;
+
+  const ZenTypography({
+    this.fontSizeDisplay = 80.0,
+    this.lineHeightTight = 1.0,
+    this.lineHeightNormal = 1.25,
+    this.lineHeightRelaxed = 1.6,
+  });
+}
+
 /// 使用者介面的佈局規範 (Design Tokens)
 @immutable
 class ZenLayout {
   final double maxContentWidth;
   final double cardWidth;
+  final double letterSpacingHuge;
+  final double letterSpacingLarge;
+  final double letterSpacingNormal;
+  final double buttonHeight;
+  final double questionAreaHeight;
+  final double canvasHeightDefault;
+  final double handleWidth;
+  final double handleHeight;
 
-  const ZenLayout({this.maxContentWidth = 600.0, this.cardWidth = 400.0});
+  const ZenLayout({
+    this.maxContentWidth = 600.0,
+    this.cardWidth = 400.0,
+    this.letterSpacingHuge = 8.0,
+    this.letterSpacingLarge = 4.0,
+    this.letterSpacingNormal = 2.0,
+    this.buttonHeight = 48.0,
+    this.questionAreaHeight = 120.0,
+    this.canvasHeightDefault = 240.0,
+    this.handleWidth = 40.0,
+    this.handleHeight = 4.0,
+  });
 }
 
 /// 語意化顏色的 Zen 主題擴充
@@ -68,6 +103,9 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
   /// 佈局系統
   final ZenLayout layout;
 
+  /// 排版系統
+  final ZenTypography typography;
+
   const ZenTheme({
     required this.bgPrimary,
     required this.bgSurface,
@@ -81,6 +119,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     this.spacing = const ZenSpacing(),
     this.radius = const ZenRadius(),
     this.layout = const ZenLayout(),
+    this.typography = const ZenTypography(),
   });
 
   @override
@@ -97,6 +136,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     ZenSpacing? spacing,
     ZenRadius? radius,
     ZenLayout? layout,
+    ZenTypography? typography,
   }) {
     return ZenTheme(
       bgPrimary: bgPrimary ?? this.bgPrimary,
@@ -111,6 +151,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       spacing: spacing ?? this.spacing,
       radius: radius ?? this.radius,
       layout: layout ?? this.layout,
+      typography: typography ?? this.typography,
     );
   }
 
@@ -132,6 +173,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       spacing: spacing, // 間隔不參與 lerp
       radius: radius, // 圓角不參與 lerp
       layout: layout, // 佈局不參與 lerp
+      typography: typography, // 排版不參與 lerp
     );
   }
 

@@ -51,7 +51,7 @@ class _ZenCanvasState extends ConsumerState<ZenCanvas> {
           width: double.infinity,
           decoration: BoxDecoration(
             color: widget.theme.bgSurface,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(widget.theme.radius.lg),
             border: Border.all(
               color: widget.theme.textPrimary.withValues(alpha: 0.1),
               width: 0.5,

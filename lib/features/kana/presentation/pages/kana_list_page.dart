@@ -335,7 +335,7 @@ class _KanaCard extends StatelessWidget {
                           ? Theme.of(context).textTheme.headlineMedium
                           : Theme.of(context).textTheme.headlineLarge)
                       ?.copyWith(
-                        height: 1.25,
+                        height: zen.typography.lineHeightNormal,
                         color: kana.isDuplicate
                             ? zen.textPrimary.withValues(alpha: 0.2)
                             : zen.textPrimary,
@@ -343,7 +343,7 @@ class _KanaCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: zen.spacing.xs + 2,
+            bottom: zen.spacing.xs,
             right: zen.spacing.sm,
             child: Text(
               kana.romaji,

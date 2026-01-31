@@ -22,13 +22,13 @@ class ZenButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttonContent = InkWell(
       onTap: onPressed,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(theme.radius.lg),
       child: Container(
-        height: 48, // 標準觸控高度
+        height: theme.layout.buttonHeight, // 標準觸控高度
         padding: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
           color: isGhost ? Colors.transparent : theme.bgSurface,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(theme.radius.lg),
           border: isGhost
               ? null
               : Border.all(color: theme.borderSubtle, width: 0.5),
@@ -40,7 +40,7 @@ class ZenButton extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w300,
               color: theme.textPrimary,
-              letterSpacing: 2.0,
+              letterSpacing: theme.layout.letterSpacingNormal,
             ),
           ),
         ),

@@ -56,7 +56,9 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
       extendBody: true,
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
+          constraints: BoxConstraints(
+            maxWidth: zenTheme.layout.maxContentWidth,
+          ),
           child: CustomScrollView(
             slivers: [
               // 標題區域
@@ -75,7 +77,8 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
                               ?.copyWith(
                                 fontWeight: FontWeight.w300,
                                 color: zenTheme.textPrimary,
-                                letterSpacing: 2.0,
+                                letterSpacing:
+                                    zenTheme.layout.letterSpacingNormal,
                               ),
                         ),
                         const SizedBox(height: 8),
