@@ -26,7 +26,7 @@ class HomePage extends StatelessWidget {
             _HomeNavItem(
               title: '單字',
               subtitle: 'ことば',
-              onTap: null, // 尚未開發
+              onTap: () => context.push('/vocabulary'),
               theme: zenTheme,
             ),
             const SizedBox(height: 48),
