@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/theme.dart';
 import '../../../../core/widgets/zen_chip_selector.dart';
 import '../providers/vocabulary_provider.dart';
 import '../widgets/vocabulary_card.dart';
 import '../widgets/vocabulary_search_bar.dart';
-import 'vocabulary_practice_page.dart';
 
 class VocabularyListPage extends ConsumerWidget {
   const VocabularyListPage({super.key});
@@ -121,7 +121,7 @@ class VocabularyListPage extends ConsumerWidget {
             ),
           ),
 
-          // 單字列表 - 穩定版
+          // 單字列表 - 效能優化版
           SliverSafeArea(
             top: false,
             minimum: EdgeInsets.only(
@@ -129,89 +129,76 @@ class VocabularyListPage extends ConsumerWidget {
               left: zen.spacing.lg,
               right: zen.spacing.lg,
             ),
-            sliver: SliverToBoxAdapter(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 450),
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                child: vocabAsync.when(
-                  skipLoadingOnRefresh: true,
-                  data: (vocabs) {
-                    final query = ref.watch(vocabularySearchQueryProvider);
-                    final filter = ref.watch(vocabularyFilterProvider);
-
-                    return Padding(
-                      key: ValueKey(
-                        'vocab_content_${query}_${filter ?? 'all'}',
-                      ),
-                      padding: EdgeInsets.only(bottom: zen.spacing.sm),
-                      child: vocabs.isEmpty
-                          ? SizedBox(
-                              height: 300,
-                              child: Center(
-                                child: Text(
-                                  '找不到符合的單字',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: zen.textSecondary.withValues(
-                                      alpha: 0.5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : ListView.separated(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: vocabs.length,
-                              separatorBuilder: (context, index) =>
-                                  SizedBox(height: zen.spacing.md),
-                              itemBuilder: (context, index) => VocabularyCard(
-                                key: ValueKey(vocabs[index].id),
-                                vocabulary: vocabs[index],
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          VocabularyPracticePage(
-                                            vocabulary: vocabs[index],
-                                          ),
-                                    ),
-                                  );
-                                },
+            sliver: vocabAsync.when(
+              skipLoadingOnRefresh: true,
+              data: (vocabs) {
+                return SliverFillRemaining(
+                  hasScrollBody: true,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 450),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                    child: vocabs.isEmpty
+                        ? Center(
+                            key: const ValueKey('vocab_empty'),
+                            child: Text(
+                              '找不到符合的單字',
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: zen.textSecondary,
                               ),
                             ),
-                    );
-                  },
-                  loading: () => const SizedBox(
-                    key: ValueKey('vocab_loading'),
-                    height: 300,
-                    child: Center(
-                      child: Opacity(
-                        opacity: 0.5,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
+                          )
+                        : CustomScrollView(
+                            key: ValueKey('vocab_list_${vocabs.length}'),
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate((
+                                  context,
+                                  index,
+                                ) {
+                                  if (index.isOdd) {
+                                    return SizedBox(height: zen.spacing.md);
+                                  }
+                                  final itemIndex = index ~/ 2;
+                                  final vocab = vocabs[itemIndex];
+                                  return VocabularyCard(
+                                    key: ValueKey(vocab.id),
+                                    vocabulary: vocab,
+                                    onTap: () {
+                                      GoRouter.of(context).push(
+                                        '/vocabulary/practice',
+                                        extra: vocab,
+                                      );
+                                    },
+                                  );
+                                }, childCount: (vocabs.length * 2) - 1),
+                              ),
+                            ],
+                          ),
                   ),
-                  error: (err, stack) => SizedBox(
-                    key: const ValueKey('vocab_error'),
-                    height: 300,
-                    child: Center(child: Text('讀取失敗: $err')),
+                );
+              },
+              loading: () => const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: Opacity(
+                    opacity: 0.5,
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
+              ),
+              error: (err, stack) => SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: Text('讀取失敗: $err')),
               ),
             ),
           ),
 
           // 底部間距
-          SliverSafeArea(
-            top: false,
-            minimum: EdgeInsets.only(bottom: zen.spacing.xxl * 2),
-            sliver: const SliverToBoxAdapter(child: SizedBox.shrink()),
-          ),
+          SliverToBoxAdapter(child: SizedBox(height: zen.spacing.xxl * 2)),
         ],
       ),
     );

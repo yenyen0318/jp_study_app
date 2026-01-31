@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-01-31
+
+### Refactor
+- **列表效能優化 (Sliver Performance Optimization)**：將 `VocabularyListPage` 與 `KanaListPage` 原有的 `SliverToBoxAdapter` 嵌套列表結構重構為原生 `SliverList` 與 `SliverGrid`，大幅提升長列表滾動流暢度與記憶體效率。
+- **邏輯抽離與架構優化**：將五十音分組邏輯從 UI 層抽離至獨立的 `filteredKanaGroupsProvider`，提升代碼可讀性與測試性。
+- **動畫過渡校準**：在 Sliver 結構下重新實作 `AnimatedSwitcher` 過渡邏輯，修復重構過程中遺失的平滑淡入淡出效果，確保優質的視覺平衡。
+- **導航統一 (GoRouter)**：全面遷移至宣告式導航，確保單字列表跳轉至練習頁面符合專案路由規範。
+
 ## [0.4.1] - 2026-01-31
 
 ### Refactor

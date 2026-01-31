@@ -5,6 +5,8 @@ import 'package:jp_study_app/features/exam/presentation/pages/exam_page.dart';
 import 'package:jp_study_app/features/exam/presentation/pages/exam_result_page.dart';
 import 'package:jp_study_app/features/exam/presentation/pages/exam_setup_page.dart';
 import 'package:jp_study_app/features/vocabulary/presentation/pages/vocabulary_list_page.dart';
+import 'package:jp_study_app/features/vocabulary/presentation/pages/vocabulary_practice_page.dart';
+import 'package:jp_study_app/features/vocabulary/domain/entities/vocabulary.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -23,6 +25,15 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/vocabulary',
       builder: (context, state) => const VocabularyListPage(),
+      routes: [
+        GoRoute(
+          path: 'practice',
+          builder: (context, state) {
+            final vocabulary = state.extra as Vocabulary;
+            return VocabularyPracticePage(vocabulary: vocabulary);
+          },
+        ),
+      ],
     ),
   ],
 );

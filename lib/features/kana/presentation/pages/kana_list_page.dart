@@ -12,6 +12,7 @@ import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_pr
 import 'package:jp_study_app/features/kana/presentation/providers/kana_type_filter_provider.dart';
 import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';
 import 'package:jp_study_app/core/widgets/zen_chip_selector.dart';
+import 'package:jp_study_app/features/kana/presentation/providers/kana_groups_provider.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -20,7 +21,7 @@ class KanaListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final zen = context.zen;
     final textTheme = Theme.of(context).textTheme;
-    final kanaListAsync = ref.watch(kanaListViewModelProvider);
+    final groupsAsync = ref.watch(filteredKanaGroupsProvider);
     final selectedCategory = ref.watch(kanaCategoryFilterProvider);
 
     // 監聽音效錯誤狀態
@@ -66,7 +67,6 @@ class KanaListPage extends ConsumerWidget {
                                 letterSpacing: 2.0,
                               ),
                             ),
-                            // 假名類型切換 - 使用 ZenSegmentedButton
                             ZenSegmentedButton<KanaType>(
                               options: const [
                                 KanaType.hiragana,
@@ -86,7 +86,6 @@ class KanaListPage extends ConsumerWidget {
                         ),
                       ),
                       SizedBox(height: zen.spacing.lg),
-                      // 分類選擇 - 使用 ZenChipSelector
                       ZenChipSelector<KanaCategory>(
                         options: KanaCategory.values,
                         selectedValue: selectedCategory,
@@ -109,230 +108,108 @@ class KanaListPage extends ConsumerWidget {
             ),
           ),
 
-          // 假名列表內容
-          SliverSafeArea(
-            top: false,
-            minimum: EdgeInsets.only(bottom: zen.spacing.lg),
-            sliver: SliverToBoxAdapter(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 350),
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    transitionBuilder: (child, animation) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
-                    child: Padding(
-                      key: ValueKey(
-                        '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: zen.spacing.md),
-                      child: kanaListAsync.when(
-                        data: (kanaList) {
-                          final seion = kanaList
-                              .where((k) => k.row >= 0 && k.row <= 9)
-                              .toList();
-                          final bion = kanaList
-                              .where((k) => k.row == 10)
-                              .toList();
-                          final dakuon = kanaList
-                              .where((k) => k.row >= 11 && k.row <= 14)
-                              .toList();
-                          final handakuon = kanaList
-                              .where((k) => k.row == 15)
-                              .toList();
-                          final youon = kanaList
-                              .where((k) => k.row >= 16 && k.row <= 26)
-                              .toList();
-                          final sokuon = kanaList
-                              .where(
-                                (k) => k.row == 100 && k.id.contains('sokuon'),
-                              )
-                              .toList();
-                          final choon = kanaList
-                              .where((k) => k.row == 101)
-                              .toList();
-                          final modern = kanaList
-                              .where((k) => k.row >= 110)
-                              .toList();
-
-                          final showSeion =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.seion;
-                          final showDakuon =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.dakuon;
-                          final showHandakuon =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.handakuon;
-                          final showYouon =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.youon;
-                          final showSokuon =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.sokuon;
-                          final showChoon =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.choon;
-                          final showModern =
-                              selectedCategory == KanaCategory.all ||
-                              selectedCategory == KanaCategory.modern;
-
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: zen.spacing.lg,
+          // 假名列表內容 - 優化版
+          groupsAsync.when(
+            data: (groups) => SliverFillRemaining(
+              hasScrollBody: true,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 350),
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: CustomScrollView(
+                  key: ValueKey(
+                    '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
+                  ),
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: zen.spacing.lg),
+                      sliver: SliverMainAxisGroup(
+                        slivers: [
+                          for (final group in groups) ...[
+                            SliverToBoxAdapter(
+                              child: Center(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 600,
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: zen.spacing.md,
+                                      bottom: zen.spacing.md,
+                                    ),
+                                    child: _CategoryHeader(
+                                      title: group.title,
+                                      description: group.description,
+                                      zen: zen,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (showSeion && seion.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.seion.label,
-                                    description: KanaCategory.seion.description,
-                                    zen: zen,
+                            _SliverKanaGrid(
+                              kanaList: group.items,
+                              zen: zen,
+                              crossAxisCount: group.crossAxisCount,
+                              onTap: (kana) {
+                                ref
+                                    .read(kanaAudioControllerProvider.notifier)
+                                    .play(kana.text);
+                                showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  builder: (context) => Consumer(
+                                    builder: (context, ref, child) {
+                                      final allKana = ref.watch(
+                                        kanaListViewModelProvider,
+                                      );
+                                      return allKana.maybeWhen(
+                                        data: (list) => KanaDetailSheet(
+                                          kana: kana,
+                                          similarKana: list
+                                              .where(
+                                                (k) => kana.similarKanaIds
+                                                    .contains(k.id),
+                                              )
+                                              .toList(),
+                                          onPlayAudio: () {
+                                            ref
+                                                .read(
+                                                  kanaAudioControllerProvider
+                                                      .notifier,
+                                                )
+                                                .play(kana.text);
+                                          },
+                                        ),
+                                        orElse: () => const SizedBox.shrink(),
+                                      );
+                                    },
                                   ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: seion,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showSeion && bion.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: '鼻音',
-                                    description: '最後一個鼻音發音',
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: bion,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showDakuon && dakuon.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.dakuon.label,
-                                    description:
-                                        KanaCategory.dakuon.description,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: dakuon,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showHandakuon && handakuon.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.handakuon.label,
-                                    description:
-                                        KanaCategory.handakuon.description,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: handakuon,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showYouon && youon.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.youon.label,
-                                    description: KanaCategory.youon.description,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: youon,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                    crossAxisCount: 3,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showSokuon && sokuon.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.sokuon.label,
-                                    description:
-                                        KanaCategory.sokuon.description,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: sokuon,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                    crossAxisCount: 3,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showChoon && choon.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.choon.label,
-                                    description: KanaCategory.choon.description,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: choon,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                    crossAxisCount: 3,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                                if (showModern && modern.isNotEmpty) ...[
-                                  _CategoryHeader(
-                                    title: KanaCategory.modern.label,
-                                    description:
-                                        KanaCategory.modern.description,
-                                    zen: zen,
-                                  ),
-                                  SizedBox(height: zen.spacing.md),
-                                  _KanaGrid(
-                                    kanaList: modern,
-                                    allKana: kanaList,
-                                    ref: ref,
-                                    zen: zen,
-                                    crossAxisCount: 3,
-                                  ),
-                                  SizedBox(height: zen.spacing.xl),
-                                ],
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
-                        loading: () => const SizedBox(
-                          height: 200,
-                          child: Center(child: Text('準備中...')),
-                        ),
-                        error: (err, stack) => const SizedBox(
-                          height: 200,
-                          child: Center(child: Text('發生錯誤')),
-                        ),
+                            SliverToBoxAdapter(
+                              child: SizedBox(height: zen.spacing.xl),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                  ),
+                    // 額外的底部留白，確保 CustomScrollView 能正常捲動
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: zen.spacing.xxl),
+                    ),
+                  ],
                 ),
               ),
             ),
+            loading: () =>
+                const SliverFillRemaining(child: Center(child: Text('準備中...'))),
+            error: (err, stack) =>
+                const SliverFillRemaining(child: Center(child: Text('發生錯誤'))),
           ),
 
           SliverSafeArea(
@@ -388,98 +265,71 @@ class _CategoryHeader extends StatelessWidget {
   }
 }
 
-class _KanaGrid extends StatelessWidget {
+class _SliverKanaGrid extends StatelessWidget {
   final List<Kana> kanaList;
-  final List<Kana> allKana;
-  final WidgetRef ref;
   final ZenTheme zen;
   final int crossAxisCount;
+  final Function(Kana) onTap;
 
-  const _KanaGrid({
+  const _SliverKanaGrid({
     required this.kanaList,
-    required this.allKana,
-    required this.ref,
     required this.zen,
-    this.crossAxisCount = 5,
+    required this.crossAxisCount,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final double width = constraints.maxWidth;
-            final double gap = zen.spacing.sm + zen.spacing.xs; // 12.0
-            const int baseCols = 5;
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        // 限制寬度在 600 以內 (與 Header 一致)
+        final double maxWidth = 600;
+        final double screenWidth = constraints.crossAxisExtent;
+        final double gridWidth = screenWidth > maxWidth
+            ? maxWidth
+            : screenWidth;
 
-            final double baseItemWidth =
-                (width - (baseCols - 1) * gap) / baseCols;
-            final double baseItemHeight = baseItemWidth;
+        final double gap = zen.spacing.sm + zen.spacing.xs; // 12.0
+        const int baseCols = 5;
 
-            final double currentItemWidth =
-                (width - (crossAxisCount - 1) * gap) / crossAxisCount;
+        final double baseItemWidth =
+            (gridWidth - (baseCols - 1) * gap) / baseCols;
+        final double baseItemHeight = baseItemWidth;
 
-            final double childAspectRatio = currentItemWidth / baseItemHeight;
+        final double currentItemWidth =
+            (gridWidth - (crossAxisCount - 1) * gap) / crossAxisCount;
 
-            return GridView.builder(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: gap,
-                crossAxisSpacing: gap,
-                childAspectRatio: childAspectRatio,
-              ),
-              itemCount: kanaList.length,
-              itemBuilder: (context, index) {
-                final kana = kanaList[index];
-                return _KanaCard(
-                  kana: kana,
-                  zen: zen,
-                  onTap: () {
-                    ref
-                        .read(kanaAudioControllerProvider.notifier)
-                        .play(kana.text);
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      builder: (context) => KanaDetailSheet(
-                        kana: kana,
-                        similarKana: allKana
-                            .where((k) => kana.similarKanaIds.contains(k.id))
-                            .toList(),
-                        onPlayAudio: () {
-                          ref
-                              .read(kanaAudioControllerProvider.notifier)
-                              .play(kana.text);
-                        },
-                      ),
-                    );
-                  },
-                );
-              },
-            );
-          },
-        ),
-      ),
+        final double childAspectRatio = currentItemWidth / baseItemHeight;
+
+        // 如果螢幕太寬，我們需要置中 Grid。SliverPadding 可以幫忙。
+        final double horizontalPadding = (screenWidth - gridWidth) / 2;
+
+        return SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          sliver: SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: gap,
+              crossAxisSpacing: gap,
+              childAspectRatio: childAspectRatio,
+            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final kana = kanaList[index];
+              return _KanaCard(kana: kana, zen: zen, onTap: () => onTap(kana));
+            }, childCount: kanaList.length),
+          ),
+        );
+      },
     );
   }
 }
 
 class _KanaCard extends StatelessWidget {
-  final Kana vocabulary; // 這裡的原參數名為 kana，但為了符合代幣命名習慣或保持一致性，也可考慮調整
+  final Kana kana;
   final ZenTheme zen;
   final VoidCallback? onTap;
 
-  // 修正：這裡的原參數名是 kana，我維持原名以免破壞外部調用，但內部使用 zen
-  final Kana kana;
-
-  const _KanaCard({required this.kana, required this.zen, this.onTap})
-    : vocabulary = kana;
+  const _KanaCard({required this.kana, required this.zen, this.onTap});
 
   @override
   Widget build(BuildContext context) {
