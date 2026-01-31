@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 
 /// Zen 風格的 Multi Selector (多選元件)
@@ -99,8 +99,7 @@ class ZenMultiSelector<T> extends StatelessWidget {
             ),
             child: Text(
               label,
-              style: GoogleFonts.notoSansTc(
-                fontSize: 14,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isSelected ? theme.textPrimary : theme.textSecondary,
                 fontWeight: isSelected ? FontWeight.w400 : FontWeight.w300,
               ),

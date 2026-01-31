@@ -96,14 +96,84 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
 
 /// App 核心主題資料
 class AppTheme {
+  static TextTheme _buildTextTheme(Color textColor) {
+    const double height = 1.5;
+    return GoogleFonts.notoSansTcTextTheme().copyWith(
+      displayMedium: GoogleFonts.notoSansTc(
+        fontSize: 45,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      headlineLarge: GoogleFonts.notoSansTc(
+        fontSize: 32,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      headlineMedium: GoogleFonts.notoSansTc(
+        fontSize: 28,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      headlineSmall: GoogleFonts.notoSansTc(
+        fontSize: 24,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      titleLarge: GoogleFonts.notoSansTc(
+        fontSize: 22,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      titleMedium: GoogleFonts.notoSansTc(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: textColor,
+        height: height,
+      ),
+      bodyLarge: GoogleFonts.notoSansTc(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      bodyMedium: GoogleFonts.notoSansTc(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: textColor,
+        height: height,
+      ),
+      labelLarge: GoogleFonts.notoSansTc(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: textColor,
+        height: height,
+      ),
+      labelMedium: GoogleFonts.notoSansTc(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: textColor,
+        height: height,
+      ),
+      labelSmall: GoogleFonts.notoSansTc(
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+        color: textColor,
+        height: height,
+      ),
+    );
+  }
+
   static ThemeData get light {
     return ThemeData(
       useMaterial3: true,
       scaffoldBackgroundColor: ZenTheme.light.bgPrimary,
       extensions: const [ZenTheme.light],
-      textTheme: GoogleFonts.notoSansTcTextTheme().copyWith(
-        bodyMedium: GoogleFonts.notoSansTc(color: ZenTheme.light.textPrimary),
-      ),
+      textTheme: _buildTextTheme(ZenTheme.light.textPrimary),
     );
   }
 
@@ -112,9 +182,7 @@ class AppTheme {
       useMaterial3: true,
       scaffoldBackgroundColor: ZenTheme.dark.bgPrimary,
       extensions: const [ZenTheme.dark],
-      textTheme: GoogleFonts.notoSansTcTextTheme().copyWith(
-        bodyMedium: GoogleFonts.notoSansTc(color: ZenTheme.dark.textPrimary),
-      ),
+      textTheme: _buildTextTheme(ZenTheme.dark.textPrimary),
     );
   }
 }

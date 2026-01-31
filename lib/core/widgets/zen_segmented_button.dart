@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 
 /// Zen 風格的 Segmented Button (單選元件)
@@ -139,10 +139,10 @@ class _SegmentButton extends StatelessWidget {
         child: Center(
           child: Text(
             label,
-            style: GoogleFonts.notoSansTc(
-              fontSize: 13,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: isSelected ? theme.bgSurface : theme.textSecondary,
               fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+              fontSize: 13, // 微調以適應 Segmented Button
             ),
           ),
         ),

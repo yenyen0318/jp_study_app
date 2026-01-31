@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/theme.dart';
 import '../../../../core/widgets/zen_canvas.dart';
 import '../../domain/entities/vocabulary.dart';
@@ -43,16 +43,12 @@ class VocabularyPracticePage extends ConsumerWidget {
                     const SizedBox(height: 24),
                     Text(
                       vocabulary.text,
-                      style: GoogleFonts.notoSansJp(
-                        fontSize: 48,
-                        fontWeight: FontWeight.w300,
-                        color: zenTheme.textPrimary,
-                      ),
+                      style: Theme.of(context).textTheme.displayMedium
+                          ?.copyWith(color: zenTheme.textPrimary),
                     ),
                     Text(
                       vocabulary.meaning,
-                      style: TextStyle(
-                        fontSize: 18,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: zenTheme.textSecondary,
                       ),
                     ),
@@ -61,8 +57,7 @@ class VocabularyPracticePage extends ConsumerWidget {
                     // 書寫練習區
                     Text(
                       '手寫練習',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: zenTheme.textSecondary.withValues(alpha: 0.5),
                         letterSpacing: 1.2,
                       ),
@@ -79,10 +74,12 @@ class VocabularyPracticePage extends ConsumerWidget {
                     Center(
                       child: Text(
                         '下拉或向右滑動以返回',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: zenTheme.textSecondary.withValues(alpha: 0.3),
-                        ),
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(
+                              color: zenTheme.textSecondary.withValues(
+                                alpha: 0.3,
+                              ),
+                            ),
                       ),
                     ),
                   ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/presentation/providers/exam_controller.dart';
@@ -39,14 +39,18 @@ class ExamPage extends ConsumerWidget {
                 children: [
                   Text(
                     '準備題目中...',
-                    style: GoogleFonts.notoSansTc(color: theme.textSecondary),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: theme.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   TextButton(
                     onPressed: () => context.pop(),
                     child: Text(
                       '取消並返回',
-                      style: GoogleFonts.notoSansTc(color: theme.textSecondary),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: theme.textSecondary,
+                      ),
                     ),
                   ),
                 ],
@@ -189,9 +193,8 @@ class _QuestionArea extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             '聽音辨字',
-            style: GoogleFonts.notoSansTc(
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: theme.textSecondary,
-              fontSize: 14,
               letterSpacing: 2,
               fontWeight: FontWeight.w300,
             ),
@@ -206,12 +209,11 @@ class _QuestionArea extends StatelessWidget {
             child: Center(
               child: Text(
                 question.correctKana.text,
-                style: GoogleFonts.notoSansJp(
+                style: Theme.of(context).textTheme.displayMedium?.copyWith(
                   fontSize: 80,
                   color: theme.textPrimary,
                   fontWeight: FontWeight.w200,
-                  height:
-                      1.0, // Force line height to 1.0 to behave predictably within the box
+                  height: 1.0,
                 ),
               ),
             ),
@@ -219,9 +221,8 @@ class _QuestionArea extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             '字元辨識',
-            style: GoogleFonts.notoSansTc(
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: theme.textSecondary,
-              fontSize: 14,
               letterSpacing: 2,
               fontWeight: FontWeight.w300,
             ),
@@ -438,8 +439,7 @@ class _OptionCardState extends State<_OptionCard>
                 child: Center(
                   child: Text(
                     widget.label,
-                    style: GoogleFonts.notoSansJp(
-                      fontSize: 24,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w300,
                       color: widget.isAnswered
                           ? (widget.isCorrect
@@ -570,9 +570,8 @@ class _WrongAnswerHint extends StatelessWidget {
               children: [
                 Text(
                   '💡 記憶小撇步',
-                  style: GoogleFonts.notoSansTc(
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: theme.accent.withValues(alpha: 0.7 * value),
-                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 1.2,
                   ),
@@ -581,9 +580,8 @@ class _WrongAnswerHint extends StatelessWidget {
                 Text(
                   mnemonic!,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.notoSansTc(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: theme.textSecondary.withValues(alpha: value),
-                    fontSize: 14,
                     height: 1.6,
                     fontWeight: FontWeight.w300,
                   ),

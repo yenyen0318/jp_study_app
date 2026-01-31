@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 
 class ZenToast extends StatelessWidget {
@@ -58,9 +58,8 @@ class ZenToast extends StatelessWidget {
           const SizedBox(width: 12),
           Text(
             message,
-            style: GoogleFonts.notoSansTc(
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
               color: theme.textPrimary,
-              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/theme.dart';
 import '../providers/vocabulary_provider.dart';
 
@@ -24,14 +24,14 @@ class VocabularySearchBar extends ConsumerWidget {
           },
           cursorColor: zenTheme.accent,
           cursorWidth: 1.0,
-          style: GoogleFonts.notoSansTc(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             color: zenTheme.textPrimary,
             fontSize: 15,
             fontWeight: FontWeight.w400,
           ),
           decoration: InputDecoration(
             hintText: '搜尋單字、發音或釋義...',
-            hintStyle: GoogleFonts.notoSansTc(
+            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: zenTheme.textSecondary.withValues(alpha: 0.55),
               fontWeight: FontWeight.w300,
               fontSize: 14,

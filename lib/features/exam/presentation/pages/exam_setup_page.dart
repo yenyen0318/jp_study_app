@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/core/widgets/zen_button.dart';
 import 'package:jp_study_app/core/widgets/zen_multi_selector.dart';
@@ -68,24 +68,24 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
                       children: [
                         Text(
                           _currentType == 'kana' ? '準備驗收' : '單字挑戰',
-                          style: GoogleFonts.notoSansTc(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w300,
-                            color: zenTheme.textPrimary,
-                            letterSpacing: 2.0,
-                          ),
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                color: zenTheme.textPrimary,
+                                letterSpacing: 2.0,
+                              ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'しけん設定',
-                          style: GoogleFonts.notoSansJp(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: zenTheme.textSecondary.withValues(
-                              alpha: 0.7,
-                            ),
-                            letterSpacing: 4.0,
-                          ),
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: zenTheme.textSecondary.withValues(
+                                  alpha: 0.7,
+                                ),
+                                letterSpacing: 4.0,
+                              ),
                         ),
                       ],
                     ),
@@ -162,8 +162,7 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
   Widget _buildSectionHeader(String title, ZenTheme theme) {
     return Text(
       title,
-      style: GoogleFonts.notoSansTc(
-        fontSize: 16,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
         fontWeight: FontWeight.w400,
         color: theme.textSecondary,
         letterSpacing: 1.2,

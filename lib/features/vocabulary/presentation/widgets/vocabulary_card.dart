@@ -43,16 +43,14 @@ class VocabularyCard extends StatelessWidget {
                         (s) => RubyTextData(
                           s.text,
                           ruby: s.reading,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: zenTheme.textPrimary,
-                            height: 1.6,
-                          ),
-                          rubyStyle: TextStyle(
-                            fontSize: 12,
-                            color: zenTheme.textSecondary,
-                          ),
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: zenTheme.textPrimary,
+                                height: 1.6,
+                              ),
+                          rubyStyle: Theme.of(context).textTheme.labelMedium
+                              ?.copyWith(color: zenTheme.textSecondary),
                         ),
                       )
                       .toList(),
@@ -61,7 +59,7 @@ class VocabularyCard extends StatelessWidget {
                   onTap: () => _speak(vocabulary.text),
                   child: Text(
                     '發音',
-                    style: TextStyle(
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: zenTheme.accent,
                       fontWeight: FontWeight.w500,
                     ),
@@ -72,8 +70,7 @@ class VocabularyCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               vocabulary.romaji,
-              style: TextStyle(
-                fontSize: 14,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: zenTheme.textSecondary,
                 letterSpacing: 1.2,
               ),
@@ -81,7 +78,10 @@ class VocabularyCard extends StatelessWidget {
             const Divider(height: 24),
             Text(
               vocabulary.meaning,
-              style: TextStyle(fontSize: 18, color: zenTheme.textPrimary),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: zenTheme.textPrimary,
+                fontSize: 18, // 微調保持原設計
+              ),
             ),
             if (vocabulary.tags.isNotEmpty) ...[
               const SizedBox(height: 12),
@@ -100,10 +100,11 @@ class VocabularyCard extends StatelessWidget {
                         ),
                         child: Text(
                           tag,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: zenTheme.textSecondary,
-                          ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: zenTheme.textSecondary,
+                                fontSize: 10,
+                              ),
                         ),
                       ),
                     )

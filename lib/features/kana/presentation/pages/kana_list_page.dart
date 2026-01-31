@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_view_model.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
@@ -58,12 +58,12 @@ class KanaListPage extends ConsumerWidget {
                             children: [
                               Text(
                                 '五十音',
-                                style: GoogleFonts.notoSansTc(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w300,
-                                  color: zenTheme.textPrimary,
-                                  letterSpacing: 2.0,
-                                ),
+                                style: Theme.of(context).textTheme.headlineLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                      color: zenTheme.textPrimary,
+                                      letterSpacing: 2.0,
+                                    ),
                               ),
                               // 假名類型切換 - 使用 ZenSegmentedButton
                               ZenSegmentedButton<KanaType>(
@@ -349,20 +349,19 @@ class _CategoryHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: GoogleFonts.notoSansTc(
-            fontSize: 18,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w400,
             color: theme.textPrimary.withValues(alpha: 0.9),
             letterSpacing: 2.0,
             height: 1.2,
+            fontSize: 18, // 微調保持原設計
           ),
         ),
         if (description != null) ...[
           const SizedBox(height: 6),
           Text(
             description!,
-            style: GoogleFonts.notoSansTc(
-              fontSize: 14,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w300,
               color: theme.textSecondary.withValues(alpha: 0.8),
               letterSpacing: 0.5,
@@ -482,9 +481,10 @@ class _KanaCard extends StatelessWidget {
             Center(
               child: Text(
                 kana.text,
-                style: GoogleFonts.notoSansJp(
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  // 動態調整大小
                   fontSize: kana.text.length > 1 ? 26 : 32,
-                  height: 1.25, // 收緊行高以避免無效空間
+                  height: 1.25,
                   color: kana.isDuplicate
                       ? theme.textPrimary.withValues(alpha: 0.2)
                       : theme.textPrimary,
@@ -496,8 +496,7 @@ class _KanaCard extends StatelessWidget {
               right: 8,
               child: Text(
                 kana.romaji,
-                style: GoogleFonts.notoSansTc(
-                  fontSize: 11,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: kana.isDuplicate
                       ? theme.textSecondary.withValues(alpha: 0.2)
                       : theme.textSecondary,

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/writing_controller.dart';
 
@@ -85,6 +85,13 @@ class _ZenCanvasState extends ConsumerState<ZenCanvas> {
                         ),
                         // 使用 Theme 定義的語意化顏色，讓 Contrast 邏輯回歸 Theme
                         guideColor: widget.theme.guideOverlay,
+                        guideTextStyle: Theme.of(context)
+                            .textTheme
+                            .displayMedium
+                            ?.copyWith(
+                              color: widget.theme.guideOverlay,
+                              fontWeight: FontWeight.w100,
+                            ),
                       ),
                     ),
                   ),
@@ -108,8 +115,7 @@ class _ZenCanvasState extends ConsumerState<ZenCanvas> {
                       const SizedBox(width: 4),
                       Text(
                         '清除',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: widget.theme.textPrimary.withValues(
                             alpha: 0.4,
                           ),
@@ -132,12 +138,14 @@ class _ZenPainter extends CustomPainter {
   final List<List<Offset>> strokes;
   final Color strokeColor;
   final Color guideColor;
+  final TextStyle? guideTextStyle;
 
   _ZenPainter({
     required this.guideText,
     required this.strokes,
     required this.strokeColor,
     required this.guideColor,
+    this.guideTextStyle,
   });
 
   @override
@@ -209,15 +217,13 @@ class _ZenPainter extends CustomPainter {
         final textPainter = TextPainter(
           text: TextSpan(
             text: char,
-            style: GoogleFonts.notoSansJp(
+            style: guideTextStyle?.copyWith(
               // 字體大小需適配格子寬度，避免重疊
               // 對於拗音，因為分格後空間變小，字體自然會依照格子比例調整 (假設 height 為主)
               // 但若維持 size.height * 0.7 可能會撐爆寬度
               // 因此取 min(cellWidth, size.height) * 0.7
               fontSize:
                   (cellWidth < size.height ? cellWidth : size.height) * 0.6,
-              color: guideColor,
-              fontWeight: FontWeight.w100,
             ),
           ),
           textDirection: TextDirection.ltr,

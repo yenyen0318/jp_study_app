@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/presentation/providers/exam_controller.dart';
@@ -38,12 +38,13 @@ class ExamResultPage extends ConsumerWidget {
                         Text(
                           result.feedbackQuote,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.notoSansTc(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300,
-                            color: theme.textPrimary,
-                            letterSpacing: 1.2,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                color: theme.textPrimary,
+                                letterSpacing: 1.2,
+                                fontSize: 18,
+                              ),
                         ),
                       ],
                     ),
@@ -57,8 +58,7 @@ class ExamResultPage extends ConsumerWidget {
                     sliver: SliverToBoxAdapter(
                       child: Text(
                         '需要精進的字元',
-                        style: GoogleFonts.notoSansTc(
-                          fontSize: 14,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: theme.textSecondary,
                           letterSpacing: 2,
                         ),
@@ -138,8 +138,7 @@ class _MasteryCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '掌握度 ${(score * 100).toInt()}%',
-      style: GoogleFonts.notoSansTc(
-        fontSize: 14,
+      style: Theme.of(context).textTheme.labelLarge?.copyWith(
         fontWeight: FontWeight.w300,
         color: theme.textSecondary,
         letterSpacing: 2.0,
@@ -212,8 +211,7 @@ class _HankoStampState extends State<_HankoStamp>
               ),
               child: Text(
                 widget.label,
-                style: GoogleFonts.notoSansJp(
-                  fontSize: 24,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   color: widget.theme.error.withValues(alpha: 0.7),
                 ),
@@ -252,10 +250,9 @@ class _WrongAnswerCard extends StatelessWidget {
         children: [
           Text(
             kana.text,
-            style: GoogleFonts.notoSansJp(
-              fontSize: 24,
-              color: theme.textPrimary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(color: theme.textPrimary),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -264,17 +261,15 @@ class _WrongAnswerCard extends StatelessWidget {
               children: [
                 Text(
                   '正確讀音：${kana.romaji}',
-                  style: GoogleFonts.notoSansTc(
-                    fontSize: 14,
-                    color: theme.textPrimary,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: theme.textPrimary),
                 ),
                 Text(
                   '您選擇了：${wrong.selectedOption}',
-                  style: GoogleFonts.notoSansTc(
-                    fontSize: 12,
-                    color: theme.textSecondary,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelMedium?.copyWith(color: theme.textSecondary),
                 ),
               ],
             ),
@@ -324,7 +319,7 @@ class _ActionBtn extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: GoogleFonts.notoSansTc(
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
             color: theme.textPrimary,
             fontSize: 15,
             fontWeight: FontWeight.w300,

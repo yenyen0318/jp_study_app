@@ -62,6 +62,23 @@ description: "App UI/UX Design System & Guidelines"
     *   日文：使用 `GoogleFonts.notoSansJp()`。
 *   **回退機制**：必須設定 `fontFamilyFallback`，確保日文漢字與繁體中文在同一行時不會出現字重不一的情況。
 
+### **字體層級系統 (Typography System)**
+
+嚴格遵循 Material Design 3 的字體層級，但調整為適應日文/繁體中文的閱讀體驗。
+
+| 層級 (Role) | 大小 (Size) | 字重 (Weight) | 用途建議 |
+| --- | --- | --- | --- |
+| **Display Medium** | 45sp | Regular | 極大標題，如首頁歡迎語 |
+| **Headline Medium** | 28sp | Regular | 頁面主標題 |
+| **Title Medium** | 16sp | Medium | 卡片標題、重要區塊標頭 |
+| **Body Large** | 16sp | Regular | 主要閱讀內文 (單字卡) |
+| **Body Medium** | 14sp | Regular | 一般說明文字 |
+| **Label Large** | 14sp | Medium | 按鈕文字、Input 標籤 |
+| **Label Medium** | 12sp | Medium | 輔助標籤、Tag |
+
+*   **字重規範**：除非極度強調，否則**禁止使用 Bold (w700)**。請多使用 Medium (w500) 或 Regular (w400) 來維持畫面的「輕盈感」。
+*   **行高 (Height)**：CJK 文字建議設定 `height: 1.5` 以確保舒適的閱讀呼吸感。
+
 ### **無圖示原則 (Icon-less Challenge)**
 *   **核心規則**：盡量不使用 Icon。
 *   **替代方案**：

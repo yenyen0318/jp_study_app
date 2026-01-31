@@ -16,6 +16,11 @@ void main() {
     expect(find.text('しけん設定'), findsOneWidget);
     expect(find.text('假名類型'), findsOneWidget);
     expect(find.text('範圍選擇'), findsOneWidget);
+
+    // 內容變長後可能超出螢幕，需捲動確保可見
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -500));
+    await tester.pump();
+
     expect(find.text('驗收模式'), findsOneWidget);
     expect(find.text('開始驗收'), findsOneWidget);
   });

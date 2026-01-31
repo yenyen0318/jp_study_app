@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 
 class ZenButton extends StatelessWidget {
@@ -37,8 +37,7 @@ class ZenButton extends StatelessWidget {
           widthFactor: 1.0,
           child: Text(
             label,
-            style: GoogleFonts.notoSansTc(
-              fontSize: 16,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w300,
               color: theme.textPrimary,
               letterSpacing: 2.0,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 
 /// Zen 風格的 Chip Selector (單選元件)
@@ -88,10 +88,10 @@ class ZenChipSelector<T> extends StatelessWidget {
                 ),
                 child: Text(
                   label,
-                  style: GoogleFonts.notoSansTc(
-                    fontSize: 13,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
                     color: isSelected ? theme.bgPrimary : theme.textSecondary,
+                    fontSize: 13, // 微調以適應 Chip 大小
                   ),
                 ),
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
 import 'package:jp_study_app/core/widgets/zen_canvas.dart';
@@ -50,7 +50,7 @@ class KanaDetailSheet extends StatelessWidget {
               children: [
                 Text(
                   kana.text,
-                  style: GoogleFonts.notoSansJp(
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     fontSize: 80,
                     fontWeight: FontWeight.w300,
                     color: zenTheme.textPrimary,
@@ -64,12 +64,12 @@ class KanaDetailSheet extends StatelessWidget {
                     children: [
                       Text(
                         kana.romaji,
-                        style: GoogleFonts.notoSansTc(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w300,
-                          color: zenTheme.textSecondary,
-                          letterSpacing: 2.0,
-                        ),
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.w300,
+                              color: zenTheme.textSecondary,
+                              letterSpacing: 2.0,
+                            ),
                       ),
                       const SizedBox(height: 4),
                       InkWell(
@@ -84,11 +84,11 @@ class KanaDetailSheet extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               '發音',
-                              style: GoogleFonts.notoSansTc(
-                                fontSize: 14,
-                                color: zenTheme.textSecondary,
-                                fontWeight: FontWeight.w300,
-                              ),
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(
+                                    color: zenTheme.textSecondary,
+                                    fontWeight: FontWeight.w300,
+                                  ),
                             ),
                           ],
                         ),
@@ -109,8 +109,7 @@ class KanaDetailSheet extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 kana.mnemonic!,
-                style: GoogleFonts.notoSansTc(
-                  fontSize: 16,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   height: 1.6,
                   color: zenTheme.textPrimary,
                   fontWeight: FontWeight.w300,
@@ -160,17 +159,13 @@ class KanaDetailSheet extends StatelessWidget {
                         children: [
                           Text(
                             s.text,
-                            style: GoogleFonts.notoSansJp(
-                              fontSize: 24,
-                              color: zenTheme.textPrimary,
-                            ),
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(color: zenTheme.textPrimary),
                           ),
                           Text(
                             s.romaji,
-                            style: GoogleFonts.notoSansTc(
-                              fontSize: 10,
-                              color: zenTheme.textSecondary,
-                            ),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: zenTheme.textSecondary),
                           ),
                         ],
                       ),
@@ -211,8 +206,7 @@ class _SectionHeader extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: GoogleFonts.notoSansTc(
-            fontSize: 14,
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w400,
             color: theme.textSecondary,
             letterSpacing: 1.2,

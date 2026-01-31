@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/theme/theme.dart';
 import '../../../../core/widgets/zen_chip_selector.dart';
 import '../providers/vocabulary_provider.dart';
@@ -39,18 +39,16 @@ class VocabularyListPage extends ConsumerWidget {
                   children: [
                     Text(
                       'N5 單字學習',
-                      style: GoogleFonts.notoSansTc(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w300,
-                        color: zenTheme.textPrimary,
-                        letterSpacing: 2.0,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: zenTheme.textPrimary,
+                            letterSpacing: 2.0,
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       '精選 800+ 核心詞彙，成就日檢之路',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: zenTheme.textSecondary.withValues(alpha: 0.7),
                       ),
                     ),
@@ -146,11 +144,12 @@ class VocabularyListPage extends ConsumerWidget {
                             child: Center(
                               child: Text(
                                 '找不到符合的單字',
-                                style: TextStyle(
-                                  color: zenTheme.textSecondary.withValues(
-                                    alpha: 0.5,
-                                  ),
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: zenTheme.textSecondary.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                    ),
                               ),
                             ),
                           )

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:jp_study_app/core/theme/theme.dart';
 
 class HomePage extends StatelessWidget {
@@ -68,8 +68,7 @@ class _HomeNavItem extends StatelessWidget {
         children: [
           Text(
             title,
-            style: GoogleFonts.notoSansTc(
-              fontSize: 36,
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.w300,
               color: isEnabled
                   ? theme.textPrimary
@@ -80,8 +79,7 @@ class _HomeNavItem extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: GoogleFonts.notoSansJp(
-              fontSize: 14,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w400,
               color: isEnabled
                   ? theme.textSecondary.withValues(alpha: 0.7)

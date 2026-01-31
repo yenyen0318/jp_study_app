@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-01-31
+
+### Refactor
+- **全域字體系統重構 (Typography System Check)**：移除所有硬編碼 `GoogleFonts` 與 `TextStyle`，全面遷移至 `AppTheme` 語意化 Token (`headlineLarge`, `bodyMedium` 等)，確保全 App 視覺一致性。
+- **元件樣式標準化**：重構 `ZenCanvas`, `ZenButton`, `ZenToast` 等核心元件以符合設計系統規範。
+- **代碼品質優化**：清除 `google_fonts` 依賴與相關 Lint 錯誤，提升代碼可維護性。
+
 ## [0.4.0] - 2026-01-31
 
 ### Added
