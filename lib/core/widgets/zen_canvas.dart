@@ -84,7 +84,9 @@ class _ZenCanvasState extends ConsumerState<ZenCanvas> {
                           alpha: 0.6,
                         ),
                         guideColor: widget.theme.textPrimary.withValues(
-                          alpha: 0.05,
+                          alpha: Theme.of(context).brightness == Brightness.dark
+                              ? 0.15
+                              : 0.05,
                         ),
                       ),
                     ),
@@ -180,7 +182,7 @@ class _ZenPainter extends CustomPainter {
         text: guideText,
         style: GoogleFonts.notoSansJp(
           fontSize: size.height * 0.7,
-          color: guideColor.withValues(alpha: 0.03),
+          color: guideColor,
           fontWeight: FontWeight.w100,
         ),
       ),
