@@ -10,6 +10,7 @@ import 'package:jp_study_app/core/errors/exceptions.dart';
 import 'package:jp_study_app/features/exam/presentation/widgets/exam_scope_dialog.dart';
 import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
+import 'package:jp_study_app/core/widgets/zen_button.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -187,31 +188,15 @@ class KanaListPage extends ConsumerWidget {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 16, right: 8),
-        child: InkWell(
-          onTap: () {
+        child: ZenButton(
+          label: '驗收',
+          onPressed: () {
             showDialog(
               context: context,
               builder: (context) => const ExamScopeDialog(),
             );
           },
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            decoration: BoxDecoration(
-              color: zenTheme.bgSurface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: zenTheme.borderSubtle, width: 0.5),
-            ),
-            child: Text(
-              '驗收',
-              style: GoogleFonts.notoSansTc(
-                fontSize: 14,
-                color: zenTheme.textPrimary,
-                fontWeight: FontWeight.w300,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ),
+          theme: zenTheme,
         ),
       ),
     );
@@ -371,31 +356,36 @@ class _KanaCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: theme.borderSubtle, width: 0.5),
         ),
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
-              child: Text(
-                kana.text,
-                style: GoogleFonts.notoSansJp(
-                  fontSize: 32,
-                  height: 1.6, // 預留標音/間距空間
-                  color: kana.isDuplicate
-                      ? theme.textPrimary.withValues(alpha: 0.2)
-                      : theme.textPrimary,
+            Expanded(
+              child: Center(
+                child: Text(
+                  kana.text,
+                  style: GoogleFonts.notoSansJp(
+                    fontSize: 32,
+                    height: 1.25, // 收緊行高以避免無效空間
+                    color: kana.isDuplicate
+                        ? theme.textPrimary.withValues(alpha: 0.2)
+                        : theme.textPrimary,
+                  ),
                 ),
               ),
             ),
-            Positioned(
-              bottom: 8,
-              right: 12,
-              child: Text(
-                kana.romaji,
-                style: GoogleFonts.notoSansTc(
-                  fontSize: 12,
-                  color: kana.isDuplicate
-                      ? theme.textSecondary.withValues(alpha: 0.2)
-                      : theme.textSecondary,
-                  fontWeight: FontWeight.w300,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6, right: 8),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  kana.romaji,
+                  style: GoogleFonts.notoSansTc(
+                    fontSize: 11,
+                    color: kana.isDuplicate
+                        ? theme.textSecondary.withValues(alpha: 0.2)
+                        : theme.textSecondary,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
               ),
             ),

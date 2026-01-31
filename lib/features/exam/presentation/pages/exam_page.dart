@@ -7,6 +7,7 @@ import 'package:jp_study_app/features/exam/presentation/providers/exam_controlle
 import 'package:jp_study_app/core/services/tts_service.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math' as math;
+import 'package:jp_study_app/core/widgets/zen_button.dart';
 
 class ExamPage extends ConsumerWidget {
   const ExamPage({super.key});
@@ -109,11 +110,13 @@ class ExamPage extends ConsumerWidget {
 
                           // 下一題按鈕
                           if (state.isAnswered)
-                            _NextButton(
+                            ZenButton(
+                              label: '下一題',
                               onPressed: () => ref
                                   .read(examControllerProvider.notifier)
                                   .nextQuestion(),
                               theme: theme,
+                              isGhost: true, // 使用幽靈按鈕樣式，更輕量
                             ),
                         ],
                       ),
@@ -439,32 +442,6 @@ class _OptionCardState extends State<_OptionCard>
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _NextButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final ZenTheme theme;
-
-  const _NextButton({required this.onPressed, required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
-      ),
-      child: Text(
-        '下一題',
-        style: GoogleFonts.notoSansTc(
-          color: theme.textPrimary,
-          fontSize: 16,
-          fontWeight: FontWeight.w300,
-          letterSpacing: 4.0,
-        ),
       ),
     );
   }

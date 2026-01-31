@@ -5,6 +5,7 @@ import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/presentation/providers/exam_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jp_study_app/core/widgets/zen_button.dart';
 
 class ExamScopeDialog extends ConsumerStatefulWidget {
   const ExamScopeDialog({super.key});
@@ -146,51 +147,36 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
             const SizedBox(height: 32),
 
             // 開始按鈕
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () {
-                  // 處理行索引映射：將 UI 上的索引轉換為資料庫中實際的 row 索引
-                  final Set<int> actualRows = {};
-                  for (final index in _selectedRows) {
-                    if (index == 11) {
-                      // 濁音包含 が、ざ、だ、ば 行 (11, 12, 13, 14)
-                      actualRows.addAll([11, 12, 13, 14]);
-                    } else if (index == 12) {
-                      // 半濁音包含 ぱ 行 (15)
-                      actualRows.add(15);
-                    } else if (index == 13) {
-                      // 拗音包含 row 16-26
-                      actualRows.addAll(List.generate(11, (i) => i + 16));
-                    } else {
-                      actualRows.add(index);
-                    }
+            ZenButton(
+              label: '平靜開始',
+              onPressed: () {
+                // 處理行索引映射：將 UI 上的索引轉換為資料庫中實際的 row 索引
+                final Set<int> actualRows = {};
+                for (final index in _selectedRows) {
+                  if (index == 11) {
+                    // 濁音包含 が、ざ、だ、ば 行 (11, 12, 13, 14)
+                    actualRows.addAll([11, 12, 13, 14]);
+                  } else if (index == 12) {
+                    // 半濁音包含 ぱ 行 (15)
+                    actualRows.add(15);
+                  } else if (index == 13) {
+                    // 拗音包含 row 16-26
+                    actualRows.addAll(List.generate(11, (i) => i + 16));
+                  } else {
+                    actualRows.add(index);
                   }
+                }
 
-                  final scope = ExamScope(
-                    types: _selectedTypes,
-                    rows: actualRows.toList(),
-                  );
-                  ref.read(examControllerProvider.notifier).startExam(scope);
-                  context.pop();
-                  context.push('/exam');
-                },
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: theme.borderSubtle, width: 0.5),
-                  ),
-                ),
-                child: Text(
-                  '平靜開始',
-                  style: GoogleFonts.notoSansTc(
-                    color: theme.textPrimary,
-                    fontSize: 16,
-                    letterSpacing: 2.0,
-                  ),
-                ),
-              ),
+                final scope = ExamScope(
+                  types: _selectedTypes,
+                  rows: actualRows.toList(),
+                );
+                ref.read(examControllerProvider.notifier).startExam(scope);
+                context.pop();
+                context.push('/exam');
+              },
+              theme: theme,
+              isFullWidth: true,
             ),
           ],
         ),

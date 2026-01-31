@@ -142,3 +142,14 @@ description: "App UI/UX Design System & Guidelines"
         }
         ```
 *   **測試驗證**：必須撰寫 Widget Test 模擬巢狀結構，驗證拖曳是否正確觸發目標行為而非捲動。
+
+## 11. 架構與代碼規範 (Architecture & Code Standards)
+
+為了維護設計系統的一致性與可維護性，嚴格禁止在 UI Widget 中硬編碼樣式邏輯。
+
+*   **禁止硬編碼 (No Hardcoding)**：
+    *   **禁止**：在 Widget 的 `build` 方法中直接寫死顏色值（如 `Color(0xFF...)`）或根據 `Brightness` 寫死判斷邏輯（如 `isDark ? 0.5 : 0.1`）。
+    *   **強制**：所有顏色與樣式變數必須定義於 `ZenTheme` 中，並透過 `Theme.of(context).extension<ZenTheme>()` 存取。
+*   **語意化優先**：
+    *   若發現新的設計需求（例如「引導層顏色」），應先擴充 `ZenTheme` 屬性（如 `guideOverlay`），再於 Widget 中使用。
+    *   以此確保修改主題時唯一來源 (Single Source of Truth) 的可靠性。
