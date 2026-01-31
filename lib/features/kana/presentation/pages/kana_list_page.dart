@@ -200,13 +200,6 @@ class KanaListPage extends ConsumerWidget {
               color: zenTheme.bgSurface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: zenTheme.borderSubtle, width: 0.5),
-              boxShadow: [
-                BoxShadow(
-                  color: zenTheme.textPrimary.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
             ),
             child: Text(
               '驗收',

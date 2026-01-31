@@ -45,7 +45,7 @@ class ExamPage extends ConsumerWidget {
                     onPressed: () => context.pop(),
                     child: Text(
                       '取消並返回',
-                      style: TextStyle(color: theme.textSecondary),
+                      style: GoogleFonts.notoSansTc(color: theme.textSecondary),
                     ),
                   ),
                 ],
@@ -151,14 +151,6 @@ class _ProgressBar extends StatelessWidget {
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
             color: theme.textPrimary.withValues(alpha: 0.6),
-            boxShadow: [
-              if (progress == 1.0)
-                BoxShadow(
-                  color: theme.textPrimary.withValues(alpha: 0.3),
-                  blurRadius: 4,
-                  spreadRadius: 1,
-                ),
-            ],
           ),
         ),
       ),
@@ -268,13 +260,6 @@ class _ZenPlayButtonState extends State<_ZenPlayButton>
             shape: BoxShape.circle,
             color: widget.theme.bgSurface,
             border: Border.all(color: widget.theme.borderSubtle, width: 0.5),
-            boxShadow: [
-              BoxShadow(
-                color: widget.theme.textPrimary.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
           child: Icon(
             Icons.volume_up_outlined,
@@ -431,18 +416,6 @@ class _OptionCardState extends State<_OptionCard>
                         : widget.theme.borderSubtle,
                     width: widget.isAnswered && widget.isCorrect ? 1.5 : 0.5,
                   ),
-                  boxShadow:
-                      (widget.isAnswered &&
-                          widget.isSelected &&
-                          widget.isCorrect)
-                      ? [
-                          BoxShadow(
-                            color: widget.theme.success.withValues(alpha: 0.2),
-                            blurRadius: 12,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : [],
                 ),
                 child: Center(
                   child: Text(
@@ -462,7 +435,7 @@ class _OptionCardState extends State<_OptionCard>
                 ),
               ),
               if (widget.isAnswered && widget.isSelected && widget.isCorrect)
-                const Positioned.fill(child: _ZenParticles()),
+                Positioned.fill(child: _ZenParticles(theme: widget.theme)),
             ],
           );
         },
@@ -498,7 +471,9 @@ class _NextButton extends StatelessWidget {
 }
 
 class _ZenParticles extends StatefulWidget {
-  const _ZenParticles();
+  final ZenTheme theme;
+
+  const _ZenParticles({required this.theme});
 
   @override
   State<_ZenParticles> createState() => _ZenParticlesState();
@@ -534,6 +509,7 @@ class _ZenParticlesState extends State<_ZenParticles>
           painter: _ParticlePainter(
             particles: _particles,
             progress: _controller.value,
+            theme: widget.theme,
           ),
         );
       },
@@ -550,15 +526,20 @@ class _Particle {
 class _ParticlePainter extends CustomPainter {
   final List<_Particle> particles;
   final double progress;
+  final ZenTheme theme;
 
-  _ParticlePainter({required this.particles, required this.progress});
+  _ParticlePainter({
+    required this.particles,
+    required this.progress,
+    required this.theme,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (progress >= 1.0) return;
 
     final paint = Paint()
-      ..color = const Color(0xFF92B5A9).withValues(alpha: 1.0 - progress);
+      ..color = theme.success.withValues(alpha: 1.0 - progress);
     final center = Offset(size.width / 2, size.height / 2);
 
     for (var p in particles) {
