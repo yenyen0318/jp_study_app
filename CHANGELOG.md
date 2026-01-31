@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-01-31
+
+### Added
+- **N5 單字學習模組 (Vocabulary Module)**：實作完整的單字學習系統，包含 800+ N5 級別單字庫。
+- **動態標籤過濾 (Dynamic Tag System)**：基於資料驅動的標籤過濾器，支援繁體中文標籤 (如 名詞、動詞、交通 等)，實現資料即 UI 的「禪意」架構。
+- **自動化內容生成**：引入 Python 生成器，確保數字、時間、日期等基礎詞彙的完整性與正確性。
+- **首頁單字入口**：更新 `HomePage` 新增單字頁面導航按鈕。
+
+### Changed
+- **ZenCanvas 優化**：將筆順參數設為可選並提供預設值，提升元件穩健性。
+
 ## [0.3.0] - 2026-01-31
 
 ### Added
