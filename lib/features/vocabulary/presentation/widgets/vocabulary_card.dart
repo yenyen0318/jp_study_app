@@ -18,17 +18,18 @@ class VocabularyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final zenTheme = Theme.of(context).extension<ZenTheme>()!;
+    final zen = context.zen;
+    final textTheme = Theme.of(context).textTheme;
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(zen.radius.md),
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(zen.spacing.md),
         decoration: BoxDecoration(
-          color: zenTheme.bgSurface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: zenTheme.borderSubtle),
+          color: zen.bgSurface,
+          borderRadius: BorderRadius.circular(zen.radius.md),
+          border: Border.all(color: zen.borderSubtle),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,14 +44,14 @@ class VocabularyCard extends StatelessWidget {
                         (s) => RubyTextData(
                           s.text,
                           ruby: s.reading,
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: zenTheme.textPrimary,
-                                height: 1.6,
-                              ),
-                          rubyStyle: Theme.of(context).textTheme.labelMedium
-                              ?.copyWith(color: zenTheme.textSecondary),
+                          style: textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: zen.textPrimary,
+                            height: 1.6,
+                          ),
+                          rubyStyle: textTheme.labelMedium?.copyWith(
+                            color: zen.textSecondary,
+                          ),
                         ),
                       )
                       .toList(),
@@ -59,52 +60,53 @@ class VocabularyCard extends StatelessWidget {
                   onTap: () => _speak(vocabulary.text),
                   child: Text(
                     '發音',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: zenTheme.accent,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: zen.accent,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: zen.spacing.sm),
             Text(
               vocabulary.romaji,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: zenTheme.textSecondary,
+              style: textTheme.bodyMedium?.copyWith(
+                color: zen.textSecondary,
                 letterSpacing: 1.2,
               ),
             ),
-            const Divider(height: 24),
+            Divider(height: zen.spacing.lg),
             Text(
               vocabulary.meaning,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: zenTheme.textPrimary,
-                fontSize: 18, // 微調保持原設計
+              style: textTheme.bodyLarge?.copyWith(
+                color: zen.textPrimary,
+                fontSize: 18,
               ),
             ),
             if (vocabulary.tags.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: zen.spacing.md),
               Wrap(
-                spacing: 8,
+                spacing: zen.spacing.sm,
                 children: vocabulary.tags
                     .map(
                       (tag) => Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: zen.spacing.sm,
+                          vertical: zen.spacing.xs / 2,
                         ),
                         decoration: BoxDecoration(
-                          color: zenTheme.bgPrimary.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(4),
+                          color: zen.bgPrimary.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(
+                            zen.radius.sm / 2,
+                          ),
                         ),
                         child: Text(
                           tag,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                color: zenTheme.textSecondary,
-                                fontSize: 10,
-                              ),
+                          style: textTheme.labelSmall?.copyWith(
+                            color: zen.textSecondary,
+                            fontSize: 10,
+                          ),
                         ),
                       ),
                     )

@@ -1,6 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// 使用者介面的間隔規範 (Design Tokens)
+@immutable
+class ZenSpacing {
+  final double xs;
+  final double sm;
+  final double md;
+  final double lg;
+  final double xl;
+  final double xxl;
+
+  const ZenSpacing({
+    this.xs = 4.0,
+    this.sm = 8.0,
+    this.md = 16.0,
+    this.lg = 24.0,
+    this.xl = 32.0,
+    this.xxl = 48.0,
+  });
+}
+
+/// 使用者介面的圓角規範 (Design Tokens)
+@immutable
+class ZenRadius {
+  final double sm;
+  final double md;
+  final double lg;
+  final double full;
+
+  const ZenRadius({
+    this.sm = 8.0,
+    this.md = 12.0,
+    this.lg = 24.0,
+    this.full = 999.0,
+  });
+}
+
 /// 語意化顏色的 Zen 主題擴充
 @immutable
 class ZenTheme extends ThemeExtension<ZenTheme> {
@@ -14,6 +50,12 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
   final Color accent;
   final Color guideOverlay;
 
+  /// 間隔系統
+  final ZenSpacing spacing;
+
+  /// 圓角系統
+  final ZenRadius radius;
+
   const ZenTheme({
     required this.bgPrimary,
     required this.bgSurface,
@@ -24,6 +66,8 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     required this.borderSubtle,
     required this.accent,
     required this.guideOverlay,
+    this.spacing = const ZenSpacing(),
+    this.radius = const ZenRadius(),
   });
 
   @override
@@ -37,6 +81,8 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     Color? borderSubtle,
     Color? accent,
     Color? guideOverlay,
+    ZenSpacing? spacing,
+    ZenRadius? radius,
   }) {
     return ZenTheme(
       bgPrimary: bgPrimary ?? this.bgPrimary,
@@ -48,6 +94,8 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       borderSubtle: borderSubtle ?? this.borderSubtle,
       accent: accent ?? this.accent,
       guideOverlay: guideOverlay ?? this.guideOverlay,
+      spacing: spacing ?? this.spacing,
+      radius: radius ?? this.radius,
     );
   }
 
@@ -66,6 +114,8 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       borderSubtle: Color.lerp(borderSubtle, other.borderSubtle, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
       guideOverlay: Color.lerp(guideOverlay, other.guideOverlay, t)!,
+      spacing: spacing, // 間隔不參與 lerp
+      radius: radius, // 圓角不參與 lerp
     );
   }
 
@@ -92,6 +142,11 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     accent: Color(0xFF4A5F6D), // 深縹
     guideOverlay: Color(0x26E1E1E1), // textPrimary * 0.15
   );
+}
+
+/// 提供便捷存取 ZenTheme 的擴充
+extension ZenThemeContext on BuildContext {
+  ZenTheme get zen => Theme.of(this).extension<ZenTheme>()!;
 }
 
 /// App 核心主題資料

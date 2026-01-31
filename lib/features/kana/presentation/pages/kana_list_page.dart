@@ -18,7 +18,8 @@ class KanaListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final zenTheme = Theme.of(context).extension<ZenTheme>()!;
+    final zen = context.zen;
+    final textTheme = Theme.of(context).textTheme;
     final kanaListAsync = ref.watch(kanaListViewModelProvider);
     final selectedCategory = ref.watch(kanaCategoryFilterProvider);
 
@@ -35,13 +36,13 @@ class KanaListPage extends ConsumerWidget {
     });
 
     return Scaffold(
-      backgroundColor: zenTheme.bgPrimary,
+      backgroundColor: zen.bgPrimary,
       body: CustomScrollView(
         slivers: [
           // 頂部標題與過濾器
           SliverSafeArea(
             bottom: false,
-            minimum: const EdgeInsets.only(top: 24),
+            minimum: EdgeInsets.only(top: zen.spacing.lg),
             sliver: SliverToBoxAdapter(
               child: Center(
                 child: ConstrainedBox(
@@ -50,19 +51,20 @@ class KanaListPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: zen.spacing.lg,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
                               '五十音',
-                              style: Theme.of(context).textTheme.headlineLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w300,
-                                    color: zenTheme.textPrimary,
-                                    letterSpacing: 2.0,
-                                  ),
+                              style: textTheme.headlineLarge?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                color: zen.textPrimary,
+                                letterSpacing: 2.0,
+                              ),
                             ),
                             // 假名類型切換 - 使用 ZenSegmentedButton
                             ZenSegmentedButton<KanaType>(
@@ -76,28 +78,30 @@ class KanaListPage extends ConsumerWidget {
                                     .read(kanaTypeFilterProvider.notifier)
                                     .setType(type);
                               },
-                              theme: zenTheme,
+                              theme: zen,
                               labelBuilder: (type) =>
                                   type == KanaType.hiragana ? 'あ' : 'ア',
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: zen.spacing.lg),
                       // 分類選擇 - 使用 ZenChipSelector
                       ZenChipSelector<KanaCategory>(
                         options: KanaCategory.values,
                         selectedValue: selectedCategory,
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: zen.spacing.lg,
+                        ),
                         onChanged: (category) {
                           ref
                               .read(kanaCategoryFilterProvider.notifier)
                               .setFilter(category);
                         },
-                        theme: zenTheme,
+                        theme: zen,
                         labelBuilder: (category) => category.label,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: zen.spacing.sm),
                     ],
                   ),
                 ),
@@ -108,7 +112,7 @@ class KanaListPage extends ConsumerWidget {
           // 假名列表內容
           SliverSafeArea(
             top: false,
-            minimum: const EdgeInsets.only(bottom: 24),
+            minimum: EdgeInsets.only(bottom: zen.spacing.lg),
             sliver: SliverToBoxAdapter(
               child: Center(
                 child: ConstrainedBox(
@@ -124,10 +128,7 @@ class KanaListPage extends ConsumerWidget {
                       key: ValueKey(
                         '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 0,
-                        vertical: 16,
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: zen.spacing.md),
                       child: kanaListAsync.when(
                         data: (kanaList) {
                           final seion = kanaList
@@ -180,7 +181,9 @@ class KanaListPage extends ConsumerWidget {
                               selectedCategory == KanaCategory.modern;
 
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: zen.spacing.lg,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -188,129 +191,129 @@ class KanaListPage extends ConsumerWidget {
                                   _CategoryHeader(
                                     title: KanaCategory.seion.label,
                                     description: KanaCategory.seion.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: seion,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showSeion && bion.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: '鼻音',
                                     description: '最後一個鼻音發音',
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: bion,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showDakuon && dakuon.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: KanaCategory.dakuon.label,
                                     description:
                                         KanaCategory.dakuon.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: dakuon,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showHandakuon && handakuon.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: KanaCategory.handakuon.label,
                                     description:
                                         KanaCategory.handakuon.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: handakuon,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showYouon && youon.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: KanaCategory.youon.label,
                                     description: KanaCategory.youon.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: youon,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                     crossAxisCount: 3,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showSokuon && sokuon.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: KanaCategory.sokuon.label,
                                     description:
                                         KanaCategory.sokuon.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: sokuon,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                     crossAxisCount: 3,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showChoon && choon.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: KanaCategory.choon.label,
                                     description: KanaCategory.choon.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: choon,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                     crossAxisCount: 3,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                                 if (showModern && modern.isNotEmpty) ...[
                                   _CategoryHeader(
                                     title: KanaCategory.modern.label,
                                     description:
                                         KanaCategory.modern.description,
-                                    theme: zenTheme,
+                                    zen: zen,
                                   ),
-                                  const SizedBox(height: 16),
+                                  SizedBox(height: zen.spacing.md),
                                   _KanaGrid(
                                     kanaList: modern,
                                     allKana: kanaList,
                                     ref: ref,
-                                    zenTheme: zenTheme,
+                                    zen: zen,
                                     crossAxisCount: 3,
                                   ),
-                                  const SizedBox(height: 32),
+                                  SizedBox(height: zen.spacing.xl),
                                 ],
                               ],
                             ),
@@ -332,10 +335,10 @@ class KanaListPage extends ConsumerWidget {
             ),
           ),
 
-          const SliverSafeArea(
+          SliverSafeArea(
             top: false,
-            minimum: EdgeInsets.only(bottom: 80),
-            sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
+            minimum: EdgeInsets.only(bottom: zen.spacing.xxl * 1.5),
+            sliver: const SliverToBoxAdapter(child: SizedBox.shrink()),
           ),
         ],
       ),
@@ -346,12 +349,12 @@ class KanaListPage extends ConsumerWidget {
 class _CategoryHeader extends StatelessWidget {
   final String title;
   final String? description;
-  final ZenTheme theme;
+  final ZenTheme zen;
 
   const _CategoryHeader({
     required this.title,
     this.description,
-    required this.theme,
+    required this.zen,
   });
 
   @override
@@ -363,19 +366,19 @@ class _CategoryHeader extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w400,
-            color: theme.textPrimary.withValues(alpha: 0.9),
+            color: zen.textPrimary.withValues(alpha: 0.9),
             letterSpacing: 2.0,
             height: 1.2,
-            fontSize: 18, // 微調保持原設計
+            fontSize: 18,
           ),
         ),
         if (description != null) ...[
-          const SizedBox(height: 6),
+          SizedBox(height: zen.spacing.xs),
           Text(
             description!,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w300,
-              color: theme.textSecondary.withValues(alpha: 0.8),
+              color: zen.textSecondary.withValues(alpha: 0.8),
               letterSpacing: 0.5,
             ),
           ),
@@ -389,14 +392,14 @@ class _KanaGrid extends StatelessWidget {
   final List<Kana> kanaList;
   final List<Kana> allKana;
   final WidgetRef ref;
-  final ZenTheme zenTheme;
+  final ZenTheme zen;
   final int crossAxisCount;
 
   const _KanaGrid({
     required this.kanaList,
     required this.allKana,
     required this.ref,
-    required this.zenTheme,
+    required this.zen,
     this.crossAxisCount = 5,
   });
 
@@ -408,23 +411,20 @@ class _KanaGrid extends StatelessWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final double width = constraints.maxWidth;
-            const double gap = 12.0;
+            final double gap = zen.spacing.sm + zen.spacing.xs; // 12.0
             const int baseCols = 5;
 
-            // 計算標準 5 欄卡片的寬度與高度 (基準比例 1.0)
             final double baseItemWidth =
                 (width - (baseCols - 1) * gap) / baseCols;
             final double baseItemHeight = baseItemWidth;
 
-            // 計算當前欄數下的卡片寬度
             final double currentItemWidth =
                 (width - (crossAxisCount - 1) * gap) / crossAxisCount;
 
-            // 動態計算長寬比:讓高度始終等於 baseItemHeight
             final double childAspectRatio = currentItemWidth / baseItemHeight;
 
             return GridView.builder(
-              padding: EdgeInsets.zero, // 移除 GridView 預設內距
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -438,7 +438,7 @@ class _KanaGrid extends StatelessWidget {
                 final kana = kanaList[index];
                 return _KanaCard(
                   kana: kana,
-                  theme: zenTheme,
+                  zen: zen,
                   onTap: () {
                     ref
                         .read(kanaAudioControllerProvider.notifier)
@@ -471,22 +471,26 @@ class _KanaGrid extends StatelessWidget {
 }
 
 class _KanaCard extends StatelessWidget {
-  final Kana kana;
-  final ZenTheme theme;
+  final Kana vocabulary; // 這裡的原參數名為 kana，但為了符合代幣命名習慣或保持一致性，也可考慮調整
+  final ZenTheme zen;
   final VoidCallback? onTap;
 
-  const _KanaCard({required this.kana, required this.theme, this.onTap});
+  // 修正：這裡的原參數名是 kana，我維持原名以免破壞外部調用，但內部使用 zen
+  final Kana kana;
+
+  const _KanaCard({required this.kana, required this.zen, this.onTap})
+    : vocabulary = kana;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(zen.radius.md),
       child: Container(
         decoration: BoxDecoration(
-          color: theme.bgSurface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.borderSubtle, width: 0.5),
+          color: zen.bgSurface,
+          borderRadius: BorderRadius.circular(zen.radius.md),
+          border: Border.all(color: zen.borderSubtle, width: 0.5),
         ),
         child: Stack(
           children: [
@@ -494,24 +498,23 @@ class _KanaCard extends StatelessWidget {
               child: Text(
                 kana.text,
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  // 動態調整大小
                   fontSize: kana.text.length > 1 ? 26 : 32,
                   height: 1.25,
                   color: kana.isDuplicate
-                      ? theme.textPrimary.withValues(alpha: 0.2)
-                      : theme.textPrimary,
+                      ? zen.textPrimary.withValues(alpha: 0.2)
+                      : zen.textPrimary,
                 ),
               ),
             ),
             Positioned(
-              bottom: 6,
-              right: 8,
+              bottom: zen.spacing.xs + 2,
+              right: zen.spacing.sm,
               child: Text(
                 kana.romaji,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: kana.isDuplicate
-                      ? theme.textSecondary.withValues(alpha: 0.2)
-                      : theme.textSecondary,
+                      ? zen.textSecondary.withValues(alpha: 0.2)
+                      : zen.textSecondary,
                   fontWeight: FontWeight.w300,
                 ),
               ),

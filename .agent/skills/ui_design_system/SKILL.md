@@ -11,7 +11,12 @@ description: "App UI/UX Design System & Guidelines"
 
 *   **去投影化**：禁止使用 `BoxShadow` 或 `Elevation`。層級感應透過色彩明度與邊框來表現。
 *   **極細邊框**：使用 `0.5dp` 的細線條（Hairline Border）作為容器邊界，增加精緻感。
-*   **圓角規範**：使用 `8dp` (Small) 或 `12dp` (Medium) 的適度圓角，避免 M3 預設的過度圓潤感。
+*   **圓角規範 (ZenRadius)**：
+    *   `sm`: 8.0 (小元件、Tag)
+    *   `md`: 12.0 (卡片、Dialog)
+    *   `lg`: 24.0 (大型 Container)
+    *   `full`: 999.0 (圓形按鈕、Pill 樣式)
+    *  **禁止直接寫死 12.0，應使用 `context.zen.radius.md`**。
 
 ## 2. 完整語意化色彩系統 (Semantic Colors) - 含深色模式
 
@@ -27,12 +32,20 @@ description: "App UI/UX Design System & Guidelines"
 | `color.error` | **#D36151** (朱紅) | **#964236** (深朱) | 錯誤、警示狀態 |
 | `color.border.subtle` | **#E0E0E0** | **#333333** | 極細邊框與分割線 |
 
-## 3. 間距與尺寸系統 (Spacing System)
+## 3. 間距系統 (ZenSpacing)
 
-遵循 **8pt 網格系統**，確保佈局具備隱形的數學秩序。
+遵循 **8pt 網格系統** 的演進版，提供六個層級以確保佈局具備隱形的數學秩序。
 
-*   **頁面邊距 (Screen Edge)**：固定為 **16dp**。這多出的空間是「呼吸感」的來源。
-*   **元件垂直間距**：段落間使用 **24dp** 或 **32dp**，讓資訊不擁擠。
+| 代幣 (Token) | 數值 (Value) | 用途建議 |
+| --- | --- | --- |
+| `xs` | 4.0 | 元件內部的極微小調整 |
+| `sm` | 8.0 | 按鈕內距、小型群組間距 |
+| `md` | 16.0 | 卡片內距、標準元件間距 |
+| `lg` | 24.0 | 頁面標準邊距 (Page Edge) |
+| `xl` | 32.0 | 區塊間的大型留白 |
+| `xxl` | 48.0 | 頁面底部或頂部的大型呼吸空間 |
+
+*   **調用方式**：`context.zen.spacing.md`。
 *   **最小觸控尺寸**：所有可點擊元件必須至少為 **48x48dp**，確保操作從容。
 
 ## 4. 元件規範 (Component Specifications)

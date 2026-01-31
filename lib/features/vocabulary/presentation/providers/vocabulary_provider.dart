@@ -66,16 +66,24 @@ class VocabularyNotifier extends _$VocabularyNotifier {
         .watch(vocabularyRepositoryProvider)
         .getN5Vocabularies();
 
-    final rawQuery = ref.watch(vocabularySearchQueryProvider);
-    final query = rawQuery.trim().toLowerCase();
+    final query = ref.watch(vocabularySearchQueryProvider).trim().toLowerCase();
     final filter = ref.watch(vocabularyFilterProvider);
 
-    return allVocab.where((vocab) {
-      // 1. 過濾標籤
-      final matchesFilter = filter == null || vocab.tags.contains(filter);
-      if (!matchesFilter) return false;
+    return _applyFilters(allVocab, query, filter);
+  }
 
-      // 2. 搜尋關鍵字
+  List<Vocabulary> _applyFilters(
+    List<Vocabulary> vocabs,
+    String query,
+    String? filterTag,
+  ) {
+    return vocabs.where((vocab) {
+      // 1. 標籤過濾
+      if (filterTag != null && !vocab.tags.contains(filterTag)) {
+        return false;
+      }
+
+      // 2. 關鍵字搜尋
       if (query.isEmpty) return true;
 
       return vocab.text.contains(query) ||
