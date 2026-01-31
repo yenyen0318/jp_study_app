@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-01-31
+
+### Added
+- **教學註解與類別細分**：將特殊假名細分為「促音」、「長音」與「外來語組合」，並在分類標題下加入直覺的中文教學註解（如：長音 - 「拉長前一個音的發音」）。
+- **Edge-to-Edge 沉浸式體驗**：重構 `KanaListPage` 佈局與 `ZenChipSelector` 內距邏輯，實現全寬流暢滾動（無邊距剪裁）。
+- **UI 易讀性優化**：全面提升分類標題與說明的字體大小與字重，強化視覺層次感。
+
+### Changed
+- **UI/UX 佈局調整**：修復 `KanaListPage` 與 `ExamPage` 的 `SafeArea` 與呼吸感問題，解決標題與系統狀態列過於緊密的問題。
+- **去投影化規範修復**：符合「日日」設計系統規範，移除 `ZenToast` 等組件中的硬編碼陰影與 Elevation。
+- **資料模型擴充**：`KanaRepository` 支援更多現代片假名組合，並同步更新相關單元測試。
+
+### Fixed
+- **選取器剪裁問題**：修復 `ZenChipSelector` 在滾動時因頁面 Padding 導致的視覺截斷現象。
+
+## [0.1.3] - 2026-01-31
+
+### Changed
+- 內部代碼優化與小規模 UI 修正（版本同步）。
+
 ## [0.1.2] - 2026-01-31
 
 ### Added
