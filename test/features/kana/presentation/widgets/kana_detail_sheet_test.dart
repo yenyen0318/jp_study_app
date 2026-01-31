@@ -4,6 +4,8 @@ import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
 import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 void main() {
   group('KanaDetailSheet Widget Test', () {
     testWidgets('renders kana details correctly', (WidgetTester tester) async {
@@ -18,10 +20,12 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light,
-          home: Scaffold(
-            body: KanaDetailSheet(kana: kana, onPlayAudio: () {}),
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light,
+            home: Scaffold(
+              body: KanaDetailSheet(kana: kana, onPlayAudio: () {}),
+            ),
           ),
         ),
       );
@@ -54,13 +58,15 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.light,
-          home: Scaffold(
-            body: KanaDetailSheet(
-              kana: kana,
-              similarKana: similar,
-              onPlayAudio: () {},
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.light,
+            home: Scaffold(
+              body: KanaDetailSheet(
+                kana: kana,
+                similarKana: similar,
+                onPlayAudio: () {},
+              ),
             ),
           ),
         ),

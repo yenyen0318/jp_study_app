@@ -15,6 +15,7 @@ class Kana with _$Kana {
     @Default(false) bool isDuplicate,
     String? mnemonic,
     @Default([]) List<String> similarKanaIds,
+    @Default([]) List<List<List<double>>> strokes,
   }) = _Kana;
 
   factory Kana.fromJson(Map<String, dynamic> json) => _$KanaFromJson(json);

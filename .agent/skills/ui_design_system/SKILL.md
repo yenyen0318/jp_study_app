@@ -122,3 +122,23 @@ description: "App UI/UX Design System & Guidelines"
         *   **寬螢幕適配**：在 Tablet/Web 上，應結合「最大內容寬度 (600dp)」與 `Center` 佈局，而非單純依賴 Safe Area。
 *   **邊界避讓 (Edge Constraints)**：
     *   在大曲面螢幕手機上，關鍵操作元件（如按鈕）應距離實體邊緣至少 `16dp`，避免誤觸。
+
+## 10. 手勢與互動衝突處理 (Gesture Handling & Conflicts)
+
+確保複雜互動（如繪圖）與捲動行為共存時的流暢體驗。
+
+*   **衝突場景**：當繪圖板 (`Canvas`) 或其他需要連續手勢的元件嵌入於可捲動容器 (`ListView`, `SingleChildScrollView`) 時，垂直拖曳通常會被容器搶奪。
+*   **解決方案**：
+    *   **優先權宣告**：使用 `RawGestureDetector` 搭配自定義的 `GestureRecognizer`。
+    *   **立即搶佔 (Eager Claim)**：實作 `ImmediatePanGestureRecognizer` (繼承自 `PanGestureRecognizer`)，並在 `addAllowedPointer` 時立即呼叫 `resolve(GestureDisposition.accepted)`，確保手勢不被父層攔截。
+    *   **程式碼範例**：
+        ```dart
+        class _ImmediatePanGestureRecognizer extends PanGestureRecognizer {
+          @override
+          void addAllowedPointer(PointerDownEvent event) {
+            super.addAllowedPointer(event);
+            resolve(GestureDisposition.accepted);
+          }
+        }
+        ```
+*   **測試驗證**：必須撰寫 Widget Test 模擬巢狀結構，驗證拖曳是否正確觸發目標行為而非捲動。

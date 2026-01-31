@@ -20,6 +20,19 @@ _$KanaImpl _$$KanaImplFromJson(Map<String, dynamic> json) => _$KanaImpl(
           ?.map((e) => e as String)
           .toList() ??
       const [],
+  strokes:
+      (json['strokes'] as List<dynamic>?)
+          ?.map(
+            (e) => (e as List<dynamic>)
+                .map(
+                  (e) => (e as List<dynamic>)
+                      .map((e) => (e as num).toDouble())
+                      .toList(),
+                )
+                .toList(),
+          )
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
@@ -33,4 +46,5 @@ Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
       'isDuplicate': instance.isDuplicate,
       'mnemonic': instance.mnemonic,
       'similarKanaIds': instance.similarKanaIds,
+      'strokes': instance.strokes,
     };
