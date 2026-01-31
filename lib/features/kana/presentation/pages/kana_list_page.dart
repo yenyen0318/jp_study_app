@@ -43,50 +43,57 @@ class KanaListPage extends ConsumerWidget {
           constraints: const BoxConstraints(maxWidth: 600),
           child: CustomScrollView(
             slivers: [
+              // 頂部標題與過濾器
               SliverSafeArea(
                 bottom: false,
-                sliver: SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
-                  sliver: SliverToBoxAdapter(
+                sliver: SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '五十音',
-                              style: GoogleFonts.notoSansTc(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w300,
-                                color: zenTheme.textPrimary,
-                                letterSpacing: 2.0,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '五十音',
+                                style: GoogleFonts.notoSansTc(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w300,
+                                  color: zenTheme.textPrimary,
+                                  letterSpacing: 2.0,
+                                ),
                               ),
-                            ),
-                            // 假名類型切換 - 使用 ZenSegmentedButton
-                            ZenSegmentedButton<KanaType>(
-                              options: const [
-                                KanaType.hiragana,
-                                KanaType.katakana,
-                              ],
-                              selectedValue: ref.watch(kanaTypeFilterProvider),
-                              onChanged: (type) {
-                                ref
-                                    .read(kanaTypeFilterProvider.notifier)
-                                    .setType(type);
-                              },
-                              theme: zenTheme,
-                              labelBuilder: (type) =>
-                                  type == KanaType.hiragana ? 'あ' : 'ア',
-                            ),
-                          ],
+                              // 假名類型切換 - 使用 ZenSegmentedButton
+                              ZenSegmentedButton<KanaType>(
+                                options: const [
+                                  KanaType.hiragana,
+                                  KanaType.katakana,
+                                ],
+                                selectedValue: ref.watch(
+                                  kanaTypeFilterProvider,
+                                ),
+                                onChanged: (type) {
+                                  ref
+                                      .read(kanaTypeFilterProvider.notifier)
+                                      .setType(type);
+                                },
+                                theme: zenTheme,
+                                labelBuilder: (type) =>
+                                    type == KanaType.hiragana ? 'あ' : 'ア',
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 24),
                         // 分類選擇 - 使用 ZenChipSelector
                         ZenChipSelector<KanaCategory>(
                           options: KanaCategory.values,
                           selectedValue: selectedCategory,
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
                           onChanged: (category) {
                             ref
                                 .read(kanaCategoryFilterProvider.notifier)
@@ -95,14 +102,14 @@ class KanaListPage extends ConsumerWidget {
                           theme: zenTheme,
                           labelBuilder: (category) => category.label,
                         ),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
                 ),
               ),
 
-              // 使用 AnimatedSwitcher 實作淡入淡出過渡動畫
-              // 符合禪意美學:平靜的視覺過渡,避免生硬的切換
+              // 假名列表內容
               SliverToBoxAdapter(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 350),
@@ -111,43 +118,74 @@ class KanaListPage extends ConsumerWidget {
                   transitionBuilder: (child, animation) {
                     return FadeTransition(opacity: animation, child: child);
                   },
-                  child: kanaListAsync.when(
-                    data: (kanaList) {
-                      final seion = kanaList
-                          .where((k) => k.row >= 0 && k.row <= 9)
-                          .toList();
-                      final bion = kanaList.where((k) => k.row == 10).toList();
-                      final dakuon = kanaList
-                          .where((k) => k.row >= 11 && k.row <= 14)
-                          .toList();
-                      final handakuon = kanaList
-                          .where((k) => k.row == 15)
-                          .toList();
-                      final youon = kanaList
-                          .where((k) => k.row >= 16 && k.row <= 26)
-                          .toList();
+                  child: Padding(
+                    key: ValueKey(
+                      '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
+                    child: kanaListAsync.when(
+                      data: (kanaList) {
+                        final seion = kanaList
+                            .where((k) => k.row >= 0 && k.row <= 9)
+                            .toList();
+                        final bion = kanaList
+                            .where((k) => k.row == 10)
+                            .toList();
+                        final dakuon = kanaList
+                            .where((k) => k.row >= 11 && k.row <= 14)
+                            .toList();
+                        final handakuon = kanaList
+                            .where((k) => k.row == 15)
+                            .toList();
+                        final youon = kanaList
+                            .where((k) => k.row >= 16 && k.row <= 26)
+                            .toList();
+                        final sokuon = kanaList
+                            .where(
+                              (k) => k.row == 100 && k.id.contains('sokuon'),
+                            )
+                            .toList();
+                        final choon = kanaList
+                            .where((k) => k.row == 101)
+                            .toList();
+                        final modern = kanaList
+                            .where((k) => k.row >= 110)
+                            .toList();
 
-                      final showSeion =
-                          selectedCategory == KanaCategory.all ||
-                          selectedCategory == KanaCategory.seion;
-                      final showDakuon =
-                          selectedCategory == KanaCategory.all ||
-                          selectedCategory == KanaCategory.dakuon;
-                      final showHandakuon =
-                          selectedCategory == KanaCategory.all ||
-                          selectedCategory == KanaCategory.handakuon;
-                      final showYouon =
-                          selectedCategory == KanaCategory.all ||
-                          selectedCategory == KanaCategory.youon;
+                        final showSeion =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.seion;
+                        final showDakuon =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.dakuon;
+                        final showHandakuon =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.handakuon;
+                        final showYouon =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.youon;
+                        final showSokuon =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.sokuon;
+                        final showChoon =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.choon;
+                        final showModern =
+                            selectedCategory == KanaCategory.all ||
+                            selectedCategory == KanaCategory.modern;
 
-                      return Padding(
-                        key: ValueKey(ref.watch(kanaTypeFilterProvider)),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
+                        return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (showSeion && seion.isNotEmpty) ...[
-                              _CategoryHeader(title: '清音', theme: zenTheme),
+                              _CategoryHeader(
+                                title: KanaCategory.seion.label,
+                                description: KanaCategory.seion.description,
+                                theme: zenTheme,
+                              ),
                               const SizedBox(height: 16),
                               _KanaGrid(
                                 kanaList: seion,
@@ -158,7 +196,11 @@ class KanaListPage extends ConsumerWidget {
                               const SizedBox(height: 32),
                             ],
                             if (showSeion && bion.isNotEmpty) ...[
-                              _CategoryHeader(title: '鼻音', theme: zenTheme),
+                              _CategoryHeader(
+                                title: '鼻音',
+                                description: '最後一個鼻音發音',
+                                theme: zenTheme,
+                              ),
                               const SizedBox(height: 16),
                               _KanaGrid(
                                 kanaList: bion,
@@ -169,7 +211,11 @@ class KanaListPage extends ConsumerWidget {
                               const SizedBox(height: 32),
                             ],
                             if (showDakuon && dakuon.isNotEmpty) ...[
-                              _CategoryHeader(title: '濁音', theme: zenTheme),
+                              _CategoryHeader(
+                                title: KanaCategory.dakuon.label,
+                                description: KanaCategory.dakuon.description,
+                                theme: zenTheme,
+                              ),
                               const SizedBox(height: 16),
                               _KanaGrid(
                                 kanaList: dakuon,
@@ -180,7 +226,11 @@ class KanaListPage extends ConsumerWidget {
                               const SizedBox(height: 32),
                             ],
                             if (showHandakuon && handakuon.isNotEmpty) ...[
-                              _CategoryHeader(title: '半濁音', theme: zenTheme),
+                              _CategoryHeader(
+                                title: KanaCategory.handakuon.label,
+                                description: KanaCategory.handakuon.description,
+                                theme: zenTheme,
+                              ),
                               const SizedBox(height: 16),
                               _KanaGrid(
                                 kanaList: handakuon,
@@ -191,7 +241,11 @@ class KanaListPage extends ConsumerWidget {
                               const SizedBox(height: 32),
                             ],
                             if (showYouon && youon.isNotEmpty) ...[
-                              _CategoryHeader(title: '拗音', theme: zenTheme),
+                              _CategoryHeader(
+                                title: KanaCategory.youon.label,
+                                description: KanaCategory.youon.description,
+                                theme: zenTheme,
+                              ),
                               const SizedBox(height: 16),
                               _KanaGrid(
                                 kanaList: youon,
@@ -202,23 +256,70 @@ class KanaListPage extends ConsumerWidget {
                               ),
                               const SizedBox(height: 32),
                             ],
+                            if (showSokuon && sokuon.isNotEmpty) ...[
+                              _CategoryHeader(
+                                title: KanaCategory.sokuon.label,
+                                description: KanaCategory.sokuon.description,
+                                theme: zenTheme,
+                              ),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: sokuon,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                                crossAxisCount: 3,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                            if (showChoon && choon.isNotEmpty) ...[
+                              _CategoryHeader(
+                                title: KanaCategory.choon.label,
+                                description: KanaCategory.choon.description,
+                                theme: zenTheme,
+                              ),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: choon,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                                crossAxisCount: 3,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                            if (showModern && modern.isNotEmpty) ...[
+                              _CategoryHeader(
+                                title: KanaCategory.modern.label,
+                                description: KanaCategory.modern.description,
+                                theme: zenTheme,
+                              ),
+                              const SizedBox(height: 16),
+                              _KanaGrid(
+                                kanaList: modern,
+                                allKana: kanaList,
+                                ref: ref,
+                                zenTheme: zenTheme,
+                                crossAxisCount: 3,
+                              ),
+                              const SizedBox(height: 32),
+                            ],
                           ],
-                        ),
-                      );
-                    },
-                    loading: () => const SizedBox(
-                      key: ValueKey('loading'),
-                      height: 200,
-                      child: Center(child: Text('準備中...')),
-                    ),
-                    error: (err, stack) => const SizedBox(
-                      key: ValueKey('error'),
-                      height: 200,
-                      child: Center(child: Text('發生錯誤')),
+                        );
+                      },
+                      loading: () => const SizedBox(
+                        height: 200,
+                        child: Center(child: Text('準備中...')),
+                      ),
+                      error: (err, stack) => const SizedBox(
+                        height: 200,
+                        child: Center(child: Text('發生錯誤')),
+                      ),
                     ),
                   ),
                 ),
               ),
+
               const SliverSafeArea(
                 top: false,
                 minimum: EdgeInsets.only(bottom: 80),
@@ -247,21 +348,43 @@ class KanaListPage extends ConsumerWidget {
 
 class _CategoryHeader extends StatelessWidget {
   final String title;
+  final String? description;
   final ZenTheme theme;
 
-  const _CategoryHeader({required this.title, required this.theme});
+  const _CategoryHeader({
+    required this.title,
+    this.description,
+    required this.theme,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: GoogleFonts.notoSansTc(
-        fontSize: 14,
-        fontWeight: FontWeight.w300,
-        color: theme.textSecondary,
-        letterSpacing: 4.0,
-        height: 1.2, // 收緊文字行高
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.notoSansTc(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+            color: theme.textPrimary.withValues(alpha: 0.9),
+            letterSpacing: 2.0,
+            height: 1.2,
+          ),
+        ),
+        if (description != null) ...[
+          const SizedBox(height: 6),
+          Text(
+            description!,
+            style: GoogleFonts.notoSansTc(
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
+              color: theme.textSecondary.withValues(alpha: 0.8),
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

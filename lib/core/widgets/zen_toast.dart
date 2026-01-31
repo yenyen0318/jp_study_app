@@ -39,16 +39,9 @@ class ZenToast extends StatelessWidget {
         color: theme.bgSurface,
         borderRadius: BorderRadius.circular(50), // 圓潤的膠囊形狀
         border: Border.all(
-          color: theme.error.withValues(alpha: 0.5),
+          color: theme.error.withValues(alpha: 0.8),
           width: 0.5,
-        ), // 使用錯誤色作為邊框，因為主要用於報錯
-        boxShadow: [
-          BoxShadow(
-            color: theme.error.withValues(alpha: 0.1),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        ), // 使用錯誤色作為邊框，因為主要用於報報，增強透明度提升質感
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

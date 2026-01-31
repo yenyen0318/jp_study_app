@@ -61,8 +61,11 @@ class ExamPage extends ConsumerWidget {
           return SafeArea(
             child: Column(
               children: [
-                // 進度條
-                _ProgressBar(progress: progress, theme: theme),
+                // 進度條 - 增加頂部間距以符合設計系統規範
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: _ProgressBar(progress: progress, theme: theme),
+                ),
 
                 Expanded(
                   child: SingleChildScrollView(

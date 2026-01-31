@@ -35,6 +35,9 @@ class ZenChipSelector<T> extends StatelessWidget {
   /// Zen 主題
   final ZenTheme theme;
 
+  /// 內距 (通常用於對齊頁面邊距)
+  final EdgeInsetsGeometry? padding;
+
   /// 選項標籤生成器 (可選,預設使用 toString())
   final String Function(T)? labelBuilder;
 
@@ -44,20 +47,25 @@ class ZenChipSelector<T> extends StatelessWidget {
     required this.selectedValue,
     required this.onChanged,
     required this.theme,
+    this.padding,
     this.labelBuilder,
   });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: padding,
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: options.map((option) {
+        children: options.asMap().entries.map((entry) {
+          final index = entry.key;
+          final option = entry.value;
           final isSelected = option == selectedValue;
           final label = labelBuilder?.call(option) ?? option.toString();
+          final isLast = index == options.length - 1;
 
           return Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: isLast ? 0 : 8),
             child: InkWell(
               onTap: () {
                 HapticFeedback.selectionClick();

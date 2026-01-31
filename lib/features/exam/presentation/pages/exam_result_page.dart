@@ -27,7 +27,7 @@ class ExamResultPage extends ConsumerWidget {
               slivers: [
                 // 頂部儀式感區域
                 SliverPadding(
-                  padding: const EdgeInsets.all(48),
+                  padding: const EdgeInsets.fromLTRB(48, 24, 48, 48),
                   sliver: SliverToBoxAdapter(
                     child: Column(
                       children: [

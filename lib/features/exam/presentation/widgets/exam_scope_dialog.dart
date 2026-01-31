@@ -36,6 +36,9 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
     '濁音 (が行~ば行)',
     '半濁音 (ぱ行)',
     '拗音 (きゃ~ぴょ)',
+    '促音 (っ/ッ)',
+    '長音 (ー)',
+    '外來語組合 (ヴァ/ティ等)',
   ];
 
   @override
@@ -111,6 +114,15 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
                   } else if (index == 13) {
                     // 拗音包含 row 16-26
                     actualRows.addAll(List.generate(11, (i) => i + 16));
+                  } else if (index == 14) {
+                    // 促音 row 100 (需過濾 id)
+                    actualRows.add(100);
+                  } else if (index == 15) {
+                    // 長音 row 101
+                    actualRows.add(101);
+                  } else if (index == 16) {
+                    // 外來語組合 row 110+
+                    actualRows.addAll([110, 111, 112, 113, 114, 115]);
                   } else {
                     actualRows.add(index);
                   }

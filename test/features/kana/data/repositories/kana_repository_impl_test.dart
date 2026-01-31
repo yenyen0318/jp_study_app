@@ -24,8 +24,8 @@ void main() {
       expect(first.row, 0);
       expect(first.col, 0);
 
-      // 驗證總數量 (46基礎 + 25濁/半濁 + 33拗音 + 5重複 = 109)
-      expect(result.length, 109);
+      // 驗證總數量 (含促音、長音、外來語等擴充分類)
+      expect(result.length, 110);
     });
 
     test('getKatakana returns correct list of Katakana', () async {
@@ -39,8 +39,8 @@ void main() {
       expect(first.text, 'ア');
       expect(first.type, 'katakana');
 
-      // 驗證總數量 (同平假名)
-      expect(result.length, 109);
+      // 驗證總數量 (片假名包含現代外來語組合，數量較平假名多)
+      expect(result.length, 134);
     });
   });
 }
