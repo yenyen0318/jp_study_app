@@ -83,11 +83,8 @@ class _ZenCanvasState extends ConsumerState<ZenCanvas> {
                         strokeColor: widget.theme.textPrimary.withValues(
                           alpha: 0.6,
                         ),
-                        guideColor: widget.theme.textPrimary.withValues(
-                          alpha: Theme.of(context).brightness == Brightness.dark
-                              ? 0.15
-                              : 0.05,
-                        ),
+                        // 使用 Theme 定義的語意化顏色，讓 Contrast 邏輯回歸 Theme
+                        guideColor: widget.theme.guideOverlay,
                       ),
                     ),
                   ),

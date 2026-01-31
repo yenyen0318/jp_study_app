@@ -12,6 +12,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
   final Color error;
   final Color borderSubtle;
   final Color accent;
+  final Color guideOverlay;
 
   const ZenTheme({
     required this.bgPrimary,
@@ -22,6 +23,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     required this.error,
     required this.borderSubtle,
     required this.accent,
+    required this.guideOverlay,
   });
 
   @override
@@ -34,6 +36,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     Color? error,
     Color? borderSubtle,
     Color? accent,
+    Color? guideOverlay,
   }) {
     return ZenTheme(
       bgPrimary: bgPrimary ?? this.bgPrimary,
@@ -44,6 +47,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       error: error ?? this.error,
       borderSubtle: borderSubtle ?? this.borderSubtle,
       accent: accent ?? this.accent,
+      guideOverlay: guideOverlay ?? this.guideOverlay,
     );
   }
 
@@ -61,6 +65,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       error: Color.lerp(error, other.error, t)!,
       borderSubtle: Color.lerp(borderSubtle, other.borderSubtle, t)!,
       accent: Color.lerp(accent, other.accent, t)!,
+      guideOverlay: Color.lerp(guideOverlay, other.guideOverlay, t)!,
     );
   }
 
@@ -73,6 +78,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     error: Color(0xFFD36151), // 朱紅
     borderSubtle: Color(0xFFE0E0E0),
     accent: Color(0xFF5D7687), // 縹色 (Hanada-iro / Muted Blue)
+    guideOverlay: Color(0x0D2B2B2B), // textPrimary * 0.05
   );
 
   static const dark = ZenTheme(
@@ -84,6 +90,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     error: Color(0xFF964236), // 深朱
     borderSubtle: Color(0xFF333333),
     accent: Color(0xFF4A5F6D), // 深縹
+    guideOverlay: Color(0x26E1E1E1), // textPrimary * 0.15
   );
 }
 
