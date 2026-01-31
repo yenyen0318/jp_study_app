@@ -43,7 +43,7 @@ class KanaListPage extends ConsumerWidget {
               SliverSafeArea(
                 bottom: false,
                 sliver: SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+                  padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
                   sliver: SliverToBoxAdapter(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +179,7 @@ class KanaListPage extends ConsumerWidget {
               ),
               const SliverSafeArea(
                 top: false,
-                minimum: EdgeInsets.only(bottom: 24),
+                minimum: EdgeInsets.only(bottom: 80),
                 sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
               ),
             ],
@@ -271,6 +271,7 @@ class _CategoryHeader extends StatelessWidget {
         fontWeight: FontWeight.w300,
         color: theme.textSecondary,
         letterSpacing: 4.0,
+        height: 1.2, // 收緊文字行高
       ),
     );
   }
@@ -296,38 +297,61 @@ class _KanaGrid extends StatelessWidget {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 600),
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 1.0,
-          ),
-          itemCount: kanaList.length,
-          itemBuilder: (context, index) {
-            final kana = kanaList[index];
-            return _KanaCard(
-              kana: kana,
-              theme: zenTheme,
-              onTap: () {
-                ref.read(kanaAudioControllerProvider.notifier).play(kana.text);
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  builder: (context) => KanaDetailSheet(
-                    kana: kana,
-                    similarKana: allKana
-                        .where((k) => kana.similarKanaIds.contains(k.id))
-                        .toList(),
-                    onPlayAudio: () {
-                      ref
-                          .read(kanaAudioControllerProvider.notifier)
-                          .play(kana.text);
-                    },
-                  ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final double width = constraints.maxWidth;
+            const double gap = 12.0;
+            const int baseCols = 5;
+
+            // 計算標準 5 欄卡片的寬度與高度 (基準比例 1.0)
+            final double baseItemWidth =
+                (width - (baseCols - 1) * gap) / baseCols;
+            final double baseItemHeight = baseItemWidth;
+
+            // 計算當前欄數下的卡片寬度
+            final double currentItemWidth =
+                (width - (crossAxisCount - 1) * gap) / crossAxisCount;
+
+            // 動態計算長寬比：讓高度始終等於 baseItemHeight
+            final double childAspectRatio = currentItemWidth / baseItemHeight;
+
+            return GridView.builder(
+              padding: EdgeInsets.zero, // 移除 GridView 預設內距
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: gap,
+                crossAxisSpacing: gap,
+                childAspectRatio: childAspectRatio,
+              ),
+              itemCount: kanaList.length,
+              itemBuilder: (context, index) {
+                final kana = kanaList[index];
+                return _KanaCard(
+                  kana: kana,
+                  theme: zenTheme,
+                  onTap: () {
+                    ref
+                        .read(kanaAudioControllerProvider.notifier)
+                        .play(kana.text);
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      builder: (context) => KanaDetailSheet(
+                        kana: kana,
+                        similarKana: allKana
+                            .where((k) => kana.similarKanaIds.contains(k.id))
+                            .toList(),
+                        onPlayAudio: () {
+                          ref
+                              .read(kanaAudioControllerProvider.notifier)
+                              .play(kana.text);
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -356,36 +380,31 @@ class _KanaCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: theme.borderSubtle, width: 0.5),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Expanded(
-              child: Center(
-                child: Text(
-                  kana.text,
-                  style: GoogleFonts.notoSansJp(
-                    fontSize: 32,
-                    height: 1.25, // 收緊行高以避免無效空間
-                    color: kana.isDuplicate
-                        ? theme.textPrimary.withValues(alpha: 0.2)
-                        : theme.textPrimary,
-                  ),
+            Center(
+              child: Text(
+                kana.text,
+                style: GoogleFonts.notoSansJp(
+                  fontSize: kana.text.length > 1 ? 26 : 32,
+                  height: 1.25, // 收緊行高以避免無效空間
+                  color: kana.isDuplicate
+                      ? theme.textPrimary.withValues(alpha: 0.2)
+                      : theme.textPrimary,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6, right: 8),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  kana.romaji,
-                  style: GoogleFonts.notoSansTc(
-                    fontSize: 11,
-                    color: kana.isDuplicate
-                        ? theme.textSecondary.withValues(alpha: 0.2)
-                        : theme.textSecondary,
-                    fontWeight: FontWeight.w300,
-                  ),
+            Positioned(
+              bottom: 6,
+              right: 8,
+              child: Text(
+                kana.romaji,
+                style: GoogleFonts.notoSansTc(
+                  fontSize: 11,
+                  color: kana.isDuplicate
+                      ? theme.textSecondary.withValues(alpha: 0.2)
+                      : theme.textSecondary,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ),

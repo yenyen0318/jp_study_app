@@ -143,7 +143,26 @@ description: "App UI/UX Design System & Guidelines"
         ```
 *   **測試驗證**：必須撰寫 Widget Test 模擬巢狀結構，驗證拖曳是否正確觸發目標行為而非捲動。
 
-## 11. 架構與代碼規範 (Architecture & Code Standards)
+## 11. 佈局與對齊原則 (Layout & Alignment Principles)
+
+幾何中心不等於視覺中心。為了追求極致的穩定感，我們採用「光學對齊 (Optical Alignment)」。
+
+*   **視覺中心優先 (Optical Centering)**：
+    *   **場景**：當一個元件（如卡片）包含主要內容（如假名）與次要標註（如 Romaji）時。
+    *   **問題**：若使用 `Column` 垂直排列，主要內容會被次要內容「頂」離中心點，導致視覺重心不穩。
+    *   **強制規範**：必須使用 `Stack`。
+        *   主要內容：使用 `Center` 確保絕對居中。
+        *   次要內容：使用 `Positioned` 浮動於角落，完全脫離主要內容的佈局流。
+*   **群組親密性 (Grouping Proximity)**：
+    *   **原則**：標題與其所屬內容的間距，必須小於標題與上方內容的間距。
+    *   **數值**：小標題 (Header) 與下方內容清單的間距固定為 **16dp**，以強化群組歸屬感。
+*   **佈局穩定性 (Layout Stability)**：
+    *   **原則**：在切換狀態或內容（如上一題/下一題、Loading/Loaded）時，容器的高度與位置必須保持絕對靜止。
+    *   **反模式**：禁止讓主要內容的動態高度（如不同長度的文字、不同類型的元件）直接撐開父容器，這會導致介面在切換瞬間產生「視覺跳動 (Visual Jump)」，增加認知負荷。
+    *   **解決方案**：為可變內容預留固定的「舞台空間 (Fixed Stage)」。
+        *   範例：測驗區塊應設定 `SizedBox(height: 120)`，無論內部是 80dp 的圖示還是 100dp 的文字，外部框架都應保持不變。
+
+## 12. 架構與代碼規範 (Architecture & Code Standards)
 
 為了維護設計系統的一致性與可維護性，嚴格禁止在 UI Widget 中硬編碼樣式邏輯。
 

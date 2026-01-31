@@ -177,7 +177,12 @@ class _QuestionArea extends StatelessWidget {
     if (question is ListeningQuestion) {
       return Column(
         children: [
-          _ZenPlayButton(onTap: onPlay, theme: theme),
+          SizedBox(
+            height: 120,
+            child: Center(
+              child: _ZenPlayButton(onTap: onPlay, theme: theme),
+            ),
+          ),
           const SizedBox(height: 16),
           Text(
             '聽音辨字',
@@ -193,12 +198,19 @@ class _QuestionArea extends StatelessWidget {
     } else {
       return Column(
         children: [
-          Text(
-            question.correctKana.text,
-            style: GoogleFonts.notoSansJp(
-              fontSize: 80,
-              color: theme.textPrimary,
-              fontWeight: FontWeight.w200,
+          SizedBox(
+            height: 120,
+            child: Center(
+              child: Text(
+                question.correctKana.text,
+                style: GoogleFonts.notoSansJp(
+                  fontSize: 80,
+                  color: theme.textPrimary,
+                  fontWeight: FontWeight.w200,
+                  height:
+                      1.0, // Force line height to 1.0 to behave predictably within the box
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 16),
