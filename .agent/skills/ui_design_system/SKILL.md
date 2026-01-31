@@ -17,6 +17,10 @@ description: "App UI/UX Design System & Guidelines"
     *   `lg`: 24.0 (大型 Container)
     *   `full`: 999.0 (圓形按鈕、Pill 樣式)
     *  **禁止直接寫死 12.0，應使用 `context.zen.radius.md`**。
+*   **佈局規範 (ZenLayout)**：
+    *   `maxContentWidth`: 600.0 (主要內容區塊最大寬度)
+    *   `cardWidth`: 400.0 (標準卡片寬度)
+    *  **調用方式**：`context.zen.layout.maxContentWidth`。
 
 ## 2. 完整語意化色彩系統 (Semantic Colors) - 含深色模式
 

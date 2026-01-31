@@ -8,10 +8,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final zenTheme = Theme.of(context).extension<ZenTheme>()!;
+    final zen = context.zen;
 
     return Scaffold(
-      backgroundColor: zenTheme.bgPrimary,
+      backgroundColor: zen.bgPrimary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -20,21 +20,21 @@ class HomePage extends StatelessWidget {
               title: '五十音',
               subtitle: 'かな',
               onTap: () => context.push('/kana'),
-              theme: zenTheme,
+              zen: zen,
             ),
-            const SizedBox(height: 48),
+            SizedBox(height: zen.spacing.xxl),
             _HomeNavItem(
               title: '單字',
               subtitle: 'ことば',
               onTap: () => context.push('/vocabulary'),
-              theme: zenTheme,
+              zen: zen,
             ),
-            const SizedBox(height: 48),
+            SizedBox(height: zen.spacing.xxl),
             _HomeNavItem(
               title: '測驗',
               subtitle: 'しけん',
               onTap: () => context.push('/exam_setup'),
-              theme: zenTheme,
+              zen: zen,
             ),
           ],
         ),
@@ -47,13 +47,13 @@ class _HomeNavItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
-  final ZenTheme theme;
+  final ZenTheme zen;
 
   const _HomeNavItem({
     required this.title,
     required this.subtitle,
     this.onTap,
-    required this.theme,
+    required this.zen,
   });
 
   @override
@@ -71,19 +71,19 @@ class _HomeNavItem extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.w300,
               color: isEnabled
-                  ? theme.textPrimary
-                  : theme.textPrimary.withValues(alpha: 0.2),
+                  ? zen.textPrimary
+                  : zen.textPrimary.withValues(alpha: 0.2),
               letterSpacing: 8.0,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: zen.spacing.sm),
           Text(
             subtitle,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w400,
               color: isEnabled
-                  ? theme.textSecondary.withValues(alpha: 0.7)
-                  : theme.textSecondary.withValues(alpha: 0.1),
+                  ? zen.textSecondary.withValues(alpha: 0.7)
+                  : zen.textSecondary.withValues(alpha: 0.1),
               letterSpacing: 4.0,
             ),
           ),

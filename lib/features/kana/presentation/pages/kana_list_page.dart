@@ -12,6 +12,8 @@ import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_pr
 import 'package:jp_study_app/features/kana/presentation/providers/kana_type_filter_provider.dart';
 import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';
 import 'package:jp_study_app/core/widgets/zen_chip_selector.dart';
+import 'package:jp_study_app/core/widgets/zen_page_header.dart';
+import 'package:jp_study_app/core/widgets/zen_card.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_groups_provider.dart';
 
 class KanaListPage extends ConsumerWidget {
@@ -20,7 +22,6 @@ class KanaListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final zen = context.zen;
-    final textTheme = Theme.of(context).textTheme;
     final groupsAsync = ref.watch(filteredKanaGroupsProvider);
     final selectedCategory = ref.watch(kanaCategoryFilterProvider);
 
@@ -47,7 +48,9 @@ class KanaListPage extends ConsumerWidget {
             sliver: SliverToBoxAdapter(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
+                  constraints: BoxConstraints(
+                    maxWidth: zen.layout.maxContentWidth,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -55,34 +58,23 @@ class KanaListPage extends ConsumerWidget {
                         padding: EdgeInsets.symmetric(
                           horizontal: zen.spacing.lg,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '五十音',
-                              style: textTheme.headlineLarge?.copyWith(
-                                fontWeight: FontWeight.w300,
-                                color: zen.textPrimary,
-                                letterSpacing: 2.0,
-                              ),
-                            ),
-                            ZenSegmentedButton<KanaType>(
-                              options: const [
-                                KanaType.hiragana,
-                                KanaType.katakana,
-                              ],
-                              selectedValue: ref.watch(kanaTypeFilterProvider),
-                              onChanged: (type) {
-                                ref
-                                    .read(kanaTypeFilterProvider.notifier)
-                                    .setType(type);
-                              },
-                              theme: zen,
-                              labelBuilder: (type) =>
-                                  type == KanaType.hiragana ? 'あ' : 'ア',
-                            ),
-                          ],
+                        child: ZenPageHeader(
+                          title: '五十音',
+                          trailing: ZenSegmentedButton<KanaType>(
+                            options: const [
+                              KanaType.hiragana,
+                              KanaType.katakana,
+                            ],
+                            selectedValue: ref.watch(kanaTypeFilterProvider),
+                            onChanged: (type) {
+                              ref
+                                  .read(kanaTypeFilterProvider.notifier)
+                                  .setType(type);
+                            },
+                            theme: zen,
+                            labelBuilder: (type) =>
+                                type == KanaType.hiragana ? 'あ' : 'ア',
+                          ),
                         ),
                       ),
                       SizedBox(height: zen.spacing.lg),
@@ -132,8 +124,8 @@ class KanaListPage extends ConsumerWidget {
                             SliverToBoxAdapter(
                               child: Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 600,
+                                  constraints: BoxConstraints(
+                                    maxWidth: zen.layout.maxContentWidth,
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.only(
@@ -282,8 +274,8 @@ class _SliverKanaGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverLayoutBuilder(
       builder: (context, constraints) {
-        // 限制寬度在 600 以內 (與 Header 一致)
-        final double maxWidth = 600;
+        // 使用設計系統中定義的 maxContentWidth
+        final double maxWidth = zen.layout.maxContentWidth;
         final double screenWidth = constraints.crossAxisExtent;
         final double gridWidth = screenWidth > maxWidth
             ? maxWidth
@@ -333,44 +325,36 @@ class _KanaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return ZenCard(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(zen.radius.md),
-      child: Container(
-        decoration: BoxDecoration(
-          color: zen.bgSurface,
-          borderRadius: BorderRadius.circular(zen.radius.md),
-          border: Border.all(color: zen.borderSubtle, width: 0.5),
-        ),
-        child: Stack(
-          children: [
-            Center(
-              child: Text(
-                kana.text,
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontSize: kana.text.length > 1 ? 26 : 32,
-                  height: 1.25,
-                  color: kana.isDuplicate
-                      ? zen.textPrimary.withValues(alpha: 0.2)
-                      : zen.textPrimary,
-                ),
+      child: Stack(
+        children: [
+          Center(
+            child: Text(
+              kana.text,
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                fontSize: kana.text.length > 1 ? 26 : 32,
+                height: 1.25,
+                color: kana.isDuplicate
+                    ? zen.textPrimary.withValues(alpha: 0.2)
+                    : zen.textPrimary,
               ),
             ),
-            Positioned(
-              bottom: zen.spacing.xs + 2,
-              right: zen.spacing.sm,
-              child: Text(
-                kana.romaji,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: kana.isDuplicate
-                      ? zen.textSecondary.withValues(alpha: 0.2)
-                      : zen.textSecondary,
-                  fontWeight: FontWeight.w300,
-                ),
+          ),
+          Positioned(
+            bottom: zen.spacing.xs + 2,
+            right: zen.spacing.sm,
+            child: Text(
+              kana.romaji,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: kana.isDuplicate
+                    ? zen.textSecondary.withValues(alpha: 0.2)
+                    : zen.textSecondary,
+                fontWeight: FontWeight.w300,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

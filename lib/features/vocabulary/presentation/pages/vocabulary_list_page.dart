@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/theme.dart';
 import '../../../../core/widgets/zen_chip_selector.dart';
+import '../../../../core/widgets/zen_page_header.dart';
 import '../providers/vocabulary_provider.dart';
 import '../widgets/vocabulary_card.dart';
 import '../widgets/vocabulary_search_bar.dart';
@@ -40,24 +41,9 @@ class VocabularyListPage extends ConsumerWidget {
                   left: zen.spacing.lg,
                   right: zen.spacing.lg,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'N5 單字學習',
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: zen.textPrimary,
-                        letterSpacing: 2.0,
-                      ),
-                    ),
-                    SizedBox(height: zen.spacing.xs),
-                    Text(
-                      '精選 800+ 核心詞彙，成就日檢之路',
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: zen.textSecondary.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  ],
+                child: const ZenPageHeader(
+                  title: 'N5 單字學習',
+                  subtitle: '精選 800+ 核心詞彙，成就日檢之路',
                 ),
               ),
             ),
@@ -151,32 +137,24 @@ class VocabularyListPage extends ConsumerWidget {
                               ),
                             ),
                           )
-                        : CustomScrollView(
+                        : ListView.separated(
                             key: ValueKey('vocab_list_${vocabs.length}'),
-                            slivers: [
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate((
-                                  context,
-                                  index,
-                                ) {
-                                  if (index.isOdd) {
-                                    return SizedBox(height: zen.spacing.md);
-                                  }
-                                  final itemIndex = index ~/ 2;
-                                  final vocab = vocabs[itemIndex];
-                                  return VocabularyCard(
-                                    key: ValueKey(vocab.id),
-                                    vocabulary: vocab,
-                                    onTap: () {
-                                      GoRouter.of(context).push(
-                                        '/vocabulary/practice',
-                                        extra: vocab,
-                                      );
-                                    },
-                                  );
-                                }, childCount: (vocabs.length * 2) - 1),
-                              ),
-                            ],
+                            padding: const EdgeInsets.all(0),
+                            itemCount: vocabs.length,
+                            separatorBuilder: (context, index) =>
+                                SizedBox(height: zen.spacing.md),
+                            itemBuilder: (context, index) {
+                              final vocab = vocabs[index];
+                              return VocabularyCard(
+                                key: ValueKey(vocab.id),
+                                vocabulary: vocab,
+                                onTap: () {
+                                  GoRouter.of(
+                                    context,
+                                  ).push('/vocabulary/practice', extra: vocab);
+                                },
+                              );
+                            },
                           ),
                   ),
                 );

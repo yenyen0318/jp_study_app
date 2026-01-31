@@ -37,6 +37,15 @@ class ZenRadius {
   });
 }
 
+/// 使用者介面的佈局規範 (Design Tokens)
+@immutable
+class ZenLayout {
+  final double maxContentWidth;
+  final double cardWidth;
+
+  const ZenLayout({this.maxContentWidth = 600.0, this.cardWidth = 400.0});
+}
+
 /// 語意化顏色的 Zen 主題擴充
 @immutable
 class ZenTheme extends ThemeExtension<ZenTheme> {
@@ -56,6 +65,9 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
   /// 圓角系統
   final ZenRadius radius;
 
+  /// 佈局系統
+  final ZenLayout layout;
+
   const ZenTheme({
     required this.bgPrimary,
     required this.bgSurface,
@@ -68,6 +80,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     required this.guideOverlay,
     this.spacing = const ZenSpacing(),
     this.radius = const ZenRadius(),
+    this.layout = const ZenLayout(),
   });
 
   @override
@@ -83,6 +96,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     Color? guideOverlay,
     ZenSpacing? spacing,
     ZenRadius? radius,
+    ZenLayout? layout,
   }) {
     return ZenTheme(
       bgPrimary: bgPrimary ?? this.bgPrimary,
@@ -96,6 +110,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       guideOverlay: guideOverlay ?? this.guideOverlay,
       spacing: spacing ?? this.spacing,
       radius: radius ?? this.radius,
+      layout: layout ?? this.layout,
     );
   }
 
@@ -116,6 +131,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       guideOverlay: Color.lerp(guideOverlay, other.guideOverlay, t)!,
       spacing: spacing, // 間隔不參與 lerp
       radius: radius, // 圓角不參與 lerp
+      layout: layout, // 佈局不參與 lerp
     );
   }
 

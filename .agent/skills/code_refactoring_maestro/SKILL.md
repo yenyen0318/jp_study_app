@@ -19,6 +19,7 @@ description: 資深程式碼重構專家。負責效能瓶頸診斷、程式碼�
 *   **消除 Magic Numbers**：所有硬編碼數值（顏色、間距、圓角、時間）必須抽離。強制使用 `ZenTheme` 擴充提供的代幣：
     *   間距：`context.zen.spacing.*`
     *   圓角：`context.zen.radius.*`
+    *   佈局：`context.zen.layout.*`
     *   顏色：`context.zen.bgPrimary`, `context.zen.textPrimary` 等。
 *   **硬編碼審查**：雖然專案目前不打算進行多語系 (i18n)，但仍需確保字串定義清晰且易於維護，避免在邏輯程式碼中出現複雜、無意義的字串拼接。
 *   **解耦邊界**：嚴格檢查 UI 層是否滲透了商業邏輯，確保 Data 與 View 之間有清晰的 Riverpod 橋樑。
