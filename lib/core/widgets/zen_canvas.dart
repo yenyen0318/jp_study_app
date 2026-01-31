@@ -61,29 +61,31 @@ class _ZenCanvasState extends ConsumerState<ZenCanvas> {
             children: [
               // 繪製層 (包含字體底稿、背景基準線、使用者筆跡)
               Positioned.fill(
-                child: RawGestureDetector(
-                  gestures: {
-                    _ImmediatePanGestureRecognizer:
-                        GestureRecognizerFactoryWithHandlers<
-                          _ImmediatePanGestureRecognizer
-                        >(() => _ImmediatePanGestureRecognizer(), (
-                          _ImmediatePanGestureRecognizer instance,
-                        ) {
-                          instance.onStart = _onPanStart;
-                          instance.onUpdate = _onPanUpdate;
-                          instance.onEnd = _onPanEnd;
-                        }),
-                  },
-                  child: CustomPaint(
-                    size: Size.infinite,
-                    painter: _ZenPainter(
-                      guideText: widget.guideText,
-                      strokes: state.currentStrokes,
-                      strokeColor: widget.theme.textPrimary.withValues(
-                        alpha: 0.6,
-                      ),
-                      guideColor: widget.theme.textPrimary.withValues(
-                        alpha: 0.05,
+                child: ClipRect(
+                  child: RawGestureDetector(
+                    gestures: {
+                      _ImmediatePanGestureRecognizer:
+                          GestureRecognizerFactoryWithHandlers<
+                            _ImmediatePanGestureRecognizer
+                          >(() => _ImmediatePanGestureRecognizer(), (
+                            _ImmediatePanGestureRecognizer instance,
+                          ) {
+                            instance.onStart = _onPanStart;
+                            instance.onUpdate = _onPanUpdate;
+                            instance.onEnd = _onPanEnd;
+                          }),
+                    },
+                    child: CustomPaint(
+                      size: Size.infinite,
+                      painter: _ZenPainter(
+                        guideText: widget.guideText,
+                        strokes: state.currentStrokes,
+                        strokeColor: widget.theme.textPrimary.withValues(
+                          alpha: 0.6,
+                        ),
+                        guideColor: widget.theme.textPrimary.withValues(
+                          alpha: 0.05,
+                        ),
                       ),
                     ),
                   ),
