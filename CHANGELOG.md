@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-01-31
+
+### Added
+- **極簡導航中心 (HomePage)**：導入全新導航結構，提供「五十音」、「單字」與「測驗」三大入口，落實「禪意」留白美學。
+- **測驗設定整頁化**：將測驗範圍選擇由彈窗轉型為全螢幕頁面 (`ExamSetupPage`)，解決資訊擁擠問題並優化操作流。
+- **單字擴展性預留**：重構測驗設定架構，模組化支援未來「單字測驗」功能。
+
+### Changed
+- **路由架構升級**：更新 `GoRouter` 配置，將 `/` 設為首頁中心，導航更具層次。
+- **視覺重心調整**：五十音頁面標題字重提升（w300），並將小標題在地化為日文（かな、ことば、しけん）。
+
+### Fixed
+- **導航冗餘移除**：移除五十音頁面的 FloatingActionButton 與實體返回按鈕，完全依賴系統原生手勢，維持極致視覺純淨。
+
 ## [0.2.0] - 2026-01-31
 
 ### Added

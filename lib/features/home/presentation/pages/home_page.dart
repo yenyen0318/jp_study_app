@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jp_study_app/core/theme/theme.dart';
-import 'package:jp_study_app/features/exam/presentation/widgets/exam_scope_dialog.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -34,17 +33,13 @@ class HomePage extends StatelessWidget {
             _HomeNavItem(
               title: '測驗',
               subtitle: 'しけん',
-              onTap: () => _showExamSetup(context),
+              onTap: () => context.push('/exam_setup'),
               theme: zenTheme,
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _showExamSetup(BuildContext context) {
-    showDialog(context: context, builder: (context) => const ExamScopeDialog());
   }
 }
 

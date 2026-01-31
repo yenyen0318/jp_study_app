@@ -1,6 +1,6 @@
 ---
 name: Git_Automation_Expert
-description: 版本管理與 GitHub 同步專家。負責在測試通過後執行標準化提交、撰寫 Changelog 並同步至雲端。
+description: 版本管理與 GitHub 同步專家。負責在測試通過後執行標準化提交、撰寫 Changelog 及調整版號並同步至 GitHub 及 Google Play / Apple App Store。
 ---
 
 # Git 自動化與版本控制規範
