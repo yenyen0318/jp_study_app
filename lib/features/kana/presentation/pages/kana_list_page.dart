@@ -7,10 +7,8 @@ import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_audio_controller.dart';
 import 'package:jp_study_app/core/widgets/zen_toast.dart';
 import 'package:jp_study_app/core/errors/exceptions.dart';
-import 'package:jp_study_app/features/exam/presentation/widgets/exam_scope_dialog.dart';
 import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
-import 'package:jp_study_app/core/widgets/zen_button.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_type_filter_provider.dart';
 import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';
 import 'package:jp_study_app/core/widgets/zen_chip_selector.dart';
@@ -327,19 +325,6 @@ class KanaListPage extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 16, right: 8),
-        child: ZenButton(
-          label: '驗收',
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => const ExamScopeDialog(),
-            );
-          },
-          theme: zenTheme,
         ),
       ),
     );
