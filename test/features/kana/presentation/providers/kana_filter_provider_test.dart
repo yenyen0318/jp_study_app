@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_category.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
 
 void main() {

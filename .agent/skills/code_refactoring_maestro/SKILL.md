@@ -22,6 +22,7 @@ description: 資深程式碼重構專家。負責效能瓶頸診斷、程式碼�
     *   佈局：`context.zen.layout.*`
     *   顏色：`context.zen.bgPrimary`, `context.zen.textPrimary` 等。
 *   **硬編碼審查**：雖然專案目前不打算進行多語系 (i18n)，但仍需確保字串定義清晰且易於維護，避免在邏輯程式碼中出現複雜、無意義的字串拼接。
+*   **Enum 優先原則 (Enum-First Policy)**：若專案中已針對特定領域定義了 Enum（如 `KanaType`, `KanaCategory`），嚴禁在代碼中繼續使用對應的硬編碼字串進行邏輯判斷或 UI 標籤顯示。所有與類型相關的顯示文字應封裝於 Enum 的屬性（屬性如 `label`, `description`）或擴充方法中。
 *   **解耦邊界**：嚴格檢查 UI 層是否滲透了商業邏輯，確保 Data 與 View 之間有清晰的 Riverpod 橋樑。
 
 ### 3. 可讀性與「日日」命名規範 (Readability & Naming)

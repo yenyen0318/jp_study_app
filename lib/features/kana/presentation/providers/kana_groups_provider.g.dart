@@ -7,7 +7,7 @@ part of 'kana_groups_provider.dart';
 // **************************************************************************
 
 String _$filteredKanaGroupsHash() =>
-    r'9801048cdfcbd492de92b062cd0bde7a4a402b21';
+    r'91b7c9a4799e23f7868137a58a93ee137e8face4';
 
 /// See also [filteredKanaGroups].
 @ProviderFor(filteredKanaGroups)

@@ -1,15 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../domain/entities/kana_type.dart';
 
 part 'kana_type_filter_provider.g.dart';
-
-/// 假名類型枚舉
-enum KanaType {
-  hiragana('平假名'),
-  katakana('片假名');
-
-  final String label;
-  const KanaType(this.label);
-}
 
 /// 假名類型篩選器
 @riverpod

@@ -7,6 +7,7 @@ import 'package:jp_study_app/features/exam/domain/repositories/exam_repository.d
 import 'package:jp_study_app/features/exam/presentation/pages/exam_page.dart';
 import 'package:jp_study_app/features/exam/presentation/providers/exam_controller.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
 import 'package:jp_study_app/core/services/tts_service.dart';
 import 'package:jp_study_app/features/exam/data/repositories/exam_repository_impl.dart';
 import 'package:mocktail/mocktail.dart';
@@ -22,7 +23,9 @@ void main() {
   setUp(() {
     mockRepository = MockExamRepository();
     mockTtsService = MockTtsService();
-    registerFallbackValue(const ExamScope(types: ['hiragana'], rows: [0]));
+    registerFallbackValue(
+      const ExamScope(types: [KanaType.hiragana], rows: [0]),
+    );
     when(() => mockTtsService.speak(any())).thenAnswer((_) async {});
   });
 
@@ -30,7 +33,7 @@ void main() {
     id: 'nu',
     text: 'ぬ',
     romaji: 'nu',
-    type: 'hiragana',
+    type: KanaType.hiragana,
     row: 4,
     col: 2,
     mnemonic: 'ぬ 是有小圈圈的麵條',
@@ -71,7 +74,7 @@ void main() {
     // 1. 初始化考試
     await container
         .read(examControllerProvider.notifier)
-        .startExam(const ExamScope(types: ['hiragana'], rows: [4]));
+        .startExam(const ExamScope(types: [KanaType.hiragana], rows: [4]));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -90,7 +93,7 @@ void main() {
     // 重置以便測試答錯
     await container
         .read(examControllerProvider.notifier)
-        .startExam(const ExamScope(types: ['hiragana'], rows: [4]));
+        .startExam(const ExamScope(types: [KanaType.hiragana], rows: [4]));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 

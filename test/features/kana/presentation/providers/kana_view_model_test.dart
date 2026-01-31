@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
 import 'package:jp_study_app/features/kana/domain/repositories/kana_repository.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_view_model.dart';
 
@@ -22,7 +23,7 @@ void main() {
         id: '1',
         text: 'あ',
         romaji: 'a',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 0,
         col: 0,
       ),

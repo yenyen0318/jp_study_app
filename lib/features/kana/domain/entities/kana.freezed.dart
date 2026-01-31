@@ -24,7 +24,7 @@ mixin _$Kana {
   String get id => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
   String get romaji => throw _privateConstructorUsedError;
-  String get type => throw _privateConstructorUsedError;
+  KanaType get type => throw _privateConstructorUsedError;
   int get row => throw _privateConstructorUsedError;
   int get col => throw _privateConstructorUsedError;
   bool get isDuplicate => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $KanaCopyWith<$Res> {
     String id,
     String text,
     String romaji,
-    String type,
+    KanaType type,
     int row,
     int col,
     bool isDuplicate,
@@ -103,7 +103,7 @@ class _$KanaCopyWithImpl<$Res, $Val extends Kana>
             type: null == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as KanaType,
             row: null == row
                 ? _value.row
                 : row // ignore: cast_nullable_to_non_nullable
@@ -146,7 +146,7 @@ abstract class _$$KanaImplCopyWith<$Res> implements $KanaCopyWith<$Res> {
     String id,
     String text,
     String romaji,
-    String type,
+    KanaType type,
     int row,
     int col,
     bool isDuplicate,
@@ -196,7 +196,7 @@ class __$$KanaImplCopyWithImpl<$Res>
         type: null == type
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as KanaType,
         row: null == row
             ? _value.row
             : row // ignore: cast_nullable_to_non_nullable
@@ -253,7 +253,7 @@ class _$KanaImpl implements _Kana {
   @override
   final String romaji;
   @override
-  final String type;
+  final KanaType type;
   @override
   final int row;
   @override
@@ -343,7 +343,7 @@ abstract class _Kana implements Kana {
     required final String id,
     required final String text,
     required final String romaji,
-    required final String type,
+    required final KanaType type,
     required final int row,
     required final int col,
     final bool isDuplicate,
@@ -361,7 +361,7 @@ abstract class _Kana implements Kana {
   @override
   String get romaji;
   @override
-  String get type;
+  KanaType get type;
   @override
   int get row;
   @override

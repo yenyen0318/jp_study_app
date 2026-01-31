@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'kana_type.dart';
 
 part 'kana.freezed.dart';
 part 'kana.g.dart';
@@ -9,7 +10,7 @@ class Kana with _$Kana {
     required String id,
     required String text,
     required String romaji,
-    required String type,
+    required KanaType type,
     required int row,
     required int col,
     @Default(false) bool isDuplicate,

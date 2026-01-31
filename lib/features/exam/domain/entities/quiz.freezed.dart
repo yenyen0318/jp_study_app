@@ -445,8 +445,8 @@ abstract class _ExamResult implements ExamResult {
 
 /// @nodoc
 mixin _$ExamScope {
-  List<String> get types =>
-      throw _privateConstructorUsedError; // ['hiragana', 'katakana']
+  List<KanaType> get types =>
+      throw _privateConstructorUsedError; // [KanaType.hiragana, KanaType.katakana]
   List<int> get rows =>
       throw _privateConstructorUsedError; // [0, 1, 2...] 代表 あ行, か行...
   bool get isRandomSampling => throw _privateConstructorUsedError;
@@ -463,7 +463,7 @@ abstract class $ExamScopeCopyWith<$Res> {
   factory $ExamScopeCopyWith(ExamScope value, $Res Function(ExamScope) then) =
       _$ExamScopeCopyWithImpl<$Res, ExamScope>;
   @useResult
-  $Res call({List<String> types, List<int> rows, bool isRandomSampling});
+  $Res call({List<KanaType> types, List<int> rows, bool isRandomSampling});
 }
 
 /// @nodoc
@@ -490,7 +490,7 @@ class _$ExamScopeCopyWithImpl<$Res, $Val extends ExamScope>
             types: null == types
                 ? _value.types
                 : types // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
+                      as List<KanaType>,
             rows: null == rows
                 ? _value.rows
                 : rows // ignore: cast_nullable_to_non_nullable
@@ -514,7 +514,7 @@ abstract class _$$ExamScopeImplCopyWith<$Res>
   ) = __$$ExamScopeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<String> types, List<int> rows, bool isRandomSampling});
+  $Res call({List<KanaType> types, List<int> rows, bool isRandomSampling});
 }
 
 /// @nodoc
@@ -540,7 +540,7 @@ class __$$ExamScopeImplCopyWithImpl<$Res>
         types: null == types
             ? _value._types
             : types // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
+                  as List<KanaType>,
         rows: null == rows
             ? _value._rows
             : rows // ignore: cast_nullable_to_non_nullable
@@ -558,23 +558,23 @@ class __$$ExamScopeImplCopyWithImpl<$Res>
 
 class _$ExamScopeImpl implements _ExamScope {
   const _$ExamScopeImpl({
-    required final List<String> types,
+    required final List<KanaType> types,
     required final List<int> rows,
     this.isRandomSampling = false,
   }) : _types = types,
        _rows = rows;
 
-  final List<String> _types;
+  final List<KanaType> _types;
   @override
-  List<String> get types {
+  List<KanaType> get types {
     if (_types is EqualUnmodifiableListView) return _types;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_types);
   }
 
-  // ['hiragana', 'katakana']
+  // [KanaType.hiragana, KanaType.katakana]
   final List<int> _rows;
-  // ['hiragana', 'katakana']
+  // [KanaType.hiragana, KanaType.katakana]
   @override
   List<int> get rows {
     if (_rows is EqualUnmodifiableListView) return _rows;
@@ -622,13 +622,13 @@ class _$ExamScopeImpl implements _ExamScope {
 
 abstract class _ExamScope implements ExamScope {
   const factory _ExamScope({
-    required final List<String> types,
+    required final List<KanaType> types,
     required final List<int> rows,
     final bool isRandomSampling,
   }) = _$ExamScopeImpl;
 
   @override
-  List<String> get types; // ['hiragana', 'katakana']
+  List<KanaType> get types; // [KanaType.hiragana, KanaType.katakana]
   @override
   List<int> get rows; // [0, 1, 2...] 代表 あ行, か行...
   @override

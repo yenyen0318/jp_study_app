@@ -8,6 +8,8 @@ import 'package:jp_study_app/features/kana/presentation/providers/kana_audio_con
 import 'package:jp_study_app/core/widgets/zen_toast.dart';
 import 'package:jp_study_app/core/errors/exceptions.dart';
 import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_category.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_type_filter_provider.dart';
 import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';

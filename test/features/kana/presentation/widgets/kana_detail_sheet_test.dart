@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jp_study_app/core/theme/theme.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
 import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_sheet.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +14,7 @@ void main() {
         id: 'h_a',
         text: 'あ',
         romaji: 'a',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 0,
         col: 0,
         mnemonic: 'Apple description',
@@ -41,7 +42,7 @@ void main() {
         id: 'h_nu',
         text: 'ぬ',
         romaji: 'nu',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 4,
         col: 2,
         similarKanaIds: ['h_me'],
@@ -51,7 +52,7 @@ void main() {
           id: 'h_me',
           text: 'め',
           romaji: 'me',
-          type: 'hiragana',
+          type: KanaType.hiragana,
           row: 6,
           col: 3,
         ),

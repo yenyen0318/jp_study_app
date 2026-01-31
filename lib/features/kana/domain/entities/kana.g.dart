@@ -10,7 +10,7 @@ _$KanaImpl _$$KanaImplFromJson(Map<String, dynamic> json) => _$KanaImpl(
   id: json['id'] as String,
   text: json['text'] as String,
   romaji: json['romaji'] as String,
-  type: json['type'] as String,
+  type: $enumDecode(_$KanaTypeEnumMap, json['type']),
   row: (json['row'] as num).toInt(),
   col: (json['col'] as num).toInt(),
   isDuplicate: json['isDuplicate'] as bool? ?? false,
@@ -40,7 +40,7 @@ Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
       'id': instance.id,
       'text': instance.text,
       'romaji': instance.romaji,
-      'type': instance.type,
+      'type': _$KanaTypeEnumMap[instance.type]!,
       'row': instance.row,
       'col': instance.col,
       'isDuplicate': instance.isDuplicate,
@@ -48,3 +48,8 @@ Map<String, dynamic> _$$KanaImplToJson(_$KanaImpl instance) =>
       'similarKanaIds': instance.similarKanaIds,
       'strokes': instance.strokes,
     };
+
+const _$KanaTypeEnumMap = {
+  KanaType.hiragana: 'hiragana',
+  KanaType.katakana: 'katakana',
+};

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/domain/repositories/exam_repository.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
 import 'package:jp_study_app/features/kana/domain/repositories/kana_repository.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_view_model.dart';
 
@@ -22,11 +23,11 @@ class ExamRepositoryImpl implements ExamRepository {
   }) async {
     final List<Kana> allPossibleKana = [];
 
-    // 獲取所有符合類型的 Kana
-    if (scope.types.contains('hiragana')) {
+    // 獲獲所有符合類型的 Kana
+    if (scope.types.contains(KanaType.hiragana)) {
       allPossibleKana.addAll(await _kanaRepository.getHiragana());
     }
-    if (scope.types.contains('katakana')) {
+    if (scope.types.contains(KanaType.katakana)) {
       allPossibleKana.addAll(await _kanaRepository.getKatakana());
     }
 

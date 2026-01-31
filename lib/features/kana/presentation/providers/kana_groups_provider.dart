@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/kana.dart';
+import '../../domain/entities/kana_category.dart';
 import 'kana_filter_provider.dart';
 import 'kana_view_model.dart';
 
@@ -36,7 +37,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.seion)) {
         groups.add(
           KanaGroup(
-            title: '清音',
+            title: KanaCategory.seion.label,
             description: KanaCategory.seion.description,
             items: seion,
           ),
@@ -49,7 +50,11 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
           (selectedCategory == KanaCategory.all ||
               selectedCategory == KanaCategory.seion)) {
         groups.add(
-          KanaGroup(title: '鼻音', description: '最後一個鼻音發音', items: bion),
+          KanaGroup(
+            title: KanaCategory.bion.label,
+            description: KanaCategory.bion.description,
+            items: bion,
+          ),
         );
       }
 
@@ -60,7 +65,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.dakuon)) {
         groups.add(
           KanaGroup(
-            title: '濁音',
+            title: KanaCategory.dakuon.label,
             description: KanaCategory.dakuon.description,
             items: dakuon,
           ),
@@ -74,7 +79,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.handakuon)) {
         groups.add(
           KanaGroup(
-            title: '半濁音',
+            title: KanaCategory.handakuon.label,
             description: KanaCategory.handakuon.description,
             items: handakuon,
           ),
@@ -88,7 +93,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.youon)) {
         groups.add(
           KanaGroup(
-            title: '拗音',
+            title: KanaCategory.youon.label,
             description: KanaCategory.youon.description,
             items: youon,
             crossAxisCount: 3,
@@ -105,7 +110,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.sokuon)) {
         groups.add(
           KanaGroup(
-            title: '促音',
+            title: KanaCategory.sokuon.label,
             description: KanaCategory.sokuon.description,
             items: sokuon,
             crossAxisCount: 3,
@@ -120,7 +125,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.choon)) {
         groups.add(
           KanaGroup(
-            title: '長音',
+            title: KanaCategory.choon.label,
             description: KanaCategory.choon.description,
             items: choon,
             crossAxisCount: 3,
@@ -135,7 +140,7 @@ FutureOr<List<KanaGroup>> filteredKanaGroups(Ref ref) async {
               selectedCategory == KanaCategory.modern)) {
         groups.add(
           KanaGroup(
-            title: '外來語',
+            title: KanaCategory.modern.label,
             description: KanaCategory.modern.description,
             items: modern,
             crossAxisCount: 3,

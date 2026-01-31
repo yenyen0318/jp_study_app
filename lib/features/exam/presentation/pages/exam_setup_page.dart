@@ -8,6 +8,7 @@ import 'package:jp_study_app/core/widgets/zen_multi_selector.dart';
 import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';
 import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/presentation/providers/exam_controller.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
 
 /// 測驗設定頁面
 /// 提供整頁式的設定介面，並預留未來單字測驗的擴展性。
@@ -24,7 +25,7 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
 
   // 五十音設定狀態
   List<int> _selectedRows = [0]; // 預設選中あ行
-  String _selectedKanaType = 'hiragana';
+  KanaType _selectedKanaType = KanaType.hiragana;
   bool _isRandomSampling = false;
 
   final _kanaRows = [
@@ -112,14 +113,13 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
                     delegate: SliverChildListDelegate([
                       _buildSectionHeader('假名類型', zenTheme),
                       const SizedBox(height: 16),
-                      ZenSegmentedButton<String>(
-                        options: const ['hiragana', 'katakana'],
+                      ZenSegmentedButton<KanaType>(
+                        options: KanaType.values,
                         selectedValue: _selectedKanaType,
                         onChanged: (value) =>
                             setState(() => _selectedKanaType = value),
                         theme: zenTheme,
-                        labelBuilder: (value) =>
-                            value == 'hiragana' ? '平假名' : '片假名',
+                        labelBuilder: (value) => value.label,
                       ),
                       const SizedBox(height: 48),
 

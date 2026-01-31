@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/data/repositories/exam_repository_impl.dart';
 import 'package:jp_study_app/features/kana/domain/entities/kana.dart';
+import 'package:jp_study_app/features/kana/domain/entities/kana_type.dart';
 import 'package:jp_study_app/features/kana/domain/repositories/kana_repository.dart';
 
 class MockKanaRepository extends Mock implements KanaRepository {}
@@ -21,7 +22,7 @@ void main() {
       id: 'nu',
       text: 'ぬ',
       romaji: 'nu',
-      type: 'hiragana',
+      type: KanaType.hiragana,
       row: 4,
       col: 2,
       similarKanaIds: ['me', 'ne'],
@@ -30,7 +31,7 @@ void main() {
       id: 'me',
       text: 'め',
       romaji: 'me',
-      type: 'hiragana',
+      type: KanaType.hiragana,
       row: 7,
       col: 3,
     );
@@ -38,7 +39,7 @@ void main() {
       id: 'ne',
       text: 'ne',
       romaji: 'ne',
-      type: 'hiragana',
+      type: KanaType.hiragana,
       row: 4,
       col: 3,
     );
@@ -46,7 +47,7 @@ void main() {
       id: 'a',
       text: 'あ',
       romaji: 'a',
-      type: 'hiragana',
+      type: KanaType.hiragana,
       row: 0,
       col: 0,
     );
@@ -61,7 +62,7 @@ void main() {
 
       // 使用隨機抽樣模式確保只生成 1 題
       final scope = ExamScope(
-        types: ['hiragana'],
+        types: [KanaType.hiragana],
         rows: [4], // な行 (包含 ぬ, ね)
         isRandomSampling: true,
       );
@@ -95,7 +96,7 @@ void main() {
         id: 'unique',
         text: 'x',
         romaji: 'x',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 0,
         col: 0,
       );
@@ -103,7 +104,7 @@ void main() {
         id: 'o1',
         text: 'o1',
         romaji: 'o1',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 1,
         col: 1,
       );
@@ -111,7 +112,7 @@ void main() {
         id: 'o2',
         text: 'o2',
         romaji: 'o2',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 1,
         col: 2,
       );
@@ -119,7 +120,7 @@ void main() {
         id: 'o3',
         text: 'o3',
         romaji: 'o3',
-        type: 'hiragana',
+        type: KanaType.hiragana,
         row: 1,
         col: 3,
       );
@@ -130,7 +131,7 @@ void main() {
       ).thenAnswer((_) async => allHiragana);
       when(() => mockKanaRepository.getKatakana()).thenAnswer((_) async => []);
 
-      final scope = ExamScope(types: ['hiragana'], rows: [0]);
+      final scope = ExamScope(types: [KanaType.hiragana], rows: [0]);
 
       // Act
       final questions = await examRepository.generateExam(
