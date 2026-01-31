@@ -11,6 +11,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
   final Color success;
   final Color error;
   final Color borderSubtle;
+  final Color accent;
 
   const ZenTheme({
     required this.bgPrimary,
@@ -20,6 +21,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     required this.success,
     required this.error,
     required this.borderSubtle,
+    required this.accent,
   });
 
   @override
@@ -31,6 +33,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     Color? success,
     Color? error,
     Color? borderSubtle,
+    Color? accent,
   }) {
     return ZenTheme(
       bgPrimary: bgPrimary ?? this.bgPrimary,
@@ -40,6 +43,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       success: success ?? this.success,
       error: error ?? this.error,
       borderSubtle: borderSubtle ?? this.borderSubtle,
+      accent: accent ?? this.accent,
     );
   }
 
@@ -56,6 +60,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
       success: Color.lerp(success, other.success, t)!,
       error: Color.lerp(error, other.error, t)!,
       borderSubtle: Color.lerp(borderSubtle, other.borderSubtle, t)!,
+      accent: Color.lerp(accent, other.accent, t)!,
     );
   }
 
@@ -67,6 +72,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     success: Color(0xFF92B5A9), // 青磁
     error: Color(0xFFD36151), // 朱紅
     borderSubtle: Color(0xFFE0E0E0),
+    accent: Color(0xFF5D7687), // 縹色 (Hanada-iro / Muted Blue)
   );
 
   static const dark = ZenTheme(
@@ -77,6 +83,7 @@ class ZenTheme extends ThemeExtension<ZenTheme> {
     success: Color(0xFF4D6B61), // 暗青
     error: Color(0xFF964236), // 深朱
     borderSubtle: Color(0xFF333333),
+    accent: Color(0xFF4A5F6D), // 深縹
   );
 }
 

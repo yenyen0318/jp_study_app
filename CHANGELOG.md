@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-01-31
+
+### Added
+- **驗收出題優化**：實作智能干擾項 (Intelligent Distractors) 演算法，優先選取形似假名作為選項。
+- **優雅的失敗 (Graceful Failure)**：測驗答錯時即時顯示假名助記故事，將挫折轉化為學習。
+- **主題擴充**：`ZenTheme` 新增 `accent` 縹色，用於學習導引與重點提示。
+
+### Changed
+- **介面穩定性**：優化 `ExamPage` 佈局，解決小螢幕與長文字溢出問題。
+- **測驗流暢度**：修正測驗動畫導致的效能與測試同步問題。
+
 ## [0.1.1] - 2026-01-31
 
 ### Added

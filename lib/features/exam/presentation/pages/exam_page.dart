@@ -64,9 +64,12 @@ class ExamPage extends ConsumerWidget {
                 _ProgressBar(progress: progress, theme: theme),
 
                 Expanded(
-                  child: Center(
+                  child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 24,
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -95,9 +98,16 @@ class ExamPage extends ConsumerWidget {
                                 .answer(opt),
                           ),
 
-                          const SizedBox(height: 48),
+                          // 答錯時的助記提示 (Graceful Failure)
+                          if (state.isAnswered && !state.isCorrect)
+                            _WrongAnswerHint(
+                              mnemonic: currentQuestion.correctKana.mnemonic,
+                              theme: theme,
+                            ),
 
-                          // 下一題按鈕 (手動跳轉)
+                          if (state.isAnswered) const SizedBox(height: 32),
+
+                          // 下一題按鈕
                           if (state.isAnswered)
                             _NextButton(
                               onPressed: () => ref
@@ -105,8 +115,6 @@ class ExamPage extends ConsumerWidget {
                                   .nextQuestion(),
                               theme: theme,
                             ),
-
-                          // 連擊粒子效果 (邏輯在 _QuestionArea 內透過連續答對次數觸發，這裡主要是佔位)
                         ],
                       ),
                     ),
@@ -565,4 +573,53 @@ class _ParticlePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class _WrongAnswerHint extends StatelessWidget {
+  final String? mnemonic;
+  final ZenTheme theme;
+
+  const _WrongAnswerHint({this.mnemonic, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    if (mnemonic == null) return const SizedBox.shrink();
+
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 600),
+      tween: Tween(begin: 0.0, end: 1.0),
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              children: [
+                Text(
+                  '💡 記憶小撇步',
+                  style: GoogleFonts.notoSansTc(
+                    color: theme.accent.withValues(alpha: 0.7 * value),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  mnemonic!,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.notoSansTc(
+                    color: theme.textSecondary.withValues(alpha: value),
+                    fontSize: 14,
+                    height: 1.6,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
