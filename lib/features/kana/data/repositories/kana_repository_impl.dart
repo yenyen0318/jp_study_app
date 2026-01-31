@@ -256,7 +256,7 @@ class KanaRepositoryImpl implements KanaRepository {
     Kana(
       id: 'h_te',
       text: 'て',
-      romaji: 'て',
+      romaji: 'te',
       type: 'hiragana',
       row: 3,
       col: 3,
