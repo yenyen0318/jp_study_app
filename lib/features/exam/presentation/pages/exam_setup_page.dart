@@ -53,16 +53,19 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
 
     return Scaffold(
       backgroundColor: zenTheme.bgPrimary,
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: CustomScrollView(
-              slivers: [
-                // 標題區域
-                SliverToBoxAdapter(
+      extendBody: true,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: CustomScrollView(
+            slivers: [
+              // 標題區域
+              SliverSafeArea(
+                bottom: false,
+                minimum: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                sliver: SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 64, 24, 48),
+                    padding: const EdgeInsets.only(bottom: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -91,10 +94,17 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
                     ),
                   ),
                 ),
-
-                // 設定內容
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+              ),
+              // 設定內容
+              SliverSafeArea(
+                top: false,
+                minimum: const EdgeInsets.only(
+                  bottom: 100,
+                  left: 24,
+                  right: 24,
+                ), // Add bottom padding to avoid button overlap
+                sliver: SliverPadding(
+                  padding: EdgeInsets.zero,
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       _buildSectionHeader('假名類型', zenTheme),
@@ -132,19 +142,20 @@ class _ExamSetupPageState extends ConsumerState<ExamSetupPage> {
                         theme: zenTheme,
                         labelBuilder: (value) => value ? '隨機 10 題' : '完整覆蓋',
                       ),
-                      const SizedBox(height: 80), // 為底部按鈕預留空間
+                      const SizedBox(height: 0),
                     ]),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
       // 固定在底職的開始按鈕
       bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+          padding: EdgeInsets.zero,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
             child: ZenButton(

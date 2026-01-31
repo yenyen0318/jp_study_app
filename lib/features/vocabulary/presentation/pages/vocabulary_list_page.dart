@@ -23,41 +23,45 @@ class VocabularyListPage extends ConsumerWidget {
           // 統合式 Header (標題 + 搜尋 + 篩選)
           SliverAppBar(
             pinned: true,
-            expandedHeight: 250,
-            collapsedHeight: 135,
+            expandedHeight: 80,
+            collapsedHeight: 80,
             toolbarHeight: 0,
             backgroundColor: zenTheme.bgPrimary,
             scrolledUnderElevation: 0,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
-            primary: false,
+            primary: true,
             flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 60, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'N5 單字學習',
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: zenTheme.textPrimary,
-                            letterSpacing: 2.0,
-                          ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '精選 800+ 核心詞彙，成就日檢之路',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: zenTheme.textSecondary.withValues(alpha: 0.7),
+              background: SafeArea(
+                bottom: false,
+                minimum: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'N5 單字學習',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              color: zenTheme.textPrimary,
+                              letterSpacing: 2.0,
+                            ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        '精選 800+ 核心詞彙，成就日檢之路',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: zenTheme.textSecondary.withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(135),
+              preferredSize: const Size.fromHeight(110),
               child: Container(
                 color: zenTheme.bgPrimary,
                 child: Column(
@@ -75,12 +79,17 @@ class VocabularyListPage extends ConsumerWidget {
                             )
                           : const SizedBox.shrink(),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 4,
+                    SafeArea(
+                      top: false,
+                      bottom: false,
+                      minimum: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0,
+                          vertical: 4,
+                        ),
+                        child: VocabularySearchBar(),
                       ),
-                      child: VocabularySearchBar(),
                     ),
                     Consumer(
                       builder: (context, ref, child) {
@@ -96,7 +105,7 @@ class VocabularyListPage extends ConsumerWidget {
                           selectedValue: activeFilter,
                           theme: zenTheme,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
+                            horizontal: 24,
                             vertical: 8,
                           ),
                           labelBuilder: (tag) => tag ?? '全部',
@@ -116,88 +125,99 @@ class VocabularyListPage extends ConsumerWidget {
           ),
 
           // 單字列表 - 穩定版 (避免搜尋時閃爍)
-          // 單字列表 - 使用 AnimatedSwitcher 實作流暢切換
-          SliverToBoxAdapter(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 450),
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              transitionBuilder: (child, animation) {
-                return FadeTransition(opacity: animation, child: child);
-              },
-              child: vocabAsync.when(
-                skipLoadingOnRefresh: true,
-                data: (vocabs) {
-                  final query = ref.watch(vocabularySearchQueryProvider);
-                  final filter = ref.watch(vocabularyFilterProvider);
+          SliverSafeArea(
+            top: false,
+            // minimum bottom is handled. horizontal is 24.
+            minimum: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
+            sliver: SliverToBoxAdapter(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 450),
+                switchInCurve: Curves.easeInOut,
+                switchOutCurve: Curves.easeInOut,
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: vocabAsync.when(
+                  skipLoadingOnRefresh: true,
+                  data: (vocabs) {
+                    final query = ref.watch(vocabularySearchQueryProvider);
+                    final filter = ref.watch(vocabularyFilterProvider);
 
-                  return Padding(
-                    key: ValueKey('vocab_content_${query}_${filter ?? 'all'}'),
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: 8,
-                    ),
-                    child: vocabs.isEmpty
-                        ? SizedBox(
-                            height: 300,
-                            child: Center(
-                              child: Text(
-                                '找不到符合的單字',
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      color: zenTheme.textSecondary.withValues(
-                                        alpha: 0.5,
+                    return Padding(
+                      key: ValueKey(
+                        'vocab_content_${query}_${filter ?? 'all'}',
+                      ),
+                      padding: const EdgeInsets.only(
+                        left: 0,
+                        right: 0,
+                        bottom: 8,
+                      ),
+                      child: vocabs.isEmpty
+                          ? SizedBox(
+                              height: 300,
+                              child: Center(
+                                child: Text(
+                                  '找不到符合的單字',
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: zenTheme.textSecondary
+                                            .withValues(alpha: 0.5),
                                       ),
+                                ),
+                              ),
+                            )
+                          : ListView.separated(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: vocabs.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 12),
+                              itemBuilder: (context, index) => VocabularyCard(
+                                key: ValueKey(vocabs[index].id),
+                                vocabulary: vocabs[index],
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          VocabularyPracticePage(
+                                            vocabulary: vocabs[index],
+                                          ),
                                     ),
+                                  );
+                                },
                               ),
                             ),
-                          )
-                        : ListView.separated(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: vocabs.length,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 12),
-                            itemBuilder: (context, index) => VocabularyCard(
-                              key: ValueKey(vocabs[index].id),
-                              vocabulary: vocabs[index],
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        VocabularyPracticePage(
-                                          vocabulary: vocabs[index],
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                  );
-                },
-                loading: () => const SizedBox(
-                  key: ValueKey('vocab_loading'),
-                  height: 300,
-                  child: Center(
-                    child: Opacity(
-                      opacity: 0.5,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                    );
+                  },
+                  loading: () => const SizedBox(
+                    key: ValueKey('vocab_loading'),
+                    height: 300,
+                    child: Center(
+                      child: Opacity(
+                        opacity: 0.5,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
                     ),
                   ),
-                ),
-                error: (err, stack) => SizedBox(
-                  key: const ValueKey('vocab_error'),
-                  height: 300,
-                  child: Center(child: Text('讀取失敗: $err')),
+                  error: (err, stack) => SizedBox(
+                    key: const ValueKey('vocab_error'),
+                    height: 300,
+                    child: Center(child: Text('讀取失敗: $err')),
+                  ),
                 ),
               ),
             ),
           ),
 
           // 底部間距
-          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          const SliverSafeArea(
+            top: false,
+            minimum: EdgeInsets.only(
+              bottom: 100,
+            ), // Ensure bottom safe area + extra
+            sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
+          ),
         ],
       ),
     );

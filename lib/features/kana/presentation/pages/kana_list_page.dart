@@ -36,296 +36,308 @@ class KanaListPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: zenTheme.bgPrimary,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: CustomScrollView(
-            slivers: [
-              // 頂部標題與過濾器
-              SliverSafeArea(
-                bottom: false,
-                sliver: SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '五十音',
-                                style: Theme.of(context).textTheme.headlineLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w300,
-                                      color: zenTheme.textPrimary,
-                                      letterSpacing: 2.0,
-                                    ),
-                              ),
-                              // 假名類型切換 - 使用 ZenSegmentedButton
-                              ZenSegmentedButton<KanaType>(
-                                options: const [
-                                  KanaType.hiragana,
-                                  KanaType.katakana,
-                                ],
-                                selectedValue: ref.watch(
-                                  kanaTypeFilterProvider,
-                                ),
-                                onChanged: (type) {
-                                  ref
-                                      .read(kanaTypeFilterProvider.notifier)
-                                      .setType(type);
-                                },
-                                theme: zenTheme,
-                                labelBuilder: (type) =>
-                                    type == KanaType.hiragana ? 'あ' : 'ア',
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        // 分類選擇 - 使用 ZenChipSelector
-                        ZenChipSelector<KanaCategory>(
-                          options: KanaCategory.values,
-                          selectedValue: selectedCategory,
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          onChanged: (category) {
-                            ref
-                                .read(kanaCategoryFilterProvider.notifier)
-                                .setFilter(category);
-                          },
-                          theme: zenTheme,
-                          labelBuilder: (category) => category.label,
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // 假名列表內容
-              SliverToBoxAdapter(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
-                  switchInCurve: Curves.easeInOut,
-                  switchOutCurve: Curves.easeInOut,
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  child: Padding(
-                    key: ValueKey(
-                      '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
-                    ),
-                    child: kanaListAsync.when(
-                      data: (kanaList) {
-                        final seion = kanaList
-                            .where((k) => k.row >= 0 && k.row <= 9)
-                            .toList();
-                        final bion = kanaList
-                            .where((k) => k.row == 10)
-                            .toList();
-                        final dakuon = kanaList
-                            .where((k) => k.row >= 11 && k.row <= 14)
-                            .toList();
-                        final handakuon = kanaList
-                            .where((k) => k.row == 15)
-                            .toList();
-                        final youon = kanaList
-                            .where((k) => k.row >= 16 && k.row <= 26)
-                            .toList();
-                        final sokuon = kanaList
-                            .where(
-                              (k) => k.row == 100 && k.id.contains('sokuon'),
-                            )
-                            .toList();
-                        final choon = kanaList
-                            .where((k) => k.row == 101)
-                            .toList();
-                        final modern = kanaList
-                            .where((k) => k.row >= 110)
-                            .toList();
-
-                        final showSeion =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.seion;
-                        final showDakuon =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.dakuon;
-                        final showHandakuon =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.handakuon;
-                        final showYouon =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.youon;
-                        final showSokuon =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.sokuon;
-                        final showChoon =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.choon;
-                        final showModern =
-                            selectedCategory == KanaCategory.all ||
-                            selectedCategory == KanaCategory.modern;
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+      body: CustomScrollView(
+        slivers: [
+          // 頂部標題與過濾器
+          SliverSafeArea(
+            bottom: false,
+            minimum: const EdgeInsets.only(top: 24),
+            sliver: SliverToBoxAdapter(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            if (showSeion && seion.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.seion.label,
-                                description: KanaCategory.seion.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: seion,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showSeion && bion.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: '鼻音',
-                                description: '最後一個鼻音發音',
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: bion,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showDakuon && dakuon.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.dakuon.label,
-                                description: KanaCategory.dakuon.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: dakuon,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showHandakuon && handakuon.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.handakuon.label,
-                                description: KanaCategory.handakuon.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: handakuon,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showYouon && youon.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.youon.label,
-                                description: KanaCategory.youon.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: youon,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                                crossAxisCount: 3,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showSokuon && sokuon.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.sokuon.label,
-                                description: KanaCategory.sokuon.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: sokuon,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                                crossAxisCount: 3,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showChoon && choon.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.choon.label,
-                                description: KanaCategory.choon.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: choon,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                                crossAxisCount: 3,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                            if (showModern && modern.isNotEmpty) ...[
-                              _CategoryHeader(
-                                title: KanaCategory.modern.label,
-                                description: KanaCategory.modern.description,
-                                theme: zenTheme,
-                              ),
-                              const SizedBox(height: 16),
-                              _KanaGrid(
-                                kanaList: modern,
-                                allKana: kanaList,
-                                ref: ref,
-                                zenTheme: zenTheme,
-                                crossAxisCount: 3,
-                              ),
-                              const SizedBox(height: 32),
-                            ],
+                            Text(
+                              '五十音',
+                              style: Theme.of(context).textTheme.headlineLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    color: zenTheme.textPrimary,
+                                    letterSpacing: 2.0,
+                                  ),
+                            ),
+                            // 假名類型切換 - 使用 ZenSegmentedButton
+                            ZenSegmentedButton<KanaType>(
+                              options: const [
+                                KanaType.hiragana,
+                                KanaType.katakana,
+                              ],
+                              selectedValue: ref.watch(kanaTypeFilterProvider),
+                              onChanged: (type) {
+                                ref
+                                    .read(kanaTypeFilterProvider.notifier)
+                                    .setType(type);
+                              },
+                              theme: zenTheme,
+                              labelBuilder: (type) =>
+                                  type == KanaType.hiragana ? 'あ' : 'ア',
+                            ),
                           ],
-                        );
-                      },
-                      loading: () => const SizedBox(
-                        height: 200,
-                        child: Center(child: Text('準備中...')),
+                        ),
                       ),
-                      error: (err, stack) => const SizedBox(
-                        height: 200,
-                        child: Center(child: Text('發生錯誤')),
+                      const SizedBox(height: 24),
+                      // 分類選擇 - 使用 ZenChipSelector
+                      ZenChipSelector<KanaCategory>(
+                        options: KanaCategory.values,
+                        selectedValue: selectedCategory,
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        onChanged: (category) {
+                          ref
+                              .read(kanaCategoryFilterProvider.notifier)
+                              .setFilter(category);
+                        },
+                        theme: zenTheme,
+                        labelBuilder: (category) => category.label,
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 假名列表內容
+          SliverSafeArea(
+            top: false,
+            minimum: const EdgeInsets.only(bottom: 24),
+            sliver: SliverToBoxAdapter(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 350),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(opacity: animation, child: child);
+                    },
+                    child: Padding(
+                      key: ValueKey(
+                        '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0,
+                        vertical: 16,
+                      ),
+                      child: kanaListAsync.when(
+                        data: (kanaList) {
+                          final seion = kanaList
+                              .where((k) => k.row >= 0 && k.row <= 9)
+                              .toList();
+                          final bion = kanaList
+                              .where((k) => k.row == 10)
+                              .toList();
+                          final dakuon = kanaList
+                              .where((k) => k.row >= 11 && k.row <= 14)
+                              .toList();
+                          final handakuon = kanaList
+                              .where((k) => k.row == 15)
+                              .toList();
+                          final youon = kanaList
+                              .where((k) => k.row >= 16 && k.row <= 26)
+                              .toList();
+                          final sokuon = kanaList
+                              .where(
+                                (k) => k.row == 100 && k.id.contains('sokuon'),
+                              )
+                              .toList();
+                          final choon = kanaList
+                              .where((k) => k.row == 101)
+                              .toList();
+                          final modern = kanaList
+                              .where((k) => k.row >= 110)
+                              .toList();
+
+                          final showSeion =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.seion;
+                          final showDakuon =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.dakuon;
+                          final showHandakuon =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.handakuon;
+                          final showYouon =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.youon;
+                          final showSokuon =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.sokuon;
+                          final showChoon =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.choon;
+                          final showModern =
+                              selectedCategory == KanaCategory.all ||
+                              selectedCategory == KanaCategory.modern;
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (showSeion && seion.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.seion.label,
+                                    description: KanaCategory.seion.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: seion,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showSeion && bion.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: '鼻音',
+                                    description: '最後一個鼻音發音',
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: bion,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showDakuon && dakuon.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.dakuon.label,
+                                    description:
+                                        KanaCategory.dakuon.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: dakuon,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showHandakuon && handakuon.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.handakuon.label,
+                                    description:
+                                        KanaCategory.handakuon.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: handakuon,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showYouon && youon.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.youon.label,
+                                    description: KanaCategory.youon.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: youon,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                    crossAxisCount: 3,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showSokuon && sokuon.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.sokuon.label,
+                                    description:
+                                        KanaCategory.sokuon.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: sokuon,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                    crossAxisCount: 3,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showChoon && choon.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.choon.label,
+                                    description: KanaCategory.choon.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: choon,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                    crossAxisCount: 3,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                                if (showModern && modern.isNotEmpty) ...[
+                                  _CategoryHeader(
+                                    title: KanaCategory.modern.label,
+                                    description:
+                                        KanaCategory.modern.description,
+                                    theme: zenTheme,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _KanaGrid(
+                                    kanaList: modern,
+                                    allKana: kanaList,
+                                    ref: ref,
+                                    zenTheme: zenTheme,
+                                    crossAxisCount: 3,
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                              ],
+                            ),
+                          );
+                        },
+                        loading: () => const SizedBox(
+                          height: 200,
+                          child: Center(child: Text('準備中...')),
+                        ),
+                        error: (err, stack) => const SizedBox(
+                          height: 200,
+                          child: Center(child: Text('發生錯誤')),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-
-              const SliverSafeArea(
-                top: false,
-                minimum: EdgeInsets.only(bottom: 80),
-                sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
-              ),
-            ],
+            ),
           ),
-        ),
+
+          const SliverSafeArea(
+            top: false,
+            minimum: EdgeInsets.only(bottom: 80),
+            sliver: SliverToBoxAdapter(child: SizedBox.shrink()),
+          ),
+        ],
       ),
     );
   }

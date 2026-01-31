@@ -22,13 +22,15 @@ class ExamResultPage extends ConsumerWidget {
           final result = state.result;
           if (result == null) return const Center(child: Text('查無結果'));
 
-          return SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                // 頂部儀式感區域
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(48, 24, 48, 48),
-                  sliver: SliverToBoxAdapter(
+          return CustomScrollView(
+            slivers: [
+              // 頂部儀式感區域
+              SliverSafeArea(
+                bottom: false,
+                minimum: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                sliver: SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
                     child: Column(
                       children: [
                         _MasteryCircle(score: result.score, theme: theme),
@@ -50,25 +52,32 @@ class ExamResultPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+              ),
 
-                // 錯誤複習標題
-                if (result.wrongAnswers.isNotEmpty)
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    sliver: SliverToBoxAdapter(
-                      child: Text(
-                        '需要精進的字元',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: theme.textSecondary,
-                          letterSpacing: 2,
-                        ),
+              // 錯誤複習標題
+              if (result.wrongAnswers.isNotEmpty)
+                SliverSafeArea(
+                  top: false,
+                  bottom: false,
+                  minimum: const EdgeInsets.symmetric(horizontal: 24),
+                  sliver: SliverToBoxAdapter(
+                    child: Text(
+                      '需要精進的字元',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: theme.textSecondary,
+                        letterSpacing: 2,
                       ),
                     ),
                   ),
+                ),
 
-                // 錯誤清單
-                SliverPadding(
-                  padding: const EdgeInsets.all(24),
+              // 錯誤清單
+              SliverSafeArea(
+                top: false,
+                bottom: false,
+                minimum: const EdgeInsets.symmetric(horizontal: 24),
+                sliver: SliverPadding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final wrong = result.wrongAnswers[index];
@@ -80,14 +89,15 @@ class ExamResultPage extends ConsumerWidget {
                     }, childCount: result.wrongAnswers.length),
                   ),
                 ),
+              ),
 
-                // 操作按鈕
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 48,
-                    vertical: 32,
-                  ),
-                  sliver: SliverToBoxAdapter(
+              // 操作按鈕
+              SliverSafeArea(
+                top: false,
+                minimum: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
+                sliver: SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 24),
                     child: Column(
                       children: [
                         _ActionBtn(
@@ -117,8 +127,8 @@ class ExamResultPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
         loading: () => const SizedBox.shrink(),

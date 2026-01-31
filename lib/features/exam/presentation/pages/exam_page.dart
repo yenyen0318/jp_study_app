@@ -62,20 +62,31 @@ class ExamPage extends ConsumerWidget {
           final double progress =
               (state.currentIndex + 1) / state.questions.length;
 
-          return SafeArea(
-            child: Column(
-              children: [
-                // 進度條 - 增加頂部間距以符合設計系統規範
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
+          return Column(
+            children: [
+              // 進度條 - 增加頂部間距以符合設計系統規範
+              SafeArea(
+                bottom: false,
+                minimum: const EdgeInsets.only(top: 24, left: 24, right: 24),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 0),
                   child: _ProgressBar(progress: progress, theme: theme),
                 ),
+              ),
 
-                Expanded(
+              Expanded(
+                child: SafeArea(
+                  // Use SafeArea implicitly for content
+                  top: false,
+                  minimum: const EdgeInsets.only(
+                    bottom: 24,
+                    left: 24,
+                    right: 24,
+                  ),
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
+                        horizontal: 0,
                         vertical: 24,
                       ),
                       child: Column(
@@ -130,8 +141,8 @@ class ExamPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
