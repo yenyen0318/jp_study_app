@@ -50,6 +50,9 @@ description: "App UI/UX Design System & Guidelines"
 | `xxl` | 48.0 | 頁面底部或頂部的大型呼吸空間 |
 
 *   **調用方式**：`context.zen.spacing.md`。
+*   **禁止代幣運算**：禁止對設計標記進行數學運算（如 `spacing.xs / 2` 或 `spacing.md * 1.5`）。
+    *   **原則**：應直接使用最接近的現有代幣。
+    *   **例外**：若現有代幣確實無法滿足精確對齊需求，應優先考慮擴充 `ZenSpacing` 代幣系統，而非在 UI 代碼中進行運算。
 *   **最小觸控尺寸**：所有可點擊元件必須至少為 **48x48dp**，確保操作從容。
 
 ## 4. 元件規範 (Component Specifications)
@@ -272,3 +275,7 @@ description: "App UI/UX Design System & Guidelines"
 *   **語意化優先**：
     *   若發現新的設計需求（例如「引導層顏色」），應先擴充 `ZenTheme` 屬性（如 `guideOverlay`），再於 Widget 中使用。
     *   以此確保修改主題時唯一來源 (Single Source of Truth) 的可靠性。
+*   **禁止代碼內運算 (Zero-calculation Policy)**：
+    *   **規則**：在 Widget 層級，禁止對 `ZenSpacing` 或 `ZenRadius` 進行任何形式的乘法、除法或加減運算。
+    *   **理由**：任何「數值計算」都會破壞系統的穩定感與數學秩序，並增加日後維護時查找 Magic Numbers 的難度。
+    *   **替代方案**：若遇到需要運算的情況（如 `xs / 2` 或 `xxl * 1.5`），**不應新增代幣或進行運算**，應直接取用最接近的現有代幣（如直接使用 `xs` 或 `xxl`）。

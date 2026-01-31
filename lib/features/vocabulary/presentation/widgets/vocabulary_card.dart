@@ -76,10 +76,7 @@ class VocabularyCard extends StatelessWidget {
           ),
           Text(
             vocabulary.meaning,
-            style: textTheme.bodyLarge?.copyWith(
-              color: zen.textPrimary,
-              fontSize: 18,
-            ),
+            style: textTheme.titleMedium?.copyWith(color: zen.textPrimary),
           ),
           if (vocabulary.tags.isNotEmpty) ...[
             SizedBox(height: zen.spacing.md),
@@ -90,17 +87,16 @@ class VocabularyCard extends StatelessWidget {
                     (tag) => Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: zen.spacing.sm,
-                        vertical: zen.spacing.xs / 2,
+                        vertical: zen.spacing.xs,
                       ),
                       decoration: BoxDecoration(
                         color: zen.bgPrimary.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(zen.radius.sm / 2),
+                        borderRadius: BorderRadius.circular(zen.radius.sm),
                       ),
                       child: Text(
                         tag,
                         style: textTheme.labelSmall?.copyWith(
                           color: zen.textSecondary,
-                          fontSize: 10,
                         ),
                       ),
                     ),

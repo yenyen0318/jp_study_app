@@ -206,7 +206,7 @@ class KanaListPage extends ConsumerWidget {
 
           SliverSafeArea(
             top: false,
-            minimum: EdgeInsets.only(bottom: zen.spacing.xxl * 1.5),
+            minimum: EdgeInsets.only(bottom: zen.spacing.xxl),
             sliver: const SliverToBoxAdapter(child: SizedBox.shrink()),
           ),
         ],
@@ -237,8 +237,6 @@ class _CategoryHeader extends StatelessWidget {
             fontWeight: FontWeight.w400,
             color: zen.textPrimary.withValues(alpha: 0.9),
             letterSpacing: 2.0,
-            height: 1.2,
-            fontSize: 18,
           ),
         ),
         if (description != null) ...[
@@ -281,7 +279,7 @@ class _SliverKanaGrid extends StatelessWidget {
             ? maxWidth
             : screenWidth;
 
-        final double gap = zen.spacing.sm + zen.spacing.xs; // 12.0
+        final double gap = zen.spacing.md;
         const int baseCols = 5;
 
         final double baseItemWidth =
@@ -332,13 +330,16 @@ class _KanaCard extends StatelessWidget {
           Center(
             child: Text(
               kana.text,
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontSize: kana.text.length > 1 ? 26 : 32,
-                height: 1.25,
-                color: kana.isDuplicate
-                    ? zen.textPrimary.withValues(alpha: 0.2)
-                    : zen.textPrimary,
-              ),
+              style:
+                  (kana.text.length > 1
+                          ? Theme.of(context).textTheme.headlineMedium
+                          : Theme.of(context).textTheme.headlineLarge)
+                      ?.copyWith(
+                        height: 1.25,
+                        color: kana.isDuplicate
+                            ? zen.textPrimary.withValues(alpha: 0.2)
+                            : zen.textPrimary,
+                      ),
             ),
           ),
           Positioned(
