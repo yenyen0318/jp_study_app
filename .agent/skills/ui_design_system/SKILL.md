@@ -162,7 +162,73 @@ description: "App UI/UX Design System & Guidelines"
     *   **解決方案**：為可變內容預留固定的「舞台空間 (Fixed Stage)」。
         *   範例：測驗區塊應設定 `SizedBox(height: 120)`，無論內部是 80dp 的圖示還是 100dp 的文字，外部框架都應保持不變。
 
-## 12. 架構與代碼規範 (Architecture & Code Standards)
+## 12. 選擇元件規範 (Selection Components)
+
+為了確保使用者能夠直覺地理解元件的選擇語意,我們建立了明確的單選/多選元件視覺規範。
+
+### **單選元件 (Single Selection)**
+
+單選元件提供兩種樣式,根據選項數量和使用場景選擇:
+
+#### **Segmented Button 樣式**
+*   **適用場景**: 2-4 個選項的單選,通常用於模式切換或類型切換
+*   **視覺特徵**:
+    *   整體外框包裹 (`borderRadius: 20`, `border: 0.5dp`)
+    *   選項之間使用極細分隔線 (`0.5dp`)
+    *   選中項填充 `theme.textPrimary` 背景色
+    *   未選中項透明背景
+    *   選中項文字使用 `theme.bgSurface` (反色)
+    *   未選中項文字使用 `theme.textSecondary`
+*   **動畫**: 200ms 的背景色過渡動畫
+*   **觸覺回饋**: 選擇時調用 `HapticFeedback.selectionClick()`
+*   **標準元件**: 使用 `ZenSegmentedButton`
+
+#### **Chip 樣式**
+*   **適用場景**: 3+ 個選項的單選,通常用於分類選擇或篩選
+*   **視覺特徵**:
+    *   獨立的 Chip 設計 (`borderRadius: 20`, `border: 0.5dp`)
+    *   選中項填充 `theme.textPrimary` 背景色
+    *   未選中項使用 `theme.bgSurface` 背景色
+    *   選中項文字使用 `theme.bgPrimary` (反色)
+    *   未選中項文字使用 `theme.textSecondary`
+    *   Chip 間距為 `8dp`
+*   **佈局**: 使用 `SingleChildScrollView` 支援水平捲動
+*   **動畫**: 200ms 的背景色過渡動畫
+*   **觸覺回饋**: 選擇時調用 `HapticFeedback.selectionClick()`
+*   **標準元件**: 使用 `ZenChipSelector`
+
+### **多選元件 (Multiple Selection)**
+
+多選元件必須有明確的視覺提示,區別於單選元件:
+
+*   **視覺特徵**:
+    *   未選中項使用**虛線邊框** (`BorderSide(style: BorderStyle.dashed)`)
+    *   選中項使用**實線邊框** + 淡色背景 (`theme.textPrimary.withValues(alpha: 0.05)`)
+    *   邊框寬度為 `0.5dp`
+    *   圓角為 `8dp`
+*   **佈局**: 使用 `Wrap` 支援自動換行
+*   **間距**: 元件間距為 `8dp`
+*   **動畫**: 200ms 的邊框樣式與背景色過渡動畫
+*   **觸覺回饋**: 選擇/取消選擇時調用 `HapticFeedback.selectionClick()`
+*   **標準元件**: 使用 `ZenMultiSelector`
+
+### **元件選擇決策樹**
+
+```
+選擇元件
+├─ 單選?
+│  ├─ 2-4 個選項? → ZenSegmentedButton
+│  └─ 3+ 個選項? → ZenChipSelector
+└─ 多選? → ZenMultiSelector
+```
+
+### **禁止事項**
+
+*   **禁止混用**: 同一場景內的選擇元件應使用相同樣式
+*   **禁止自訂**: 不得在頁面中自訂選擇元件,必須使用標準元件
+*   **禁止誤導**: 多選元件不得使用與單選相同的視覺樣式
+
+## 13. 架構與代碼規範 (Architecture & Code Standards)
 
 為了維護設計系統的一致性與可維護性，嚴格禁止在 UI Widget 中硬編碼樣式邏輯。
 

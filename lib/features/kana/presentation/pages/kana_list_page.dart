@@ -12,6 +12,8 @@ import 'package:jp_study_app/features/kana/presentation/widgets/kana_detail_shee
 import 'package:jp_study_app/features/kana/presentation/providers/kana_filter_provider.dart';
 import 'package:jp_study_app/core/widgets/zen_button.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_type_filter_provider.dart';
+import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';
+import 'package:jp_study_app/core/widgets/zen_chip_selector.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -62,26 +64,36 @@ class KanaListPage extends ConsumerWidget {
                                 letterSpacing: 2.0,
                               ),
                             ),
-                            _KanaTypeToggle(
-                              selectedType: ref.watch(kanaTypeFilterProvider),
-                              onTypeChanged: (type) {
+                            // 假名類型切換 - 使用 ZenSegmentedButton
+                            ZenSegmentedButton<KanaType>(
+                              options: const [
+                                KanaType.hiragana,
+                                KanaType.katakana,
+                              ],
+                              selectedValue: ref.watch(kanaTypeFilterProvider),
+                              onChanged: (type) {
                                 ref
                                     .read(kanaTypeFilterProvider.notifier)
                                     .setType(type);
                               },
                               theme: zenTheme,
+                              labelBuilder: (type) =>
+                                  type == KanaType.hiragana ? 'あ' : 'ア',
                             ),
                           ],
                         ),
                         const SizedBox(height: 24),
-                        _CategorySelector(
-                          selectedCategory: selectedCategory,
-                          onCategorySelected: (category) {
+                        // 分類選擇 - 使用 ZenChipSelector
+                        ZenChipSelector<KanaCategory>(
+                          options: KanaCategory.values,
+                          selectedValue: selectedCategory,
+                          onChanged: (category) {
                             ref
                                 .read(kanaCategoryFilterProvider.notifier)
                                 .setFilter(category);
                           },
                           theme: zenTheme,
+                          labelBuilder: (category) => category.label,
                         ),
                       ],
                     ),
@@ -228,130 +240,6 @@ class KanaListPage extends ConsumerWidget {
           },
           theme: zenTheme,
         ),
-      ),
-    );
-  }
-}
-
-/// 假名類型切換按鈕
-///
-/// 符合禪意美學設計原則:
-/// - 使用簡潔的文字標籤「あ」vs「ア」
-/// - 與現有 _CategorySelector 風格一致
-/// - 極簡的視覺設計,不干擾主要內容
-class _KanaTypeToggle extends StatelessWidget {
-  final KanaType selectedType;
-  final Function(KanaType) onTypeChanged;
-  final ZenTheme theme;
-
-  const _KanaTypeToggle({
-    required this.selectedType,
-    required this.onTypeChanged,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildToggleButton(
-          type: KanaType.hiragana,
-          label: 'あ',
-          isSelected: selectedType == KanaType.hiragana,
-        ),
-        const SizedBox(width: 8),
-        _buildToggleButton(
-          type: KanaType.katakana,
-          label: 'ア',
-          isSelected: selectedType == KanaType.katakana,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildToggleButton({
-    required KanaType type,
-    required String label,
-    required bool isSelected,
-  }) {
-    return InkWell(
-      onTap: () => onTypeChanged(type),
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: isSelected ? theme.textPrimary : theme.bgSurface,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? Colors.transparent : theme.borderSubtle,
-            width: 0.5,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: GoogleFonts.notoSansJp(
-              fontSize: 18,
-              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-              color: isSelected ? theme.bgPrimary : theme.textSecondary,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _CategorySelector extends StatelessWidget {
-  final KanaCategory selectedCategory;
-  final Function(KanaCategory) onCategorySelected;
-  final ZenTheme theme;
-
-  const _CategorySelector({
-    required this.selectedCategory,
-    required this.onCategorySelected,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: KanaCategory.values.map((category) {
-          final isSelected = category == selectedCategory;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: InkWell(
-              onTap: () => onCategorySelected(category),
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected ? theme.textPrimary : theme.bgSurface,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isSelected ? Colors.transparent : theme.borderSubtle,
-                    width: 0.5,
-                  ),
-                ),
-                child: Text(
-                  category.label,
-                  style: GoogleFonts.notoSansTc(
-                    fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-                    color: isSelected ? theme.bgPrimary : theme.textSecondary,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
       ),
     );
   }

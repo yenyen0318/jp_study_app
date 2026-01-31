@@ -6,6 +6,8 @@ import 'package:jp_study_app/features/exam/domain/entities/quiz.dart';
 import 'package:jp_study_app/features/exam/presentation/providers/exam_controller.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jp_study_app/core/widgets/zen_button.dart';
+import 'package:jp_study_app/core/widgets/zen_segmented_button.dart';
+import 'package:jp_study_app/core/widgets/zen_multi_selector.dart';
 
 class ExamScopeDialog extends ConsumerStatefulWidget {
   const ExamScopeDialog({super.key});
@@ -15,9 +17,9 @@ class ExamScopeDialog extends ConsumerStatefulWidget {
 }
 
 class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
-  final List<int> _selectedRows = [0]; // 預設選中あ行
-  final List<String> _selectedTypes = ['hiragana'];
-  bool _isRandomSampling = false; // 驗收模式：false=完整覆蓋, true=隨機抽樣
+  List<int> _selectedRows = [0]; // 預設選中あ行
+  String _selectedType = 'hiragana'; // 單選:平假名或片假名
+  bool _isRandomSampling = false; // 驗收模式:false=完整覆蓋, true=隨機抽樣
 
   final _rows = [
     'あ行',
@@ -35,26 +37,6 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
     '半濁音 (ぱ行)',
     '拗音 (きゃ~ぴょ)',
   ];
-
-  void _toggleRow(int index) {
-    setState(() {
-      if (_selectedRows.contains(index)) {
-        if (_selectedRows.length > 1) _selectedRows.remove(index);
-      } else {
-        _selectedRows.add(index);
-      }
-    });
-  }
-
-  void _toggleType(String type) {
-    setState(() {
-      if (_selectedTypes.contains(type)) {
-        if (_selectedTypes.length > 1) _selectedTypes.remove(type);
-      } else {
-        _selectedTypes.add(type);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,79 +62,35 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
             ),
             const SizedBox(height: 24),
 
-            // 類型選擇 (平假名/片假名)
-            Row(
-              children: [
-                _TypeChip(
-                  label: '平假名',
-                  isSelected: _selectedTypes.contains('hiragana'),
-                  onTap: () => _toggleType('hiragana'),
-                  theme: theme,
-                ),
-                const SizedBox(width: 12),
-                _TypeChip(
-                  label: '片假名',
-                  isSelected: _selectedTypes.contains('katakana'),
-                  onTap: () => _toggleType('katakana'),
-                  theme: theme,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            // 行選擇矩陣
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: List.generate(_rows.length, (index) {
-                final isSelected = _selectedRows.contains(index);
-                return InkWell(
-                  onTap: () => _toggleRow(index),
-                  borderRadius: BorderRadius.circular(8),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? theme.textPrimary.withValues(alpha: 0.05)
-                          : Colors.transparent,
-                      border: Border.all(
-                        color: isSelected
-                            ? theme.textPrimary.withValues(alpha: 0.3)
-                            : theme.borderSubtle,
-                        width: 0.5,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      _rows[index],
-                      style: GoogleFonts.notoSansTc(
-                        fontSize: 14,
-                        color: isSelected
-                            ? theme.textPrimary
-                            : theme.textSecondary,
-                        fontWeight: isSelected
-                            ? FontWeight.w400
-                            : FontWeight.w300,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-
-            const SizedBox(height: 20),
-
-            // 驗收模式選擇（使用 Segmented Button 表達單選語意）
-            _ModeSegmentedButton(
-              isRandomSampling: _isRandomSampling,
-              onModeChanged: (isRandom) =>
-                  setState(() => _isRandomSampling = isRandom),
+            // 類型選擇 (平假名/片假名) - 使用 ZenSegmentedButton
+            ZenSegmentedButton<String>(
+              options: const ['hiragana', 'katakana'],
+              selectedValue: _selectedType,
+              onChanged: (value) => setState(() => _selectedType = value),
               theme: theme,
+              labelBuilder: (value) => value == 'hiragana' ? '平假名' : '片假名',
+            ),
+
+            const SizedBox(height: 20),
+
+            // 行選擇矩陣 - 使用 ZenMultiSelector
+            ZenMultiSelector<int>(
+              options: List.generate(_rows.length, (i) => i),
+              selectedValues: _selectedRows,
+              onChanged: (values) => setState(() => _selectedRows = values),
+              theme: theme,
+              labelBuilder: (index) => _rows[index],
+            ),
+
+            const SizedBox(height: 20),
+
+            // 驗收模式選擇 - 使用 ZenSegmentedButton
+            ZenSegmentedButton<bool>(
+              options: const [false, true],
+              selectedValue: _isRandomSampling,
+              onChanged: (value) => setState(() => _isRandomSampling = value),
+              theme: theme,
+              labelBuilder: (value) => value ? '隨機 10 題' : '完整覆蓋',
             ),
 
             const SizedBox(height: 32),
@@ -179,7 +117,7 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
                 }
 
                 final scope = ExamScope(
-                  types: _selectedTypes,
+                  types: [_selectedType], // 單選改為列表
                   rows: actualRows.toList(),
                   isRandomSampling: _isRandomSampling,
                 );
@@ -191,144 +129,6 @@ class _ExamScopeDialogState extends ConsumerState<ExamScopeDialog> {
               isFullWidth: true,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _TypeChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final ZenTheme theme;
-
-  const _TypeChip({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        decoration: BoxDecoration(
-          color: isSelected ? theme.textPrimary : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? theme.textPrimary : theme.borderSubtle,
-            width: 0.5,
-          ),
-        ),
-        child: Text(
-          label,
-          style: GoogleFonts.notoSansTc(
-            fontSize: 13,
-            color: isSelected ? theme.bgSurface : theme.textSecondary,
-            fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// 驗收模式 Segmented Button（完整覆蓋 / 隨機抽樣）
-/// 使用整體式設計明確表達「單選」語意
-class _ModeSegmentedButton extends StatelessWidget {
-  final bool isRandomSampling;
-  final ValueChanged<bool> onModeChanged;
-  final ZenTheme theme;
-
-  const _ModeSegmentedButton({
-    required this.isRandomSampling,
-    required this.onModeChanged,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.borderSubtle, width: 0.5),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _SegmentButton(
-              label: '完整覆蓋',
-              isSelected: !isRandomSampling,
-              onTap: () => onModeChanged(false),
-              theme: theme,
-              isLeft: true,
-            ),
-          ),
-          Container(width: 0.5, height: 32, color: theme.borderSubtle),
-          Expanded(
-            child: _SegmentButton(
-              label: '隨機 10 題',
-              isSelected: isRandomSampling,
-              onTap: () => onModeChanged(true),
-              theme: theme,
-              isLeft: false,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Segmented Button 的單個按鈕
-class _SegmentButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final ZenTheme theme;
-  final bool isLeft;
-
-  const _SegmentButton({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-    required this.theme,
-    required this.isLeft,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.horizontal(
-        left: isLeft ? const Radius.circular(20) : Radius.zero,
-        right: !isLeft ? const Radius.circular(20) : Radius.zero,
-      ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? theme.textPrimary : Colors.transparent,
-          borderRadius: BorderRadius.horizontal(
-            left: isLeft ? const Radius.circular(20) : Radius.zero,
-            right: !isLeft ? const Radius.circular(20) : Radius.zero,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: GoogleFonts.notoSansTc(
-              fontSize: 13,
-              color: isSelected ? theme.bgSurface : theme.textSecondary,
-              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-            ),
-          ),
         ),
       ),
     );
