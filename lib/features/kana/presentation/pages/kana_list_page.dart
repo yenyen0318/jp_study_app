@@ -17,6 +17,7 @@ import 'package:jp_study_app/core/widgets/zen_chip_selector.dart';
 import 'package:jp_study_app/core/widgets/zen_page_header.dart';
 import 'package:jp_study_app/core/widgets/zen_card.dart';
 import 'package:jp_study_app/features/kana/presentation/providers/kana_groups_provider.dart';
+import 'package:jp_study_app/core/widgets/zen_async_builder.dart';
 
 class KanaListPage extends ConsumerWidget {
   const KanaListPage({super.key});
@@ -102,106 +103,82 @@ class KanaListPage extends ConsumerWidget {
             ),
           ),
 
-          // 假名列表內容 - 優化版
-          groupsAsync.when(
-            data: (groups) => SliverFillRemaining(
-              hasScrollBody: true,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 350),
-                switchInCurve: Curves.easeInOut,
-                switchOutCurve: Curves.easeInOut,
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                child: CustomScrollView(
-                  key: ValueKey(
-                    '${ref.watch(kanaTypeFilterProvider)}_${selectedCategory.name}',
-                  ),
-                  slivers: [
-                    SliverPadding(
-                      padding: EdgeInsets.symmetric(horizontal: zen.spacing.lg),
-                      sliver: SliverMainAxisGroup(
-                        slivers: [
-                          for (final group in groups) ...[
-                            SliverToBoxAdapter(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth: zen.layout.maxContentWidth,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top: zen.spacing.md,
-                                    bottom: zen.spacing.md,
-                                  ),
-                                  child: _CategoryHeader(
-                                    title: group.title,
-                                    description: group.description,
-                                    zen: zen,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            _SliverKanaGrid(
-                              kanaList: group.items,
-                              zen: zen,
-                              crossAxisCount: group.crossAxisCount,
-                              onTap: (kana) {
-                                ref
-                                    .read(kanaAudioControllerProvider.notifier)
-                                    .play(kana.text);
-                                showModalBottomSheet(
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  isScrollControlled: true,
-                                  builder: (context) => Consumer(
-                                    builder: (context, ref, child) {
-                                      final allKana = ref.watch(
-                                        kanaListViewModelProvider,
-                                      );
-                                      return allKana.maybeWhen(
-                                        data: (list) => KanaDetailSheet(
-                                          kana: kana,
-                                          similarKana: list
-                                              .where(
-                                                (k) => kana.similarKanaIds
-                                                    .contains(k.id),
-                                              )
-                                              .toList(),
-                                          onPlayAudio: () {
-                                            ref
-                                                .read(
-                                                  kanaAudioControllerProvider
-                                                      .notifier,
-                                                )
-                                                .play(kana.text);
-                                          },
-                                        ),
-                                        orElse: () => const SizedBox.shrink(),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                            SliverToBoxAdapter(
-                              child: SizedBox(height: zen.spacing.xl),
-                            ),
-                          ],
-                        ],
+          // 假名列表內容 - 禪意狀態優化版
+          SliverZenAsyncBuilder(
+            value: groupsAsync,
+            emptyMessage: '這個分類暫時還沒有內容',
+            emptySubtitle: '試試其他分類吧',
+            data: (groups) => SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: zen.spacing.lg),
+              sliver: SliverMainAxisGroup(
+                slivers: [
+                  for (final group in groups) ...[
+                    SliverToBoxAdapter(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: zen.layout.maxContentWidth,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: zen.spacing.md,
+                            bottom: zen.spacing.md,
+                          ),
+                          child: _CategoryHeader(
+                            title: group.title,
+                            description: group.description,
+                            zen: zen,
+                          ),
+                        ),
                       ),
                     ),
-                    // 額外的底部留白，確保 CustomScrollView 能正常捲動
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: zen.spacing.xxl),
+                    _SliverKanaGrid(
+                      kanaList: group.items,
+                      zen: zen,
+                      crossAxisCount: group.crossAxisCount,
+                      onTap: (kana) {
+                        ref
+                            .read(kanaAudioControllerProvider.notifier)
+                            .play(kana.text);
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          builder: (context) => Consumer(
+                            builder: (context, ref, child) {
+                              final allKana = ref.watch(
+                                kanaListViewModelProvider,
+                              );
+                              return allKana.maybeWhen(
+                                data: (list) => KanaDetailSheet(
+                                  kana: kana,
+                                  similarKana: list
+                                      .where(
+                                        (k) =>
+                                            kana.similarKanaIds.contains(k.id),
+                                      )
+                                      .toList(),
+                                  onPlayAudio: () {
+                                    ref
+                                        .read(
+                                          kanaAudioControllerProvider.notifier,
+                                        )
+                                        .play(kana.text);
+                                  },
+                                ),
+                                orElse: () => const SizedBox.shrink(),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
+                    SliverToBoxAdapter(child: SizedBox(height: zen.spacing.xl)),
                   ],
-                ),
+                  // 額外的底部留白,確保 CustomScrollView 能正常捲動
+                  SliverToBoxAdapter(child: SizedBox(height: zen.spacing.xxl)),
+                ],
               ),
             ),
-            loading: () =>
-                const SliverFillRemaining(child: Center(child: Text('準備中...'))),
-            error: (err, stack) =>
-                const SliverFillRemaining(child: Center(child: Text('發生錯誤'))),
           ),
 
           SliverSafeArea(

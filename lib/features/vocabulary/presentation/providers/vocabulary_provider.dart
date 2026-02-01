@@ -62,14 +62,15 @@ List<String> vocabularyAvailableTags(Ref ref) {
 class VocabularyNotifier extends _$VocabularyNotifier {
   @override
   FutureOr<List<Vocabulary>> build() async {
+    // 監聽搜尋和篩選變化
+    final query = ref.watch(vocabularySearchQueryProvider);
+    final filter = ref.watch(vocabularyFilterProvider);
+
     final allVocab = await ref
         .watch(vocabularyRepositoryProvider)
         .getN5Vocabularies();
 
-    final query = ref.watch(vocabularySearchQueryProvider).trim().toLowerCase();
-    final filter = ref.watch(vocabularyFilterProvider);
-
-    return _applyFilters(allVocab, query, filter);
+    return _applyFilters(allVocab, query.trim().toLowerCase(), filter);
   }
 
   List<Vocabulary> _applyFilters(

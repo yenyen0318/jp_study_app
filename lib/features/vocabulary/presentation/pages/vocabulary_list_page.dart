@@ -8,6 +8,7 @@ import '../../../../core/widgets/zen_page_header.dart';
 import '../providers/vocabulary_provider.dart';
 import '../widgets/vocabulary_card.dart';
 import '../widgets/vocabulary_search_bar.dart';
+import '../../../../core/widgets/zen_async_builder.dart';
 
 class VocabularyListPage extends ConsumerWidget {
   const VocabularyListPage({super.key});
@@ -15,7 +16,6 @@ class VocabularyListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final zen = context.zen;
-    final textTheme = Theme.of(context).textTheme;
     final vocabAsync = ref.watch(vocabularyNotifierProvider);
 
     return Scaffold(
@@ -107,7 +107,7 @@ class VocabularyListPage extends ConsumerWidget {
             ),
           ),
 
-          // 單字列表 - 效能優化版
+          // 單字列表 - 禪意狀態優化版
           SliverSafeArea(
             top: false,
             minimum: EdgeInsets.only(
@@ -115,62 +115,28 @@ class VocabularyListPage extends ConsumerWidget {
               left: zen.spacing.lg,
               right: zen.spacing.lg,
             ),
-            sliver: vocabAsync.when(
-              skipLoadingOnRefresh: true,
-              data: (vocabs) {
-                return SliverFillRemaining(
-                  hasScrollBody: true,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 450),
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    transitionBuilder: (child, animation) {
-                      return FadeTransition(opacity: animation, child: child);
-                    },
-                    child: vocabs.isEmpty
-                        ? Center(
-                            key: const ValueKey('vocab_empty'),
-                            child: Text(
-                              '找不到符合的單字',
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: zen.textSecondary,
-                              ),
-                            ),
-                          )
-                        : ListView.separated(
-                            key: ValueKey('vocab_list_${vocabs.length}'),
-                            padding: const EdgeInsets.all(0),
-                            itemCount: vocabs.length,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: zen.spacing.md),
-                            itemBuilder: (context, index) {
-                              final vocab = vocabs[index];
-                              return VocabularyCard(
-                                key: ValueKey(vocab.id),
-                                vocabulary: vocab,
-                                onTap: () {
-                                  GoRouter.of(
-                                    context,
-                                  ).push('/vocabulary/practice', extra: vocab);
-                                },
-                              );
-                            },
-                          ),
-                  ),
-                );
-              },
-              loading: () => const SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                  child: Opacity(
-                    opacity: 0.5,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-              ),
-              error: (err, stack) => SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(child: Text('讀取失敗: $err')),
+            sliver: SliverZenAsyncBuilder(
+              value: vocabAsync,
+              emptyMessage: '沒有找到相關的單字',
+              emptySubtitle: '換個關鍵字,說不定會有新發現',
+              data: (vocabs) => SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final vocab = vocabs[index];
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: index == vocabs.length - 1 ? 0 : zen.spacing.md,
+                    ),
+                    child: VocabularyCard(
+                      key: ValueKey(vocab.id),
+                      vocabulary: vocab,
+                      onTap: () {
+                        GoRouter.of(
+                          context,
+                        ).push('/vocabulary/practice', extra: vocab);
+                      },
+                    ),
+                  );
+                }, childCount: vocabs.length),
               ),
             ),
           ),

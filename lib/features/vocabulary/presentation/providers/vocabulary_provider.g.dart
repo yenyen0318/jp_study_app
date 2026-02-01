@@ -80,7 +80,7 @@ final vocabularyFilterProvider =
 
 typedef _$VocabularyFilter = AutoDisposeNotifier<String?>;
 String _$vocabularyNotifierHash() =>
-    r'0826eabd9f0186e814e21f3111e1a272ec2764bc';
+    r'604ccf67a9675f86b9bc703ec704248c54b2717b';
 
 /// See also [VocabularyNotifier].
 @ProviderFor(VocabularyNotifier)

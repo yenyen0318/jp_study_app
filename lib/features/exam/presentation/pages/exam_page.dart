@@ -8,6 +8,8 @@ import 'package:jp_study_app/core/services/tts_service.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math' as math;
 import 'package:jp_study_app/core/widgets/zen_button.dart';
+import 'package:jp_study_app/core/widgets/zen_async_builder.dart';
+import 'package:jp_study_app/core/widgets/zen_dot_loader.dart';
 
 class ExamPage extends ConsumerWidget {
   const ExamPage({super.key});
@@ -26,10 +28,13 @@ class ExamPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: theme.bgPrimary,
-      body: stateAsync.when(
+      body: ZenAsyncBuilder(
+        value: stateAsync,
+        errorMessage: '測驗準備時遇到了一些狀況',
+        errorSubtitle: '先回去看看其他內容,晚點再來挑戰吧',
         data: (state) {
           if (state.result != null) {
-            // 已有結果，自動跳轉或在此顯示結果 (通常由 controller 觸發跳轉，這裡先暫時顯示進入點)
+            // 已有結果,自動跳轉或在此顯示結果 (通常由 controller 觸發跳轉,這裡先暫時顯示進入點)
             return const SizedBox.shrink();
           }
           if (state.questions.isEmpty) {
@@ -37,21 +42,25 @@ class ExamPage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // 1. 動態指示: 微點呼吸
+                  const ZenDotLoader(),
+                  const SizedBox(height: 24),
+
+                  // 2. 狀態說明: 降低權重
                   Text(
                     '準備題目中...',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: theme.textSecondary,
+                      color: theme.textSecondary.withValues(alpha: 0.5),
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  TextButton(
+                  const SizedBox(height: 48),
+
+                  // 3. 操作引導: 賦予實體感
+                  ZenButton(
+                    label: '取消並返回',
                     onPressed: () => context.pop(),
-                    child: Text(
-                      '取消並返回',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: theme.textSecondary,
-                      ),
-                    ),
+                    theme: theme,
                   ),
                 ],
               ),
@@ -138,7 +147,7 @@ class ExamPage extends ConsumerWidget {
                                   .read(examControllerProvider.notifier)
                                   .nextQuestion(),
                               theme: theme,
-                              isGhost: true, // 使用幽靈按鈕樣式，更輕量
+                              isGhost: true, // 使用幽靈按鈕樣式,更輕量
                             ),
                         ],
                       ),
@@ -149,8 +158,6 @@ class ExamPage extends ConsumerWidget {
             ],
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('發生錯誤: $err')),
       ),
     );
   }

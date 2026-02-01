@@ -127,6 +127,44 @@ description: "App UI/UX Design System & Guidelines"
 *   **空白狀態**：
     *   使用**繁體中文**鼓勵語句，如需圖像則僅使用簡單的幾何線條或文字排版，避免使用任何通用圖示庫 (Includes Lucide)。例如：「準備好開始日日的練習了嗎？」
 
+### **Sliver 與動畫的陷阱 (Critical: Sliver Animation Pitfalls)**
+> [!CAUTION]
+> **禁止在 Sliver 中使用 `AnimatedSwitcher` 或 `IntrinsicHeight` 等會計算 intrinsic dimensions 的元件!**
+
+**問題根源**:
+- `CustomScrollView` 和其他 Sliver-based widgets 使用 lazy loading,不會計算所有子元件的尺寸
+- `AnimatedSwitcher`、`IntrinsicHeight`、`IntrinsicWidth`、**`Center`** 等元件會要求子元件提供 intrinsic dimensions
+- **`SliverFillRemaining` + `Center`** 組合也會觸發相同錯誤
+- 這會導致 `RenderShrinkWrappingViewport does not support returning intrinsic dimensions` 錯誤
+
+**❌ 錯誤做法**:
+```dart
+SliverZenAsyncBuilder(
+  data: (items) => SliverFillRemaining(
+    child: AnimatedSwitcher(  // ❌ 會觸發錯誤!
+      child: CustomScrollView(...),
+    ),
+  ),
+)
+```
+
+**✅ 正確做法**:
+```dart
+SliverZenAsyncBuilder(
+  data: (items) => SliverList(  // ✅ 直接返回 Sliver
+    delegate: SliverChildBuilderDelegate(...),
+  ),
+)
+```
+
+**規則**:
+1. **在 Sliver 層級直接返回 Sliver 元件**,不要用 `SliverFillRemaining` 包裹 Box widgets
+2. **AnimatedSwitcher 應放在 CustomScrollView 外層**,而非內層
+3. **如需過渡動畫**,在 `ZenAsyncBuilder` 內部已實作 `FadeTransition`,無需額外包裹
+4. **使用 `SliverList`、`SliverPadding`、`SliverMainAxisGroup`** 等原生 Sliver,而非轉換為 Box
+5. **`SliverFillRemaining` 內禁止使用 `Center`**,改用 `SliverToBoxAdapter` + 固定高度的 `SizedBox`
+
+
 ## 8. 響應式與平板適配 (Responsive & Tablet)
 
 在平板等大螢幕設備上，重點在於「避免視線過度發散」，維持專注的閱讀體驗。

@@ -5,7 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.0] - 2026-01-31
+## [0.5.1] - 2026-02-01
+
+### Added
+- **全新禪意狀態系統 (Zen Async UI)**：實作 `ZenAsyncBuilder` 與 `SliverZenAsyncBuilder` 統一處理全 App 的載入、空白與錯誤狀態。
+- **極簡微點載入 (ZenDotLoader)**：取代傳統骨架屏與進度圈，以單個呼吸微點傳達「等待中」的靜謐感。
+
+### Refactor
+- **空白與錯誤狀態精簡 (Minimalist States)**：移除所有幾何圖表與圖示，回歸純文字導引，落實「視覺隱形」的設計哲學。
+- **Sliver 渲染陷阱修復**：解決 `CustomScrollView` 內 `AnimatedSwitcher` 觸發的渲染錯誤，優化 Sliver 效能與穩定性。
+
+### Fixed
+- **單字搜尋聯動失效**：修復 `VocabularyProvider` 監聽順序問題，確保搜尋文字改變時即時觸發資料過濾與重建。
+- **考試準備畫面層次**：優化 `ExamPage` 等待狀態與取消按鈕的辨識度，建立更清晰的操作導引。
+
 
 ### Refactor
 - **列表效能優化 (Sliver Performance Optimization)**：將 `VocabularyListPage` 與 `KanaListPage` 原有的 `SliverToBoxAdapter` 嵌套列表結構重構為原生 `SliverList` 與 `SliverGrid`，大幅提升長列表滾動流暢度與記憶體效率。
