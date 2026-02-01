@@ -124,21 +124,19 @@ class KanaListPage extends ConsumerWidget {
                         slivers: [
                           for (final group in groups) ...[
                             SliverToBoxAdapter(
-                              child: Center(
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: zen.layout.maxContentWidth,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: zen.layout.maxContentWidth,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    top: zen.spacing.md,
+                                    bottom: zen.spacing.md,
                                   ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: zen.spacing.md,
-                                      bottom: zen.spacing.md,
-                                    ),
-                                    child: _CategoryHeader(
-                                      title: group.title,
-                                      description: group.description,
-                                      zen: zen,
-                                    ),
+                                  child: _CategoryHeader(
+                                    title: group.title,
+                                    description: group.description,
+                                    zen: zen,
                                   ),
                                 ),
                               ),
